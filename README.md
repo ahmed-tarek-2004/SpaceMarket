@@ -27,7 +27,7 @@ A comprehensive ASP.NET Core authentication system with JWT tokens, OTP verifica
 - **Response Handler Pattern** for consistent API responses
 
 ### Unit Testing 
- - **Note : ** Unit tests for the endpoints have been implemented. Unit tests for the services are planned and will be added next.
+ - **Note :** Unit tests for the endpoints have been implemented. Unit tests for the services are planned and will be added next.
 
 ## Architecture
 
