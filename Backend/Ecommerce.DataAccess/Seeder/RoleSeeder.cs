@@ -1,5 +1,4 @@
 ﻿using Ecommerce.Entities.Models.Auth.Identity;
-
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +17,7 @@ namespace Ecommerce.DataAccess.Seeder
                     Name = "Admin",
                     NormalizedName = "ADMIN"
                 });
+
                 await _roleManager.CreateAsync(new Role()
                 {
                     Id = Guid.NewGuid().ToString(),
@@ -25,6 +25,19 @@ namespace Ecommerce.DataAccess.Seeder
                     NormalizedName = "USER"
                 });
 
+                await _roleManager.CreateAsync(new Role()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = "Client",
+                    NormalizedName = "CLIENT"
+                });
+
+                await _roleManager.CreateAsync(new Role()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = "ServiceProvider",
+                    NormalizedName = "SERVICEPROVIDER"
+                });
             }
         }
     }
