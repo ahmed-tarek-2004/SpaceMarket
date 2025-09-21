@@ -11,7 +11,7 @@ namespace Ecommerce.Entities.Models
     public class Withdrawal
     {
         public Guid Id { get; set; }
-        public Guid ProviderId { get; set; }
+        public string ProviderId { get; set; }
         public decimal Amount { get; set; }
         public string BankAccount { get; set; }
         public WithdrawalStatus Status { get; set; }

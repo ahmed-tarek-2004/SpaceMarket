@@ -10,7 +10,7 @@ namespace Ecommerce.Entities.Models
     public class Satellite
     {
         public Guid Id { get; set; }
-        public Guid ClientId { get; set; }
+        public string ClientId { get; set; }
         public string Name { get; set; }
         public string NoradId { get; set; }
         public string TleLine1 { get; set; }

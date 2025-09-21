@@ -10,7 +10,7 @@ namespace Ecommerce.Entities.Models
     public class ComplianceService
     {
         public Guid Id { get; set; }
-        public Guid ProviderId { get; set; }
+        public string ProviderId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string Category { get; set; }

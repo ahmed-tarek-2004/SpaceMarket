@@ -39,7 +39,7 @@ namespace Ecommerce.API.Extensions
                 opt.Password.RequireDigit = true;
                 opt.Password.RequireNonAlphanumeric = true;
             })
-            .AddEntityFrameworkStores<AuthContext>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddRoleManager<RoleManager<Role>>()
             .AddUserManager<UserManager<User>>()
             .AddDefaultTokenProviders();

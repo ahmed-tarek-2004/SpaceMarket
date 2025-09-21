@@ -11,7 +11,7 @@ namespace Ecommerce.Entities.Models
     public class Order
     {
         public Guid Id { get; set; }
-        public Guid ClientId { get; set; }
+        public string ClientId { get; set; }
         public decimal Amount { get; set; }
         public decimal Commission { get; set; }
         public OrderStatus Status { get; set; }

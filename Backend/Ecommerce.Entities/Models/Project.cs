@@ -11,7 +11,7 @@ namespace Ecommerce.Entities.Models
     public class Project
     {
         public Guid Id { get; set; }
-        public Guid ClientId { get; set; }
+        public string ClientId { get; set; }
         public Guid ServiceId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }

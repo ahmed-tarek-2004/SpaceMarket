@@ -11,7 +11,7 @@ namespace Ecommerce.Entities.Models
     {
         public Guid Id { get; set; }
         public Guid ReviewId { get; set; }
-        public Guid ProviderId { get; set; }
+        public string ProviderId { get; set; }
         public string Text { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

@@ -11,8 +11,8 @@ namespace Ecommerce.Entities.Models
     public class ComplianceTicket
     {
         public Guid Id { get; set; }
-        public Guid ClientId { get; set; }
-        public Guid? ProviderId { get; set; }
+        public string ClientId { get; set; }
+        public string? ProviderId { get; set; }
         public string Topic { get; set; }
         public string Description { get; set; }
         public string AttachmentsUrl { get; set; }

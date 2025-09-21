@@ -11,8 +11,8 @@ namespace Ecommerce.Entities.Models
     {
         public Guid Id { get; set; }
         public Guid ServiceId { get; set; }
-        public Guid ClientId { get; set; }
-        public Guid ProviderId { get; set; }
+        public string ClientId { get; set; }
+        public string ProviderId { get; set; }
         public int Rating { get; set; } // 1–5
         public string Text { get; set; }
 
