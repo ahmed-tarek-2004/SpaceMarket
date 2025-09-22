@@ -24,6 +24,7 @@ namespace Ecommerce.API.Controllers
         private readonly IAuthService _authService;
         private readonly ResponseHandler _responseHandler;
         private readonly IValidator<RegisterRequest> _registerValidator;
+        private readonly IValidator<ClientRegisterRequest> _clientregisterValidator;
         private readonly IValidator<LoginRequest> _loginValidator;
         private readonly IValidator<ForgetPasswordRequest> _forgetPasswordValidator;
         private readonly IValidator<ResetPasswordRequest> _resetPasswordValidator;
@@ -31,7 +32,7 @@ namespace Ecommerce.API.Controllers
         private readonly IAuthGoogleService _authGoogleService;
 
 
-        public AccountController(IAuthService authService, ResponseHandler responseHandler, IValidator<RegisterRequest> registerValidator, IValidator<LoginRequest> loginValidator, IValidator<ForgetPasswordRequest> forgetPasswordValidator, IValidator<ResetPasswordRequest> resetPasswordValidator, IAuthGoogleService authGoogleService, IValidator<ChangePasswordRequest> changePasswordValidator)
+        public AccountController(IAuthService authService, ResponseHandler responseHandler, IValidator<RegisterRequest> registerValidator, IValidator<LoginRequest> loginValidator, IValidator<ForgetPasswordRequest> forgetPasswordValidator, IValidator<ResetPasswordRequest> resetPasswordValidator, IAuthGoogleService authGoogleService, IValidator<ChangePasswordRequest> changePasswordValidator,IValidator<ClientRegisterRequest>clientRegisterValidator)
         {
             _authService = authService;
             _responseHandler = responseHandler;
@@ -41,6 +42,7 @@ namespace Ecommerce.API.Controllers
             _resetPasswordValidator = resetPasswordValidator;
             _authGoogleService = authGoogleService;
             _changePasswordValidator = changePasswordValidator;
+            _clientregisterValidator = clientRegisterValidator;
         }
         [HttpPost("login")]
         public async Task<ActionResult<Response<LoginResponse>>> Login([FromBody] LoginRequest request)
@@ -98,6 +100,21 @@ namespace Ecommerce.API.Controllers
             }
 
             var response = await _authService.RegisterAsync(request);
+            return StatusCode((int)response.StatusCode, response);
+        }
+
+        [HttpPost("register/client")]
+        public async Task<ActionResult<Response<RegisterResponse>>> RegisterAsBuyer([FromForm] ClientRegisterRequest request)
+        {
+            ValidationResult validationResult = await _clientregisterValidator.ValidateAsync(request);
+            if (!validationResult.IsValid)
+            {
+                string errors = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                return StatusCode((int)_responseHandler.BadRequest<object>(errors).StatusCode,
+                    _responseHandler.BadRequest<object>(errors));
+            }
+
+            var response = await _authService.RegisterAsClientAsync(request);
             return StatusCode((int)response.StatusCode, response);
         }
 

@@ -9,6 +9,7 @@ using Ecommerce.Entities.DTO.Account.Auth.Login;
 using Ecommerce.Entities.DTO.Account.Auth.Register;
 using Ecommerce.Entities.DTO.Account.Auth.ResetPassword;
 using Ecommerce.Entities.Models.Auth.Identity;
+using Ecommerce.Entities.Models.Auth.Users;
 using Ecommerce.Entities.Shared.Bases;
 
 using Microsoft.AspNetCore.Identity;
@@ -109,6 +110,7 @@ namespace Ecommerce.DataAccess.Services.Auth
             {
                 var user = new User
                 {
+                    Id = Guid.NewGuid().ToString(),
                     UserName = registerRequest.Email, // Modify it by what you need
                     Email = registerRequest.Email,
                     PhoneNumber = registerRequest.PhoneNumber,
@@ -126,7 +128,7 @@ namespace Ecommerce.DataAccess.Services.Auth
                 await _userManager.AddToRoleAsync(user, "USER");
                 _logger.LogInformation("User created and role 'User' assigned. ID: {UserId}", user.Id);
 
-                await _userManager.CreateAsync(user);
+                //await _userManager.CreateAsync(user);
 
                 var tokens = await _tokenStoreService.GenerateAndStoreTokensAsync(user.Id, user);
 
@@ -158,6 +160,87 @@ namespace Ecommerce.DataAccess.Services.Auth
             {
                 await transaction.RollbackAsync();
                 _logger.LogError(ex, "Error occurred during RegisterUserAsync for Email: {Email}", registerRequest.Email);
+                return _responseHandler.BadRequest<RegisterResponse>("An error occurred during registration.");
+            }
+        }
+        public async Task<Response<RegisterResponse>> RegisterAsClientAsync(ClientRegisterRequest clientregisterRequest)
+        {
+            _logger.LogInformation("RegisterAsync started for Email: {Email}", clientregisterRequest.Email);
+
+            var emailPhoneCheck = await CheckIfEmailOrPhoneExists(clientregisterRequest.Email, clientregisterRequest.PhoneNumber);
+            if (emailPhoneCheck != null)
+            {
+                _logger.LogWarning("Registration failed: {Reason}", emailPhoneCheck);
+                return _responseHandler.BadRequest<RegisterResponse>(emailPhoneCheck);
+            }
+
+            // Create Identity User
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var user = new User
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserName = clientregisterRequest.Email, // Modify it by what you need
+                    Email = clientregisterRequest.Email,
+                    PhoneNumber = clientregisterRequest.PhoneNumber,
+                };
+
+                var createUserResult = await _userManager.CreateAsync(user, clientregisterRequest.Password);
+                if (!createUserResult.Succeeded)
+                {
+                    var errors = createUserResult.Errors.Select(e => e.Description).ToList();
+                    _logger.LogWarning("User creation failed for Email: {Email}. Errors: {Errors}", clientregisterRequest.Email, string.Join(", ", errors));
+                    return _responseHandler.BadRequest<RegisterResponse>(string.Join(", ", errors));
+                }
+
+                // Assign User role
+                await _userManager.AddToRoleAsync(user, "Client");
+                _logger.LogInformation("User created and role 'Client' assigned. ID: {UserId}", user.Id);
+
+//                await _userManager.CreateAsync(user);
+                var client = new Client()
+                {
+                    Id=user.Id,
+                    Address = clientregisterRequest.Country,
+                    FullName=clientregisterRequest.FullName,
+                    Organization=clientregisterRequest.OrganizationName
+                };
+                var createdClientResult= await _context.Clients.AddAsync(client);
+               // await _context.SaveChangesAsync();
+                _logger.LogInformation($"Client Adding Result is : {createdClientResult.State}");
+
+
+                var tokens = await _tokenStoreService.GenerateAndStoreTokensAsync(user.Id, user);
+
+                var otp = await _otpService.GenerateAndStoreOtpAsync(user.Id);
+
+                // Send OTP via Email
+                await _emailService.SendOtpEmailAsync(user, otp);
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                _logger.LogInformation("User registration completed successfully. Email sent to {Email}", clientregisterRequest.Email);
+
+
+                var response = new RegisterResponse
+                {
+                    Email = clientregisterRequest.Email,
+                    Id = user.Id,
+                    IsEmailConfirmed = false,
+                    PhoneNumber = clientregisterRequest.PhoneNumber,
+                    Role = "Client",
+                    AccessToken = tokens.AccessToken,
+                    RefreshToken = tokens.RefreshToken
+                };
+
+                return _responseHandler.Created<RegisterResponse>(response, "Client registered successfully. Please check your email to receive the OTP.");
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error occurred during ClientRegisterUserAsync for Email: {Email}", clientregisterRequest.Email);
                 return _responseHandler.BadRequest<RegisterResponse>("An error occurred during registration.");
             }
         }
