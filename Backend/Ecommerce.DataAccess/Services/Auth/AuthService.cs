@@ -164,7 +164,7 @@ namespace Ecommerce.DataAccess.Services.Auth
                 return _responseHandler.BadRequest<RegisterResponse>("An error occurred during registration.");
             }
         }
-        public async Task<Response<RegisterResponse>> RegisterAsClientAsync(ClientRegisterRequest clientregisterRequest)
+        public async Task<Response<ClientRegisterResponse>> RegisterAsClientAsync(ClientRegisterRequest clientregisterRequest)
         {
             _logger.LogInformation("RegisterAsync started for Email: {Email}", clientregisterRequest.Email);
 
@@ -172,7 +172,7 @@ namespace Ecommerce.DataAccess.Services.Auth
             if (emailPhoneCheck != null)
             {
                 _logger.LogWarning("Registration failed: {Reason}", emailPhoneCheck);
-                return _responseHandler.BadRequest<RegisterResponse>(emailPhoneCheck);
+                return _responseHandler.BadRequest<ClientRegisterResponse>(emailPhoneCheck);
             }
 
             // Create Identity User
@@ -192,7 +192,7 @@ namespace Ecommerce.DataAccess.Services.Auth
                 {
                     var errors = createUserResult.Errors.Select(e => e.Description).ToList();
                     _logger.LogWarning("User creation failed for Email: {Email}. Errors: {Errors}", clientregisterRequest.Email, string.Join(", ", errors));
-                    return _responseHandler.BadRequest<RegisterResponse>(string.Join(", ", errors));
+                    return _responseHandler.BadRequest<ClientRegisterResponse>(string.Join(", ", errors));
                 }
 
                 // Assign User role
@@ -212,7 +212,7 @@ namespace Ecommerce.DataAccess.Services.Auth
                 _logger.LogInformation($"Client Adding Result is : {createdClientResult.State}");
 
 
-                var tokens = await _tokenStoreService.GenerateAndStoreTokensAsync(user.Id, user);
+               // var tokens = await _tokenStoreService.GenerateAndStoreTokensAsync(user.Id, user);
 
                 var otp = await _otpService.GenerateAndStoreOtpAsync(user.Id);
 
@@ -225,24 +225,22 @@ namespace Ecommerce.DataAccess.Services.Auth
                 _logger.LogInformation("User registration completed successfully. Email sent to {Email}", clientregisterRequest.Email);
 
 
-                var response = new RegisterResponse
+                var response = new ClientRegisterResponse
                 {
                     Email = clientregisterRequest.Email,
                     Id = user.Id,
-                    IsEmailConfirmed = false,
+                    isEmailConfirmed = false,
                     PhoneNumber = clientregisterRequest.PhoneNumber,
                     Role = "Client",
-                    AccessToken = tokens.AccessToken,
-                    RefreshToken = tokens.RefreshToken
                 };
 
-                return _responseHandler.Created<RegisterResponse>(response, "Client registered successfully. Please check your email to receive the OTP.");
+                return _responseHandler.Created<ClientRegisterResponse>(response, "Client registered successfully. Please check your email to receive the OTP.");
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
                 _logger.LogError(ex, "Error occurred during ClientRegisterUserAsync for Email: {Email}", clientregisterRequest.Email);
-                return _responseHandler.BadRequest<RegisterResponse>("An error occurred during registration.");
+                return _responseHandler.BadRequest<ClientRegisterResponse>("An error occurred during registration.");
             }
         }
 
