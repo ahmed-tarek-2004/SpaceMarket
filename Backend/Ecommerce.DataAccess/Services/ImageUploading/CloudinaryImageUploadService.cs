@@ -33,7 +33,8 @@ namespace Ecommerce.DataAccess.Services.ImageUploading
 
             var uploadParams = new ImageUploadParams
             {
-                File = new FileDescription(file.FileName, memoryStream)
+                File = new FileDescription(file.FileName, memoryStream),
+                Type = "upload"
             };
 
             var result = await _cloudinary.UploadAsync(uploadParams);
@@ -46,5 +47,33 @@ namespace Ecommerce.DataAccess.Services.ImageUploading
 
             return result.Url?.ToString() ?? throw new Exception("Cloudinary returned empty URL.");
         }
+
+        public async Task<string> UploadCertificateAsync(IFormFile file, string providerId)
+        {
+            if (file == null || file.Length == 0)
+                throw new ArgumentException("Certificate file is required.");
+
+            using var stream = file.OpenReadStream();
+
+            var uploadParams = new RawUploadParams()
+            {
+                File = new FileDescription(file.FileName, stream),
+                Folder = $"service_providers/{providerId}/certifications",
+                PublicId = Guid.NewGuid().ToString(),
+                Overwrite = false
+            };
+
+            var result = await _cloudinary.UploadAsync(uploadParams);
+
+            if (result == null)
+                throw new Exception("Upload result was null from Cloudinary.");
+
+            if (result.Error != null)
+                throw new Exception($"Cloudinary error occurred: {result.Error.Message}");
+
+            return result.Url?.ToString() ?? throw new Exception("Cloudinary returned empty URL.");
+        }
+
+
     }
 }

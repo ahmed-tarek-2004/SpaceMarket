@@ -1,6 +1,7 @@
 ﻿using Ecommerce.Entities.Models.Auth.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Text.Json;
 
 public class ServiceProviderConfiguration : IEntityTypeConfiguration<ServiceProvider>
 {
@@ -19,8 +20,11 @@ public class ServiceProviderConfiguration : IEntityTypeConfiguration<ServiceProv
         builder.Property(sp => sp.WebsiteUrl)
             .HasMaxLength(200);
 
-        builder.Property(sp => sp.CertificationsUrlJson)
-            .HasMaxLength(1000);
+        builder.Property(sp => sp.CertificationsUrls)
+            .HasConversion(
+            v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+            v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null)
+        );
 
         // Configure enum as string with max length
         builder.Property(sp => sp.Status)
