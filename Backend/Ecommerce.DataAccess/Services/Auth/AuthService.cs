@@ -201,7 +201,7 @@ namespace Ecommerce.DataAccess.Services.Auth
 //                await _userManager.CreateAsync(user);
                 var client = new Client()
                 {
-                    Id=user.Id,
+                    User=user,
                     Address = clientregisterRequest.Country,
                     FullName=clientregisterRequest.FullName,
                     Organization=clientregisterRequest.OrganizationName
