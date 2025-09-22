@@ -1,6 +1,5 @@
 ﻿using Ecommerce.Entities.Models.Auth.Users;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Ecommerce.Entities.Models.Auth.Identity
 {
