@@ -10,11 +10,13 @@ namespace Ecommerce.Entities.Models
     {
         public Guid Id { get; set; }
         public Guid CartId { get; set; }
+        public string ServiceId { get; set; }
         public Guid DatasetId { get; set; }
         public int Quantity { get; set; } = 1;
         public decimal PriceSnapshot { get; set; }
 
         public Cart Cart { get; set; }
+        public Service Service { get; set; }
         public Dataset Dataset { get; set; }
     }
 }

@@ -27,6 +27,11 @@ namespace Ecommerce.DataAccess.EntitiesConfigurations
                 .WithMany()
                 .HasForeignKey(ci => ci.DatasetId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+           builder.HasOne(ci => ci.Service)
+                .WithMany(s => s.CartItems)
+                .HasForeignKey(ci => ci.ServiceId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

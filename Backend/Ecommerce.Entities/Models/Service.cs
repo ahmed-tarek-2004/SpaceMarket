@@ -24,6 +24,7 @@ namespace Ecommerce.Entities.Models
         public bool IsDeleted { get; set; }
         public DateTime? DeletedAt { get; set; }
 
+        public ICollection<CartItem> CartItems {  get; set; }
         public ServiceProvider Provider { get; set; }
         public ServiceCategory Category { get; set; }
     }
