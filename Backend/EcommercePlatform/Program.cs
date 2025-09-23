@@ -1,4 +1,3 @@
-
 using Ecommerce.API.Extensions;
 using Ecommerce.DataAccess.ApplicationContext;
 using Ecommerce.DataAccess.Extensions;
@@ -46,6 +45,19 @@ namespace EcommercePlatform
             // Rate limiter for otp resend
             builder.Services.AddResendOtpRateLimiter();
 
+            // Add CORS services
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngularApp",
+                    policy =>
+                    {
+                        policy.WithOrigins("http://localhost:4200")
+                              .AllowAnyHeader()
+                              .AllowAnyMethod()
+                              .AllowCredentials();
+                    });
+            });
+
             builder.Services.AddDataProtection()
                 .PersistKeysToDbContext<ApplicationDbContext>()
                 .SetApplicationName("AuthStarter");
@@ -82,6 +94,9 @@ namespace EcommercePlatform
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors("AllowAngularApp");
+
             app.UseAuthentication();
             app.UseAuthorization();
 
