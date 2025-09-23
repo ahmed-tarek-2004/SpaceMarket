@@ -62,21 +62,21 @@ namespace Ecommerce.DataAccess.Services.Auth
                 return _responseHandler.BadRequest<LoginResponse>("Email is not verified. Please verify your email first.");
 
             // If OTP is not provided, generate and send OTP
-            if (string.IsNullOrEmpty(loginRequest.Otp))
-            {
-                var otp = await _otpService.GenerateAndStoreOtpAsync(user.Id);
-                await _emailService.SendOtpEmailAsync(user, otp);
-                return _responseHandler.Success<LoginResponse>(null, "OTP sent to your email. Please provide the OTP to complete login.");
-            }
+            //if (string.IsNullOrEmpty(loginRequest.Otp))
+            //{
+            //    var otp = await _otpService.GenerateAndStoreOtpAsync(user.Id);
+            //    await _emailService.SendOtpEmailAsync(user, otp);
+            //    return _responseHandler.Success<LoginResponse>(null, "OTP sent to your email. Please provide the OTP to complete login.");
+            //}
 
             // Get user roles
             var roles = await _userManager.GetRolesAsync(user);
 
 
-            // Verify OTP
-            var isOtpValid = await _otpService.ValidateOtpAsync(user.Id, loginRequest.Otp);
-            if (!isOtpValid)
-                return _responseHandler.BadRequest<LoginResponse>("Invalid or expired OTP.");
+            //// Verify OTP
+            //var isOtpValid = await _otpService.ValidateOtpAsync(user.Id, loginRequest.Otp);
+            //if (!isOtpValid)
+            //    return _responseHandler.BadRequest<LoginResponse>("Invalid or expired OTP.");
 
             // Generate tokens
             var tokens = await _tokenStoreService.GenerateAndStoreTokensAsync(user.Id, user);
