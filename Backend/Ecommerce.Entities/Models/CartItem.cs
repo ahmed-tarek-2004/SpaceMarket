@@ -10,7 +10,7 @@ namespace Ecommerce.Entities.Models
     {
         public Guid Id { get; set; }
         public Guid CartId { get; set; }
-        public string ServiceId { get; set; }
+        public Guid ServiceId { get; set; }
         public Guid DatasetId { get; set; }
         public int Quantity { get; set; } = 1;
         public decimal PriceSnapshot { get; set; }
