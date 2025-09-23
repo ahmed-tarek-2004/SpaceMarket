@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Ecommerce.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class AddingServiceToCartItem : Migration
+    public partial class AddServiceToCartItem : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
