@@ -123,7 +123,7 @@ namespace Ecommerce.API.Controllers
 
 
         [HttpPost("register/provider")]
-        public async Task<ActionResult<Response<RegisterServiceProviderResponse>>> Create([FromForm] RegisterServiceProviderRequest request, CancellationToken cancellationToken)
+        public async Task<ActionResult<Response<RegisterServiceProviderResponse>>> RegisterAsProvider([FromForm] RegisterServiceProviderRequest request, CancellationToken cancellationToken)
         {
 
             ValidationResult validationResult = await _registerProviderValidator.ValidateAsync(request);
