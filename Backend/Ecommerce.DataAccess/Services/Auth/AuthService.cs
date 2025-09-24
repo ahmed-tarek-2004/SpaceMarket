@@ -66,6 +66,7 @@ namespace Ecommerce.DataAccess.Services.Auth
             {
                 var otp = await _otpService.GenerateAndStoreOtpAsync(user.Id);
                 await _emailService.SendOtpEmailAsync(user, otp);
+                _logger.LogInformation($"Otp Sent is : {otp}");
                 return _responseHandler.Success<LoginResponse>(null, "OTP sent to your email. Please provide the OTP to complete login.");
             }
 
@@ -73,7 +74,7 @@ namespace Ecommerce.DataAccess.Services.Auth
             var roles = await _userManager.GetRolesAsync(user);
 
 
-            //// Verify OTP
+            // Verify OTP
             var isOtpValid = await _otpService.ValidateOtpAsync(user.Id, loginRequest.Otp);
             if (!isOtpValid)
                 return _responseHandler.BadRequest<LoginResponse>("Invalid or expired OTP.");
@@ -212,7 +213,7 @@ namespace Ecommerce.DataAccess.Services.Auth
                 _logger.LogInformation($"Client Adding Result is : {createdClientResult.State}");
 
 
-                var tokens = await _tokenStoreService.GenerateAndStoreTokensAsync(user.Id, user);
+               // var tokens = await _tokenStoreService.GenerateAndStoreTokensAsync(user.Id, user);
 
                 var otp = await _otpService.GenerateAndStoreOtpAsync(user.Id);
 
