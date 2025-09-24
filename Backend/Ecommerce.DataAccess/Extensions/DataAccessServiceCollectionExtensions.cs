@@ -1,19 +1,18 @@
-﻿using System.Net;
-using System.Net.Mail;
-
-using Ecommerce.DataAccess.ApplicationContext;
+﻿using Ecommerce.DataAccess.ApplicationContext;
 using Ecommerce.DataAccess.Services.Auth;
 using Ecommerce.DataAccess.Services.Cart;
 using Ecommerce.DataAccess.Services.Email;
 using Ecommerce.DataAccess.Services.ImageUploading;
 using Ecommerce.DataAccess.Services.OAuth;
 using Ecommerce.DataAccess.Services.OTP;
+using Ecommerce.DataAccess.Services.ServiceCategory;
 using Ecommerce.DataAccess.Services.Token;
 using Ecommerce.Utilities.Configurations;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net;
+using System.Net.Mail;
 
 namespace Ecommerce.DataAccess.Extensions
 {
@@ -29,6 +28,7 @@ namespace Ecommerce.DataAccess.Extensions
         }
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+            services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IOTPService, OTPService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IImageUploadService, CloudinaryImageUploadService>();

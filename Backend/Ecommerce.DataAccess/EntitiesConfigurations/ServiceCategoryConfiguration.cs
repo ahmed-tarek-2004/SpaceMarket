@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Ecommerce.Entities.Models;
+﻿using Ecommerce.Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,6 +12,13 @@ namespace Ecommerce.DataAccess.EntitiesConfigurations
 
             builder.Property(sc => sc.Name).IsRequired().HasMaxLength(100);
             builder.Property(sc => sc.Description).HasMaxLength(500);
+
+            builder.Property(sc => sc.IsDeleted).HasDefaultValue(false);
+
+            builder.HasMany(sc => sc.Services)
+                .WithOne(s => s.Category)
+                .HasForeignKey(s => s.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict); // Prevent deletion if services exist
 
             builder.Property(sc => sc.CreatedAt).IsRequired();
             builder.Property(sc => sc.UpdatedAt);
