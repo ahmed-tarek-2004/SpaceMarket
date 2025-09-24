@@ -18,7 +18,7 @@ namespace Ecommerce.DataAccess.EntitiesConfigurations
             builder.Property(s => s.Title).IsRequired().HasMaxLength(100);
             builder.Property(s => s.Description).HasMaxLength(500);
             builder.Property(s => s.Price).HasColumnType("decimal(18,2)");
-            builder.Property(s => s.ImagesUrlJson).HasMaxLength(1000);
+            builder.Property(s => s.ImagesUrl).HasMaxLength(1000);
 
             // Enum as string with max length
             builder.Property(s => s.Status)
