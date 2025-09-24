@@ -1,4 +1,5 @@
-﻿using Ecommerce.DataAccess.ApplicationContext;
+﻿using Azure.Core;
+using Ecommerce.DataAccess.ApplicationContext;
 using Ecommerce.DataAccess.Services.Email;
 using Ecommerce.DataAccess.Services.ImageUploading;
 using Ecommerce.Entities.DTO.ServiceCatalog;
@@ -270,8 +271,15 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                 if (!string.IsNullOrEmpty(filter.ProviderId))
                     query = query.Where(s => s.ProviderId == filter.ProviderId);
 
-                if (!string.IsNullOrEmpty(filter.Status))
-                    query = query.Where(s => s.Status.ToString() == filter.Status);
+                if (!string.IsNullOrWhiteSpace(filter.Status))
+                {
+                    if (!Enum.TryParse<ServiceStatus>(filter.Status, true, out var parsedStatus))
+                    {
+                        return _responseHandler.BadRequest<List<AdminServiceResponse>>("Invalid status value.");
+                    }
+
+                    query = query.Where(s => s.Status == parsedStatus);
+                }
 
                 var services = await query
                     .OrderByDescending(s => s.CreatedAt)
@@ -291,7 +299,7 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
 
                 return _responseHandler.Success(services, "Services fetched successfully.");
             }
-            catch (Exception ex)
+              catch (Exception ex)
             {
                 _logger.LogError(ex, "Error fetching all services for admin");
                 return _responseHandler.ServerError<List<AdminServiceResponse>>("An error occurred while fetching services.");

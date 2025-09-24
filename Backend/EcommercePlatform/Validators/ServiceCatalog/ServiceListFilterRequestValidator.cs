@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Entities.DTO.ServiceCatalog;
+using Ecommerce.Utilities.Enums;
 using FluentValidation;
 
 namespace Ecommerce.API.Validators.ServiceCatalog
@@ -8,10 +9,9 @@ namespace Ecommerce.API.Validators.ServiceCatalog
         public ServiceListFilterRequestValidator()
         {
             RuleFor(x => x.Status)
-                .Must(status => string.IsNullOrEmpty(status) ||
-                                new[] { "Active", "PendingApproval", "Suspended" }
-                                .Contains(status))
-                .WithMessage("Invalid status filter.");
+                .NotEmpty().WithMessage("Status is required.")
+                .Must(status => Enum.TryParse<ServiceStatus>(status, true, out _))
+                .WithMessage("Invalid status value. Allowed: PendingApproval, Active, Suspended.");
         }
     }
 }
