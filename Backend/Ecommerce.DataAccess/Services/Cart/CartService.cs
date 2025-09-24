@@ -341,7 +341,7 @@ namespace Ecommerce.DataAccess.Services.Cart
                 ProviderName = ci.Service?.Provider?.CompanyName??"Empty",
                 UnitPrice = ci.Service?.Price??ci.PriceSnapshot,
                 Quantity = ci.Quantity,
-                ImageUrl = ci.Service?.ImagesUrlJson??"Empty",
+                ImageUrl = ci.Service?.ImagesUrl??"Empty",
                 Total = ci.Service.Price * ci.Quantity,
             }).ToList();
 

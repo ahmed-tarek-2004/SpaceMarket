@@ -12,8 +12,8 @@ public class ServiceCategoryController(ResponseHandler responseHandler, ICategor
     private readonly ResponseHandler _responseHandler = responseHandler;
     private readonly ICategoryService _categoryService = categoryService;
 
-    [HttpPost("")]
-    [Authorize(Roles = "ServiceProvider")]
+    [HttpPost("create")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> AddServiceCategory([FromBody] CreateServiceCategoryRequest request, CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid)
@@ -49,7 +49,7 @@ public class ServiceCategoryController(ResponseHandler responseHandler, ICategor
 
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = "ServiceProvider")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateServiceCategory(Guid id, [FromBody] UpdateServiceCategoryRequest dto)
     {
         if (!ModelState.IsValid)
@@ -60,7 +60,7 @@ public class ServiceCategoryController(ResponseHandler responseHandler, ICategor
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = "ServiceProvider")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteServiceCategory(Guid id)
     {
         var result = await _categoryService.DeleteServiceCategoryAsync(id);

@@ -25,16 +25,20 @@ namespace Ecommerce.API.Validators.ServiceCatalog
                 .NotEmpty().WithMessage("Category is required.");
 
             RuleFor(x => x.Image)
-                .NotNull().WithMessage("Image is required.")
+                .NotNull().WithMessage("Image is required.");
+
+            RuleFor(x => x.Image)
                 .Must(file =>
                 {
-                    if (file == null) return false;
-
                     var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
                     return _allowedExtensions.Contains(ext);
                 })
-                .WithMessage($"Image must be one of the following types: {string.Join(", ", _allowedExtensions)}")
+                .When(x => x.Image != null) 
+                .WithMessage($"Image must be one of the following types: {string.Join(", ", _allowedExtensions)}");
+
+            RuleFor(x => x.Image)
                 .Must(file => file.Length <= _maxFileSize)
+                .When(x => x.Image != null) 
                 .WithMessage("Image size must be less than or equal to 5 MB.");
         }
     }
