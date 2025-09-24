@@ -73,6 +73,26 @@ namespace Ecommerce.DataAccess.Services.ImageUploading
 
             return result.Url?.ToString() ?? throw new Exception("Cloudinary returned empty URL.");
         }
+        public async Task<bool> DeleteAsync(string publicId)
+        {
+            if (string.IsNullOrWhiteSpace(publicId))
+                throw new ArgumentException("PublicId is required to delete the resource.");
+
+            var deletionParams = new DeletionParams(publicId)
+            {
+                ResourceType = ResourceType.Image 
+            };
+
+            var deletionResult = await _cloudinary.DestroyAsync(deletionParams);
+
+            if (deletionResult == null)
+                throw new Exception("Cloudinary deletion result was null.");
+
+            if (deletionResult.Error != null)
+                throw new Exception($"Cloudinary error occurred during deletion: {deletionResult.Error.Message}");
+
+            return deletionResult.Result == "ok";
+        }
 
 
     }

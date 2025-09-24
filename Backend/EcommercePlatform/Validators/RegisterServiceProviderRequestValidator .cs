@@ -37,19 +37,21 @@ public class RegisterServiceProviderRequestValidator : AbstractValidator<Registe
             .When(x => !string.IsNullOrEmpty(x.WebsiteUrl));
 
         RuleFor(x => x.CertificationFiles)
-            .NotEmpty().WithMessage("At least one certificate is required.")
+            .NotEmpty().WithMessage("At least one certificate/image is required.")
             .Must(certs => certs.Count <= MaxFileCount)
-            .WithMessage($"A maximum of {MaxFileCount} certificates are allowed.");
+            .WithMessage($"A maximum of {MaxFileCount} certificates/images are allowed.");
 
         RuleForEach(x => x.CertificationFiles).ChildRules(cert =>
         {
             cert.RuleFor(f => f.Length)
                 .LessThanOrEqualTo(MaxFileSizeMB * 1024 * 1024)
-                .WithMessage($"Each certificate must be less than {MaxFileSizeMB} MB.");
+                .WithMessage($"Each certificate/image must be less than {MaxFileSizeMB} MB.");
 
             cert.RuleFor(f => f.ContentType)
-                .Equal("application/pdf")
-                .WithMessage("Only PDF files are allowed.");
+                .Must(ct => new[] { "image/png", "image/jpg", "image/jpeg", "image/jfif" }
+                                .Contains(ct.ToLower()))
+                .WithMessage("Only image files (.png, .jpg, .jpeg, .jfif) are allowed.");
         });
+
     }
 }
