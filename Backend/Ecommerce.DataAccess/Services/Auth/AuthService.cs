@@ -66,6 +66,7 @@ namespace Ecommerce.DataAccess.Services.Auth
             {
                 var otp = await _otpService.GenerateAndStoreOtpAsync(user.Id);
                 await _emailService.SendOtpEmailAsync(user, otp);
+                _logger.LogInformation($"Otp Sent is : {otp}");
                 return _responseHandler.Success<LoginResponse>(null, "OTP sent to your email. Please provide the OTP to complete login.");
             }
 

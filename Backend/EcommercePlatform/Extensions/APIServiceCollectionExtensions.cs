@@ -1,21 +1,19 @@
-﻿using System.Text;
-using System.Threading.RateLimiting;
-
 using Ecommerce.API.Validators;
 using Ecommerce.API.Validators.ServiceCatalog;
 using Ecommerce.DataAccess.ApplicationContext;
 using Ecommerce.Entities.DTO.ServiceCatalog;
 using Ecommerce.Entities.Models.Auth.Identity;
 using Ecommerce.Utilities.Configurations;
-
+using FluentValidation;
 using FluentValidation.AspNetCore;
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-
 using Serilog;
+using System.Reflection;
+using System.Text;
+using System.Threading.RateLimiting;
 
 namespace Ecommerce.API.Extensions
 {
@@ -112,22 +110,21 @@ namespace Ecommerce.API.Extensions
         }
         public static IServiceCollection AddFluentValidation(this IServiceCollection services)
         {
-            services.AddControllers().AddFluentValidation(fv =>
-            {
-                fv.RegisterValidatorsFromAssemblyContaining<RegisterRequestValidator>();
-                fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>();
-                fv.RegisterValidatorsFromAssemblyContaining<ForgetPasswordRequestValidator>();
-                fv.RegisterValidatorsFromAssemblyContaining<ResetPasswordRequestValidator>();
-                fv.RegisterValidatorsFromAssemblyContaining<ChangePasswordRequestValidator>();
-                fv.RegisterValidatorsFromAssemblyContaining<UpdateServiceRequestValidator>();
-                fv.RegisterValidatorsFromAssemblyContaining<ServiceMetricsFilterRequestValidator>();
-                fv.RegisterValidatorsFromAssemblyContaining<CreateServiceRequestValidator>();
-                fv.RegisterValidatorsFromAssemblyContaining<UpdateServiceStatusRequestValidator>();
-                fv.RegisterValidatorsFromAssemblyContaining<ServiceListFilterRequestValidator>();
-
-
-
-            });
+//             services.AddControllers().AddFluentValidation(fv =>
+//             {
+//                 fv.RegisterValidatorsFromAssemblyContaining<RegisterRequestValidator>();
+//                 fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>();
+//                 fv.RegisterValidatorsFromAssemblyContaining<ForgetPasswordRequestValidator>();
+//                 fv.RegisterValidatorsFromAssemblyContaining<ResetPasswordRequestValidator>();
+//                 fv.RegisterValidatorsFromAssemblyContaining<ChangePasswordRequestValidator>();
+//                 fv.RegisterValidatorsFromAssemblyContaining<UpdateServiceRequestValidator>();
+//                 fv.RegisterValidatorsFromAssemblyContaining<ServiceMetricsFilterRequestValidator>();
+//                 fv.RegisterValidatorsFromAssemblyContaining<CreateServiceRequestValidator>();
+//                 fv.RegisterValidatorsFromAssemblyContaining<UpdateServiceStatusRequestValidator>();
+//                 fv.RegisterValidatorsFromAssemblyContaining<ServiceListFilterRequestValidator>();
+//             });
+            services.AddFluentValidationAutoValidation()
+             .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             return services;
         }
         public static IServiceCollection AddResendOtpRateLimiter(this IServiceCollection services)

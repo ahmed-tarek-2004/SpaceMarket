@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Ecommerce.Entities.Models.Auth.Users;
 using Ecommerce.Utilities.Enums;
@@ -26,6 +27,7 @@ namespace Ecommerce.Entities.Models
         public DateTime? DeletedAt { get; set; }
 
         public ICollection<CartItem> CartItems {  get; set; }
+        
         public ServiceProvider Provider { get; set; }
         public ServiceCategory Category { get; set; }
     }
