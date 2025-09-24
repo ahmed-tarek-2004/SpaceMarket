@@ -288,10 +288,11 @@ namespace Ecommerce.DataAccess.Services.Auth
                 {
                     foreach (var file in registerRequest.CertificationFiles)
                     {
-                        if (file.ContentType != "application/pdf")
+                        var allowedImageTypes = new[] { "image/png", "image/jpg", "image/jpeg", "image/jfif" };
+                        if (!allowedImageTypes.Contains(file.ContentType.ToLower()))
                         {
                             return _responseHandler.BadRequest<RegisterServiceProviderResponse>(
-                                "Only PDF files are allowed for certifications."
+                                "Only image files (.png, .jpg, .jpeg, .jfif) are allowed for certifications."
                             );
                         }
 
@@ -300,6 +301,7 @@ namespace Ecommerce.DataAccess.Services.Auth
                     }
                 }
 
+
                 var serviceProvider = new ServiceProvider
                 {
                     Id = identityUser.Id,
@@ -307,7 +309,7 @@ namespace Ecommerce.DataAccess.Services.Auth
                     CompanyName = registerRequest.CompanyName,
                     WebsiteUrl = registerRequest.WebsiteUrl ?? string.Empty,
                     CertificationsUrls = certificationUrls,
-                    Status = ServiceProviderStatus.Suspended,
+                    Status = ServiceProviderStatus.Suspended, 
                     CreatedAt = DateTime.UtcNow
                 };
                 await _context.ServiceProviders.AddAsync(serviceProvider, cancellationToken);

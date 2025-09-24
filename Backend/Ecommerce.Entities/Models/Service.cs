@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Ecommerce.Entities.Models.Auth.Users;
 using Ecommerce.Utilities.Enums;
+using Microsoft.AspNetCore.Http;
 namespace Ecommerce.Entities.Models
 {
     public class Service
@@ -16,7 +17,7 @@ namespace Ecommerce.Entities.Models
         public string Description { get; set; }
         public Guid CategoryId { get; set; }
         public decimal Price { get; set; }
-        public string ImagesUrlJson { get; set; }
+        public string ImagesUrl { get; set; }
         public ServiceStatus Status { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
