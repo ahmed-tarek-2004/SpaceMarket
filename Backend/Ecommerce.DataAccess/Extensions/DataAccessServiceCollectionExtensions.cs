@@ -4,6 +4,7 @@ using Ecommerce.DataAccess.Services.Cart;
 using Ecommerce.DataAccess.Services.Email;
 using Ecommerce.DataAccess.Services.ImageUploading;
 using Ecommerce.DataAccess.Services.OAuth;
+using Ecommerce.DataAccess.Services.Order;
 using Ecommerce.DataAccess.Services.OTP;
 using Ecommerce.DataAccess.Services.ServiceCatalog;
 using Ecommerce.DataAccess.Services.ServiceCategory;
@@ -37,7 +38,8 @@ namespace Ecommerce.DataAccess.Extensions
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<IAuthGoogleService, AuthGoogleService>();
-            services.AddScoped<IServiceCatalogService, ServiceCatalogService>();    
+            services.AddScoped<IServiceCatalogService, ServiceCatalogService>();
+            services.AddScoped<IOrderService, OrderService>();
 
             return services;
         }
@@ -52,10 +54,10 @@ namespace Ecommerce.DataAccess.Extensions
                     Port = emailSettings.SmtpPort,
                     Credentials = new NetworkCredential(emailSettings.Username, emailSettings.Password),
                     EnableSsl = emailSettings.EnableSsl,
-                    UseDefaultCredentials = false,           
+                    UseDefaultCredentials = false,
                 });
 
-            return services; 
+            return services;
         }
     }
 }

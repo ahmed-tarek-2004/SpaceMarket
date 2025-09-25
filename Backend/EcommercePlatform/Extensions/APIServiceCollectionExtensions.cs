@@ -1,9 +1,9 @@
 using Ecommerce.API.Validators;
-using Ecommerce.API.Validators.ServiceCatalog;
 using Ecommerce.DataAccess.ApplicationContext;
-using Ecommerce.Entities.DTO.ServiceCatalog;
+using Ecommerce.Entities.DTO.Shared;
 using Ecommerce.Entities.Models.Auth.Identity;
 using Ecommerce.Utilities.Configurations;
+using Ecommerce.Utilities.Enums;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -110,19 +110,20 @@ namespace Ecommerce.API.Extensions
         }
         public static IServiceCollection AddFluentValidation(this IServiceCollection services)
         {
-//             services.AddControllers().AddFluentValidation(fv =>
-//             {
-//                 fv.RegisterValidatorsFromAssemblyContaining<RegisterRequestValidator>();
-//                 fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>();
-//                 fv.RegisterValidatorsFromAssemblyContaining<ForgetPasswordRequestValidator>();
-//                 fv.RegisterValidatorsFromAssemblyContaining<ResetPasswordRequestValidator>();
-//                 fv.RegisterValidatorsFromAssemblyContaining<ChangePasswordRequestValidator>();
-//                 fv.RegisterValidatorsFromAssemblyContaining<UpdateServiceRequestValidator>();
-//                 fv.RegisterValidatorsFromAssemblyContaining<ServiceMetricsFilterRequestValidator>();
-//                 fv.RegisterValidatorsFromAssemblyContaining<CreateServiceRequestValidator>();
-//                 fv.RegisterValidatorsFromAssemblyContaining<UpdateServiceStatusRequestValidator>();
-//                 fv.RegisterValidatorsFromAssemblyContaining<ServiceListFilterRequestValidator>();
-//             });
+            //             services.AddControllers().AddFluentValidation(fv =>
+            //             {
+            //                 fv.RegisterValidatorsFromAssemblyContaining<RegisterRequestValidator>();
+            //                 fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>();
+            //                 fv.RegisterValidatorsFromAssemblyContaining<ForgetPasswordRequestValidator>();
+            //                 fv.RegisterValidatorsFromAssemblyContaining<ResetPasswordRequestValidator>();
+            //                 fv.RegisterValidatorsFromAssemblyContaining<ChangePasswordRequestValidator>();
+            //                 fv.RegisterValidatorsFromAssemblyContaining<UpdateServiceRequestValidator>();
+            //                 fv.RegisterValidatorsFromAssemblyContaining<ServiceMetricsFilterRequestValidator>();
+            //                 fv.RegisterValidatorsFromAssemblyContaining<CreateServiceRequestValidator>();
+            //                 fv.RegisterValidatorsFromAssemblyContaining<UpdateServiceStatusRequestValidator>();
+            //                 fv.RegisterValidatorsFromAssemblyContaining<ServiceListFilterRequestValidator>();
+            //             });
+            services.AddScoped<IValidator<RequestFilters<OrderSorting>>, RequestFiltersValidator<OrderSorting>>();
             services.AddFluentValidationAutoValidation()
              .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             return services;
