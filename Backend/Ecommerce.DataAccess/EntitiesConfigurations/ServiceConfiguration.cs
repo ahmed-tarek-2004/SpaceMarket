@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Ecommerce.Entities.Models;
+﻿using Ecommerce.Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -18,7 +13,7 @@ namespace Ecommerce.DataAccess.EntitiesConfigurations
             builder.Property(s => s.Title).IsRequired().HasMaxLength(100);
             builder.Property(s => s.Description).HasMaxLength(500);
             builder.Property(s => s.Price).HasColumnType("decimal(18,2)");
-            builder.Property(s => s.ImagesUrlJson).HasMaxLength(1000);
+            builder.Property(s => s.ImagesUrl).HasMaxLength(1000);
 
             // Enum as string with max length
             builder.Property(s => s.Status)

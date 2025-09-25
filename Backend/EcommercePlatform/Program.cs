@@ -1,4 +1,3 @@
-
 using Ecommerce.API.Extensions;
 using Ecommerce.DataAccess.ApplicationContext;
 using Ecommerce.DataAccess.Extensions;
@@ -34,6 +33,7 @@ namespace EcommercePlatform
             builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
             builder.Services.Configure<GoogleAuthSettings>(builder.Configuration.GetSection("Authorization:Google"));
+            //builder.Services.Configure<UploadcareSettings>(builder.Configuration.GetSection("Uploadcare"));
 
             builder.Services.AddApplicationServices();
             builder.Services.AddScoped<ResponseHandler>();
@@ -45,6 +45,19 @@ namespace EcommercePlatform
 
             // Rate limiter for otp resend
             builder.Services.AddResendOtpRateLimiter();
+
+            // Add CORS services
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngularApp",
+                    policy =>
+                    {
+                        policy.WithOrigins("http://localhost:4200")
+                              .AllowAnyHeader()
+                              .AllowAnyMethod()
+                              .AllowCredentials();
+                    });
+            });
 
             builder.Services.AddDataProtection()
                 .PersistKeysToDbContext<ApplicationDbContext>()
@@ -75,13 +88,16 @@ namespace EcommercePlatform
             }
             #endregion
 
-            if (app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors("AllowAngularApp");
+
             app.UseAuthentication();
             app.UseAuthorization();
 

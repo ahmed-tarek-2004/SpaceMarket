@@ -43,6 +43,7 @@ namespace Ecommerce.DataAccess.ApplicationContext
         public DbSet<ServiceCategory> ServiceCategories { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Withdrawal> Withdrawals { get; set; }
+        public DbSet<ServiceMetricEvent> ServiceMetrics { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -71,6 +72,7 @@ namespace Ecommerce.DataAccess.ApplicationContext
             modelBuilder.ApplyConfiguration(new ServiceCategoryConfiguration());
             modelBuilder.ApplyConfiguration(new TransactionConfiguration());
             modelBuilder.ApplyConfiguration(new WithdrawalConfiguration());
+            modelBuilder.ApplyConfiguration(new ServiceMetricEventConfiguration());
 
             // Additional configurations for Identity if needed
             modelBuilder.Entity<User>()

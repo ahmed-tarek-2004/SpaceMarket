@@ -58,5 +58,50 @@ namespace Ecommerce.DataAccess.Services.Email
                 throw;
             }
         }
+        public async Task SendServiceStatusChangedEmailAsync(User user, string serviceTitle, string newStatus, string? reason)
+        {
+            try
+            {
+                var rootPath = Directory.GetCurrentDirectory();
+                var templatePath = Path.Combine(rootPath, "wwwroot", "EmailTemplates", "ServiceStatusChangedEmail.html");
+
+                if (!File.Exists(templatePath))
+                {
+                    _logger.LogError($"ServiceStatusChanged Email Template not found at path: {templatePath}");
+                    throw new FileNotFoundException("ServiceStatusChanged Email Template not found.", templatePath);
+                }
+
+                var emailTemplate = await File.ReadAllTextAsync(templatePath);
+
+                emailTemplate = emailTemplate
+                    .Replace("{ProviderName}", user.UserName ?? user.Email ?? "User")
+                    .Replace("{ServiceTitle}", serviceTitle)
+                    .Replace("{NewStatus}", newStatus)
+                    .Replace("{Reason}", reason ?? "N/A")
+                    .Replace("{PlatformName}", "Ecommerce Platform")
+                    .Replace("{CurrentYear}", DateTime.UtcNow.Year.ToString());
+
+                var sendResult = await _fluentEmail
+                    .To(user.Email)
+                    .Subject($"Your Service Status Changed to {newStatus}")
+                    .Body(emailTemplate, isHtml: true)
+                    .SendAsync();
+
+                if (!sendResult.Successful)
+                {
+                    _logger.LogError($"Failed to send Service Status Changed email to {user.Email}. Errors: {string.Join(", ", sendResult.ErrorMessages)}");
+                    throw new Exception("Failed to send Service Status Changed email.");
+                }
+
+                _logger.LogInformation($"Service status changed email successfully sent to {user.Email}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while sending Service Status Changed email to {user.Email}");
+                throw;
+            }
+        }
+
     }
 }
+
