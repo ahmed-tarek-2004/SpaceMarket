@@ -1,3 +1,55 @@
-<p>
-  sign-in-form works!
-</p>
+<form [formGroup]="signInForm" (ngSubmit)="onSubmit()">
+  <!-- Email -->
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input
+      type="email"
+      id="email"
+      formControlName="email"
+      placeholder="your@email.com"
+      autocomplete="username"
+    />
+    @if (email?.invalid && (email?.dirty || email?.touched)) {
+      <div class="error">{{ getError(email) }}</div>
+    }
+  </div>
+
+  <!-- Password -->
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input
+      type="password"
+      id="password"
+      formControlName="password"
+      placeholder="••••••••"
+      autocomplete="current-password"
+    />
+    @if (password?.invalid && (password?.dirty || password?.touched)) {
+      <div class="error">{{ getError(password) }}</div>
+    }
+  </div>
+
+  @if (facade.getError()) {
+    <div class="auth-error">
+      {{ facade.getError() }}
+    </div>
+  }
+
+  
+
+  <!-- Remember & Forgot -->
+  <div class="remember-forgot">
+    <label class="remember-me">
+      <input type="checkbox" name="remember" /> Remember me
+    </label>
+<button type="button" class="forgot-link-btn" (click)="goToForgotPassword()">Forgot password?</button> </div>
+
+  <!-- Submit Button -->
+  <button type="submit" [disabled]="signInForm.invalid || facade.getIsLoading()">
+    @if (facade.getIsLoading()) {
+      Signing in...
+    } @else {
+      Sign In
+    }
+  </button>
+</form>

@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard'; 
 
 export const routes: Routes = [
   { 
@@ -12,6 +13,6 @@ export const routes: Routes = [
     loadChildren: () => 
       import('./features/auth/auth.routing').then(m => m.AUTH_ROUTES)
   },
-  // Add other routes here
-  { path: '**', redirectTo: '' }
-];
+  { path: '', redirectTo: '/auth/sign-in', pathMatch: 'full' },
+  { path: '**', redirectTo: '/auth/sign-in' }
+]

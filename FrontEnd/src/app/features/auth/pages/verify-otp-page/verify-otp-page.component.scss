@@ -9,6 +9,7 @@
   position: relative;
   overflow: hidden;
 }
+
 .auth-container::before {
   content: '';
   position: absolute;
@@ -57,11 +58,6 @@
   animation: shoot 3s ease-in-out infinite;
 }
 
-@keyframes stars-move {
-  from { transform: translateY(0); }
-  to { transform: translateY(-10%); }
-}
-
 @keyframes twinkle {
   from { opacity: 0.4; }
   to { opacity: 1; }
@@ -84,58 +80,54 @@
   }
 }
 
+.logo-section {
+  text-align: center;
+  margin-bottom: 2rem;
+  z-index: 2;
+  color: white;
 
-  .logo-section {
+  .brand {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; 
+  }
+
+  i {
+    color: #00c8ff;
+    font-size: 28px;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+    color: #fff;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    color: #ccc;
+    margin-top: 0.5rem;
+    font-weight: 500;
+  }
+}
+
+.form-card {
+  background: #F3F3F4; 
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 380px;
+  padding: 2rem;
+  z-index: 2;
+  animation: fadeIn 0.8s ease; 
+
+  h3 {
     text-align: center;
-    margin-bottom: 2rem;
-    z-index: 2;
-    color: white;
-
-    .logo {
-      width: 40px;
-      height: 40px;
-      margin-bottom: 0.5rem;
-    }
-
-    h2 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin: 0;
-      color: #fff;
-    }
-
-    .subtitle {
-      font-size: 1rem;
-      color: #ccc;
-      margin-top: 0.5rem;
-      font-weight: 500;
-    }
-    i{
-        color: #00c8ff;
-        float: left;
-        margin-top: 10px;
-        font-size: 25px;
-    }
+    margin-bottom: 1.8rem;
+    color: #17173f;
+    font-size: 1.6rem;
+    font-weight: 700;
   }
-
- 
-
-  .form-card {
-    background: #F3F3F4;
-    border-radius: 8px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    max-width: 400px;
-    padding: 1.5rem;
-    z-index: 2;
-    height: 450px;
-    
-
-    h3 {
-      text-align: center;
-      margin-bottom: 1.5rem;
-      color: #000000;
-      font-size: 1.7rem;
-      font-weight: bolder;
-    }
-  }
+}

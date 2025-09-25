@@ -1,2 +1,7 @@
-export interface ObjectApiResponse {
+export interface ApiResponse<T> {
+  data: T;
+  message: string;
+  statusCode: number;
+  errors: string[];
+  succeeded: boolean;
 }

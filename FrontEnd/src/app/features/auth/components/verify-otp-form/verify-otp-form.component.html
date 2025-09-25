@@ -1,0 +1,41 @@
+<form [formGroup]="otpForm" (ngSubmit)="onSubmit()">
+  <div class="otp-inputs">
+    <input
+      #digit1
+      type="text"
+      id="otp-1"
+      inputmode="numeric"
+      maxlength="1"
+      autocomplete="one-time-code" 
+      formControlName="digit1"
+      (input)="onDigitInput(0)"
+      (keydown.backspace)="onBackspace(0)"
+    />
+    <input
+      #digit2
+      type="text"
+      id="otp-2"
+      inputmode="numeric"
+      maxlength="1"
+      formControlName="digit2"
+      (input)="onDigitInput(1)"
+      (keydown.backspace)="onBackspace(1)"
+    />
+    <input #digit3 type="text" id="otp-3" inputmode="numeric" maxlength="1" formControlName="digit3" (input)="onDigitInput(2)" (keydown.backspace)="onBackspace(2)" />
+    <input #digit4 type="text" id="otp-4" inputmode="numeric" maxlength="1" formControlName="digit4" (input)="onDigitInput(3)" (keydown.backspace)="onBackspace(3)" />
+    <input #digit5 type="text" id="otp-5" inputmode="numeric" maxlength="1" formControlName="digit5" (input)="onDigitInput(4)" (keydown.backspace)="onBackspace(4)" />
+    <input #digit6 type="text" id="otp-6" inputmode="numeric" maxlength="1" formControlName="digit6" (input)="onDigitInput(5)" (keydown.backspace)="onBackspace(5)" />
+  </div>
+
+  @if (errorMessage) {
+    <div class="auth-error">{{ errorMessage }}</div>
+  }
+
+  <button type="submit" [disabled]="!isOtpComplete() || isLoading">
+    @if (isLoading) {
+      Verifying...
+    } @else {
+      Verify OTP
+    }
+  </button>
+</form>
