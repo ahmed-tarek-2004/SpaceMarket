@@ -213,7 +213,7 @@ namespace Ecommerce.DataAccess.Services.Auth
                 _logger.LogInformation($"Client Adding Result is : {createdClientResult.State}");
 
 
-               // var tokens = await _tokenStoreService.GenerateAndStoreTokensAsync(user.Id, user);
+                // var tokens = await _tokenStoreService.GenerateAndStoreTokensAsync(user.Id, user);
 
                 var otp = await _otpService.GenerateAndStoreOtpAsync(user.Id);
 
@@ -309,7 +309,7 @@ namespace Ecommerce.DataAccess.Services.Auth
                     CompanyName = registerRequest.CompanyName,
                     WebsiteUrl = registerRequest.WebsiteUrl ?? string.Empty,
                     CertificationsUrls = certificationUrls,
-                    Status = ServiceProviderStatus.Suspended, 
+                    Status = ServiceProviderStatus.PendingApproval,
                     CreatedAt = DateTime.UtcNow
                 };
                 await _context.ServiceProviders.AddAsync(serviceProvider, cancellationToken);
