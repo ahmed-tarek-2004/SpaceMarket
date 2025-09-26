@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ecommerce.Entities.DTO.ServiceCatalog;
+using Ecommerce.Entities.Shared;
 using Ecommerce.Entities.Shared.Bases;
 
 namespace Ecommerce.DataAccess.Services.ServiceCatalog
@@ -17,7 +18,7 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
         Task<Response<List<ServiceMetricsResponse>>> GetServiceMetricsAsync(string providerId, ServiceMetricsFilterRequest filter);
         Task<Response<List<AdminServiceResponse>>> GetAllServicesAsync(ServiceListFilterRequest filter);
         Task<Response<bool>> UpdateServiceStatusAsync(UpdateServiceStatusRequest request, string adminId);
-
-
+        public Task<Response<PaginatedList<ServiceFilterResponse>>> GetAvailableServicesAsync(ServiceFilterRequest filter);
+        public  Task<Response<ServiceResponse>> GetServiceDetailAsync(Guid serviceId);
     }
 }

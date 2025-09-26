@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+﻿using Azure.Core;
 using Ecommerce.DataAccess.Services.ServiceCatalog;
 using Ecommerce.Entities.DTO.ServiceCatalog;
 using Ecommerce.Entities.Shared.Bases;
@@ -6,6 +6,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -18,7 +19,7 @@ public class ServiceController : ControllerBase
     private readonly IValidator<ServiceMetricsFilterRequest> _metricsValidator;
     private readonly IValidator<UpdateServiceStatusRequest> _statusValidator;
     private readonly IValidator<ServiceListFilterRequest> _listFilterValidator;
-
+    private readonly IValidator<ServiceFilterRequest> _filterValidator;
 
 
     public ServiceController(IServiceCatalogService serviceCatalogService,
@@ -27,7 +28,8 @@ public class ServiceController : ControllerBase
                              IValidator<UpdateServiceRequest> updateValidator,
                              IValidator<ServiceMetricsFilterRequest> metricsValidator,
                              IValidator<UpdateServiceStatusRequest> statusValidator,
-                             IValidator<ServiceListFilterRequest> listFilterValidator)
+                             IValidator<ServiceListFilterRequest> listFilterValidator,
+                             IValidator<ServiceFilterRequest> filterValidator)
     {
         _serviceCatalogService = serviceCatalogService;
         _responseHandler = responseHandler;
@@ -36,6 +38,7 @@ public class ServiceController : ControllerBase
         _metricsValidator = metricsValidator;
         _statusValidator = statusValidator;
         _listFilterValidator = listFilterValidator;
+        _filterValidator = filterValidator;
     }
 
     [HttpPost("create")]
@@ -154,4 +157,36 @@ public class ServiceController : ControllerBase
         var response = await _serviceCatalogService.UpdateServiceStatusAsync(request, adminId);
         return StatusCode((int)response.StatusCode, response);
     }
+    /// <summary>
+    /// Ckient End Point For Retreving The Service
+    /// </summary>
+    
+    [HttpGet("client/available-service")]
+    [Authorize(Roles ="Client")]
+    public async Task<ActionResult<List<ServiceFilterResponse>>> GetAvailableServicesAsync([FromQuery]ServiceFilterRequest filter)
+    {
+        ValidationResult validationResult = await _filterValidator.ValidateAsync(filter);
+        if (!validationResult.IsValid)
+        {
+            var errors = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage));
+            return StatusCode((int)_responseHandler.BadRequest<object>(errors).StatusCode,
+                              _responseHandler.BadRequest<object>(errors));
+        }
+        var response = await _serviceCatalogService.GetAvailableServicesAsync(filter);
+        return StatusCode((int)response.StatusCode, response);
+    }
+
+    [HttpGet("client/service-detail/{serviceId}")]
+    [Authorize(Roles ="Client")]
+    public async Task<ActionResult<ServiceResponse>> GetDetailedServiceAsync([FromRoute]Guid serviceId)
+    {
+       if(string.IsNullOrEmpty(serviceId.ToString()))
+        {
+            return StatusCode((int)_responseHandler.BadRequest<object>().StatusCode,
+                             _responseHandler.BadRequest<object>("Service Must Not Be Empty"));
+        }
+        var response = await _serviceCatalogService.GetServiceDetailAsync(serviceId);
+        return StatusCode((int)response.StatusCode, response);
+    }
+
 }

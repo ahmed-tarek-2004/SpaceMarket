@@ -31,6 +31,11 @@ namespace Ecommerce.DataAccess.EntitiesConfigurations
                 .WithMany()
                 .HasForeignKey(oi => oi.DatasetId)
                 .OnDelete(DeleteBehavior.Restrict); // Restrict delete to preserve order history
+
+            builder.HasOne(oi => oi.Service)
+                .WithMany(oi=>oi.OrderItems)
+                .HasForeignKey(oi => oi.ServiceId)
+                .OnDelete(DeleteBehavior.Restrict); // Restrict delete to preserve order history
         }
     }
 
