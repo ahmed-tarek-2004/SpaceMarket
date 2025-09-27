@@ -9,4 +9,5 @@ public interface IOrderService
 {
     Task<Response<PaginatedList<OrderResponse>>> GetAllOrdersAsync(string clientId, OrderFilters<OrderSorting> filters, CancellationToken cancellationToken = default);
     Task<Response<OrderResponse>> GetOrderByIdAsync(string clientId, Guid orderId, CancellationToken cancellationToken = default);
+    public Task<Response<OrderResponse>> RequestServiceAsync(string clientId,Guid ServiceId,Guid DataSetId, RequestServiceDto request);
 }

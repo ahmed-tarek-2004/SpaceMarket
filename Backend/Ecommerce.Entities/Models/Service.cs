@@ -16,6 +16,7 @@ namespace Ecommerce.Entities.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public Guid CategoryId { get; set; }
+        //public Guid OrderItemId { get; set; }
         public decimal Price { get; set; }
         public string ImagesUrl { get; set; }
         public ServiceStatus Status { get; set; }
@@ -27,6 +28,7 @@ namespace Ecommerce.Entities.Models
         public DateTime? DeletedAt { get; set; }
 
         public ICollection<CartItem> CartItems {  get; set; }
+        public ICollection<OrderItem> OrderItems {  get; set; }
         
         public ServiceProvider Provider { get; set; }
         public ServiceCategory Category { get; set; }

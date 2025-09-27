@@ -1,6 +1,7 @@
 ﻿using Ecommerce.DataAccess.ApplicationContext;
 using Ecommerce.Entities.DTO.Order;
 using Ecommerce.Entities.DTO.Shared;
+using Ecommerce.Entities.Models;
 using Ecommerce.Entities.Shared;
 using Ecommerce.Entities.Shared.Bases;
 using Ecommerce.Utilities.Enums;
@@ -50,6 +51,9 @@ public class OrderService(
                         DatasetId = oi.DatasetId,
                         Quantity = oi.Quantity,
                         PriceSnapshot = oi.PriceSnapshot,
+                        //edit for new migration (AddingServiceToOrderItem )
+                        Id = oi.Id,
+                        ServiceId=oi.ServiceId.ToString()
                     }).ToList()
                 })
                 .AsNoTracking().AsQueryable();
@@ -97,6 +101,9 @@ public class OrderService(
                 DatasetId = oi.DatasetId,
                 Quantity = oi.Quantity,
                 PriceSnapshot = oi.PriceSnapshot,
+               //edit for new migration (AddingServiceToOrderItem )
+                Id=oi.Id,
+                ServiceId=oi.ServiceId.ToString(),
             }).ToList()
         };
 
@@ -106,6 +113,74 @@ public class OrderService(
         return _responseHandler.Success<OrderResponse>(orderResponse, "Orders fetched successfully");
     }
 
+    #region request a service for client
+    public async Task<Response<OrderResponse>> RequestServiceAsync(string clientId,Guid ServiceId, Guid DataSetId, RequestServiceDto request)
+    {
+        try
+        {
+
+            var service = await _context.Services
+                .Include(s => s.Provider)
+                .FirstOrDefaultAsync(s => s.Id == ServiceId && !s.IsDeleted);
+
+            if (service == null)
+            {
+                _logger.LogWarning($"No service with serviceId : {ServiceId}");
+                return _responseHandler.NotFound<OrderResponse>("Service not found.");
+            }
+
+            var order = new Entities.Models.Order
+            {
+                Id = Guid.NewGuid(),
+                ClientId = clientId,
+                Status = OrderStatus.PendingPayment,
+                Amount = request.Quantity,
+                Commission = request.Budget,
+                Items = new List<OrderItem>
+                {
+                      new OrderItem
+                      {
+                          Id = Guid.NewGuid(),
+                          ServiceId = service.Id,
+                          Quantity = 1,
+                          PriceSnapshot = service.Price,
+                          ApiKey=request.ApiKey,
+                          DownloadLink=request.DownloadUrl,
+                          DatasetId=DataSetId
+                      }
+                }
+            };
+
+            await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync();
+            _logger.LogInformation($"Order Requested Successfull with orderId : {order.Id} \n and orderItem with ortemItemId : {order.Items.FirstOrDefault().Id}");
+            var responseD = new OrderResponse
+            {
+                Id = order.Id,
+                Amount = order.Amount,
+                Commission = order.Commission,
+                Status = order.Status.ToString(),
+                OrderItems = order.Items.Select(oi => new OrderItemResponse
+                {
+                    Id = oi.Id,
+                    ServiceId = oi.ServiceId.ToString(),
+                    Quantity = oi.Quantity,
+                    PriceSnapshot = oi.PriceSnapshot,
+                    DatasetId=DataSetId
+                }).ToList()
+
+            };
+
+            return _responseHandler.Created(responseD, "Service request created successfully.");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error creating service request for Client: {ClientId}", clientId);
+            return _responseHandler.ServerError<OrderResponse>("An error occurred while creating the service request.");
+        }
+    }
+
+    #endregion
     private IQueryable<Entities.Models.Order> FilteredListItems<TSorting>(IQueryable<Entities.Models.Order> query, OrderFilters<TSorting> filters, string? clientId)
           where TSorting : struct, Enum
     {
@@ -138,4 +213,5 @@ public class OrderService(
             _ => query.OrderByDescending(o => o.CreatedAt)
         };
     }
+
 }

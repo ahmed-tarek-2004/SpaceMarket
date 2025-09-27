@@ -1,12 +1,16 @@
 ﻿using Ecommerce.DataAccess.ApplicationContext;
 using Ecommerce.DataAccess.Services.Email;
 using Ecommerce.DataAccess.Services.ImageUploading;
+using Ecommerce.Entities.DTO.Order;
 using Ecommerce.Entities.DTO.ServiceCatalog;
 using Ecommerce.Entities.Models;
+using Ecommerce.Entities.Shared;
 using Ecommerce.Entities.Shared.Bases;
 using Ecommerce.Utilities.Enums;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Threading;
 
 namespace Ecommerce.DataAccess.Services.ServiceCatalog
 {
@@ -361,6 +365,110 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
             }
         }
 
+        #region Client
+        public async Task<Response<PaginatedList<ServiceFilterResponse>>> GetAvailableServicesAsync(ServiceFilterRequest filter)
+        {
+            try
+            {
+                var Services = _context.Services
+                    .Include(s => s.Category)
+                    .Include(s => s.Provider)
+                    //.ThenInclude(s => s.User)
+                    .Where(s => !s.IsDeleted && s.Status == ServiceStatus.Active)
+                    .AsNoTracking();
+
+
+                if (filter.CategoryId.HasValue)
+                {
+                    Services = Services.Where(s => s.CategoryId == filter.CategoryId);
+                    _logger.LogInformation("Service Filterd By Category successfully ");
+                }
+
+
+                if (filter.MinPrice.HasValue)
+                {
+                    Services = Services.Where(s => s.Price >= filter.MinPrice.Value);
+                    _logger.LogInformation("Service Filterd By MinPrice successfully");
+
+                }
+
+                if (filter.MaxPrice.HasValue)
+                {
+                    Services = Services.Where(s => s.Price <= filter.MaxPrice.Value);
+                    _logger.LogInformation("Service Filterd By MaxPrice successfully");
+                }
+                //Note : Untill We Add It to Model Later
+                //if (!string.IsNullOrEmpty(filter.Location))
+                //   Services = Services.Where(s => s.Provider.User.Loaction.Contain(filter.Location));
+
+                var services = Services
+                    .AsNoTracking()
+                    .OrderByDescending(s => s.CreatedAt)
+                    .Select(s => new ServiceFilterResponse
+                    {
+                        Id = s.Id,
+                        CategoryId = s.CategoryId,
+                        Title = s.Title,
+                        Description = s.Description,
+                        ProviderName = s.Provider.CompanyName,
+                        CategoryName = s.Category.Name,
+                        Price = s.Price
+                    })
+                    //.ToList();
+                    //.AsNoTracking();
+                    .AsQueryable();
+
+                 var paginated = await PaginatedList<ServiceFilterResponse>.CreateAsync(services, filter.PageNumber, filter.PageSize);
+
+                return _responseHandler.Success(paginated, "Services fetched successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error When retrieving Service ");
+                return _responseHandler.ServerError<PaginatedList<ServiceFilterResponse>>("An error occurred while retrieving the service.");
+            }
+        }
+
+        public async Task<Response<ServiceResponse>> GetServiceDetailAsync(Guid serviceId)
+        {
+            try
+            {
+                var service = await _context.Services
+                    .Include(s => s.Category)
+                    .Include(s => s.Provider)
+                    //.ThenInclude(p => p.User)
+                    .AsNoTracking()
+                   .FirstOrDefaultAsync(s => s.Id == serviceId && s.Status == ServiceStatus.Active && !s.IsDeleted);
+                if (service == null)
+                {
+                    _logger.LogWarning("Service Not Found ");
+                    return _responseHandler.BadRequest<ServiceResponse>($"Service With Id {serviceId} Not Found.");
+                }
+
+                var response = new ServiceResponse
+                {
+                    Id = serviceId,
+                    Title = service.Title,
+                    Description = service.Description,
+                    ProviderId = service.Provider.Id,
+                    CategoryName = service.Category.Name,
+                    Price = service.Price,
+                    ImagesUrl = service.ImagesUrl,
+                    Status = service.Status.ToString(),
+                    CreatedAt = service.CreatedAt,
+                    UpdatedAt = service.UpdatedAt,
+                };
+
+                return _responseHandler.Success(response, $"Services {service.Id} fetched successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error Getting Service ");
+                return _responseHandler.ServerError<ServiceResponse>("An error occurred while creating the service.");
+            }
+
+        }
+        #endregion
 
     }
 }
