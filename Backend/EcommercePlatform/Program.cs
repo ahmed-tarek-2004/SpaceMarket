@@ -41,12 +41,14 @@ namespace EcommercePlatform
             builder.Services.AddDatabase(builder.Configuration);
             builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
             builder.Services.AddEmailServices(builder.Configuration);
+            builder.Services.AddStripeConfiguration(builder.Configuration);
 
             // Enum to string converter
             builder.Services
                 .AddControllers()
                 .AddJsonOptions(options =>
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
 
 
             builder.Services.AddFluentValidation();
