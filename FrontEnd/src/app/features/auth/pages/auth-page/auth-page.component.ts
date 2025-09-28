@@ -3,38 +3,29 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SignUpPageComponent } from '../sign-up-page/sign-up-page.component';
-
-import { MatCardModule } from '@angular/material/card';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatButtonModule } from '@angular/material/button';
-import { LucideAngularModule } from 'lucide-angular';
 import { SignInPageComponent } from '../sign-in-page/sign-in-page.component';
+import { MatTab, MatTabGroup } from '@angular/material/tabs';
+import { MatCardModule } from '@angular/material/card';
+import { Star } from '../../interfaces/star';
 
 @Component({
   selector: 'app-auth-page',
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    MatTabGroup,
+    MatTab,
     RouterModule,
     SignUpPageComponent,
-    MatCardModule,
-    MatTabsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatCheckboxModule,
-    MatButtonModule,
-    LucideAngularModule,
     SignInPageComponent,
+    MatCardModule,
   ],
   templateUrl: './auth-page.component.html',
   styleUrls: ['./auth-page.component.scss'],
 })
 export class AuthPageComponent {
   Math = Math;
-  
+
   selectedTabIndex = 0;
   selectedTab: 'login' | 'register' = 'login';
 

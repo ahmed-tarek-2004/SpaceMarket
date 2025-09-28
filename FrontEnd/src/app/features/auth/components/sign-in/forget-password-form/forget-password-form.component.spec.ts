@@ -1,20 +1,16 @@
-/* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
-
 import { ForgetPasswordFormComponent } from './forget-password-form.component';
 
 describe('ForgetPasswordFormComponent', () => {
   let component: ForgetPasswordFormComponent;
   let fixture: ComponentFixture<ForgetPasswordFormComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ForgetPasswordFormComponent ]
-    })
-    .compileComponents();
-  }));
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ForgetPasswordFormComponent] 
+    }).compileComponents();
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ForgetPasswordFormComponent);

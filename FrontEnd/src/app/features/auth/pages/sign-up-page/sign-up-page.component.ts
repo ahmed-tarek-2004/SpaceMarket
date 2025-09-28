@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { ClientSignUpFormComponent } from '../../components/sign-up/client-sign-up-form/client-sign-up-form.component';
 import { ProviderSignUpFormComponent } from '../../components/sign-up/provider-sign-up-form/provider-sign-up-form.component';
-import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-sign-up-page',
-  imports: [ClientSignUpFormComponent, ProviderSignUpFormComponent, MatTabsModule],
+  imports: [ClientSignUpFormComponent, ProviderSignUpFormComponent],
   templateUrl: './sign-up-page.component.html',
   styleUrls: ['./sign-up-page.component.scss'],
 })

@@ -11,7 +11,7 @@
     </ng-container>
   </div>
 
-  <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 h-full">
+  <div class="grid grid-cols-1 lg:grid-cols-2 h-full">
     <!-- LEFT  -->
     <div class="flex flex-col items-center justify-center p-6 lg:p-12 h-full">
       <div class="w-full max-w-md text-center">
@@ -83,27 +83,23 @@
     </div>
 
     <!-- RIGHT -->
-    <div class="h-full overflow-y-auto flex justify-center flex-wrap">
-      <div
-        class="flex flex-col items-center justify-center w-full max-w-md mx-10 mt-12 lg:mt-12 mb-12"
+    <div class="h-full overflow-y-auto flex justify-center items-center p-4">
+      <mat-card
+        class="w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-6 shadow-2xl"
       >
-        <mat-card
-          class="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-6 shadow-2xl"
+        <mat-tab-group
+          [selectedIndex]="selectedTabIndex"
+          (selectedIndexChange)="onTabChange($event)"
+          class="text-white"
         >
-          <mat-tab-group
-            [selectedIndex]="selectedTabIndex"
-            (selectedIndexChange)="onTabChange($event)"
-            class="text-white"
-          >
-            <mat-tab label="Sign In">
-              <app-sign-in-page></app-sign-in-page>
-            </mat-tab>
-            <mat-tab label="Register">
-              <app-sign-up-page></app-sign-up-page>
-            </mat-tab>
-          </mat-tab-group>
-        </mat-card>
-      </div>
+          <mat-tab label="Sign In">
+            <app-sign-in-page></app-sign-in-page>
+          </mat-tab>
+          <mat-tab label="Register">
+            <app-sign-up-page></app-sign-up-page>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card>
     </div>
   </div>
 </div>
