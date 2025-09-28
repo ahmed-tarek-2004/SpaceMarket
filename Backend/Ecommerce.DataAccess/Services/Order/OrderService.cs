@@ -101,9 +101,9 @@
 //                DatasetId = oi.DatasetId,
 //                Quantity = oi.Quantity,
 //                PriceSnapshot = oi.PriceSnapshot,
-//                //edit for new migration (AddingServiceToOrderItem )
-//                Id = oi.Id,
-//                ServiceId = oi.ServiceId.ToString(),
+//               //edit for new migration (AddingServiceToOrderItem )
+//                Id=oi.Id,
+//                ServiceId=oi.ServiceId.ToString(),
 //            }).ToList()
 //        };
 
@@ -114,7 +114,7 @@
 //    }
 
 //    #region request a service for client
-//    public async Task<Response<OrderResponse>> RequestServiceAsync(string clientId, Guid ServiceId, Guid DataSetId, RequestServiceDto request)
+//    public async Task<Response<OrderResponse>> RequestServiceAsync(string clientId,Guid ServiceId, Guid DataSetId, RequestServiceDto request)
 //    {
 //        try
 //        {
