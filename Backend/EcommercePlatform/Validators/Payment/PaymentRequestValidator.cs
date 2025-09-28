@@ -22,6 +22,9 @@ namespace Ecommerce.API.Validators.Payment
                 .Length(3).WithMessage("Currency must be a 3-letter code")
                 .Matches("^[a-zA-Z]{3}$").WithMessage("Currency must be alphabetic (e.g., USD)");
 
+            RuleFor(x => x.OrderId)
+                .NotEmpty().WithMessage("OrderId is required");
+
             RuleFor(x => x.SuccessUrl)
                 .NotEmpty().WithMessage("SuccessUrl is required");
 

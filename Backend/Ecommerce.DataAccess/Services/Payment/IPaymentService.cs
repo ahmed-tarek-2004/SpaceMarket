@@ -7,12 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ecommerce.Utilities.Enums;
+using Ecommerce.Entities.Models.Auth.Identity;
 
 namespace Ecommerce.DataAccess.Services.Payment
 {
     public interface IPaymentService
     {
-        public Task<Response<PaymentResponse>> CheckoutSessionService(string userEmail,PaymentRequest request);
+        public Task<Response<PaymentResponse>> CheckoutSessionService(string userId,PaymentRequest request);
         public Task <Response<string>>HandlePayment(string clientId,HandlePayment handle);
         public Task<Response<List<ProviderGetOrdersDto>>> GetProviderOrdersAsync(string providerId);
         public Task<Response<object>> HandleWebhookAsync(string json, string stripeSignature);

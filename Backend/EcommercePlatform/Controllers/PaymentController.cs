@@ -7,6 +7,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Stripe;
 using Stripe.V2;
 using System;
@@ -52,27 +53,27 @@ namespace Ecommerce.API.Controllers
                 return StatusCode((int)_responseHandler.BadRequest<object>(errors).StatusCode,
                     _responseHandler.BadRequest<object>(errors));
             }
-            var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
-            var response = await _paymentService.CheckoutSessionService(userEmail,request);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var response = await _paymentService.CheckoutSessionService(userId,request);
             return StatusCode((int)response.StatusCode, response);
         }
 
-        [HttpPost("handle-client-state")]
-        [Authorize(Roles ="Client")]
-        public async Task<IActionResult> HandleState([FromBody] HandlePayment request)
-        {
-            var validation = await _handelPaymentValidator.ValidateAsync(request);
-            if (!validation.IsValid)
-            {
-                var errors = string.Join(", ", validation.Errors.Select(e => e.ErrorMessage));
-                return StatusCode((int)_responseHandler.BadRequest<object>(errors).StatusCode,
-                    _responseHandler.BadRequest<object>(errors));
-            }
+        //[HttpPost("handle-client-state")]
+        //[Authorize(Roles ="Client")]
+        //public async Task<IActionResult> HandleState([FromBody] HandlePayment request)
+        //{
+        //    var validation = await _handelPaymentValidator.ValidateAsync(request);
+        //    if (!validation.IsValid)
+        //    {
+        //        var errors = string.Join(", ", validation.Errors.Select(e => e.ErrorMessage));
+        //        return StatusCode((int)_responseHandler.BadRequest<object>(errors).StatusCode,
+        //            _responseHandler.BadRequest<object>(errors));
+        //    }
 
-            var clientId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var response = await _paymentService.HandlePayment(clientId,request);
-            return StatusCode((int)response.StatusCode, response);
-        }
+        //    var clientId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        //    var response = await _paymentService.HandlePayment(clientId,request);
+        //    return StatusCode((int)response.StatusCode, response);
+        //}
 
         [HttpGet("get/provider/payment")]
         [Authorize(Roles = "ServiceProvider")]
@@ -85,25 +86,25 @@ namespace Ecommerce.API.Controllers
         }
         [HttpGet("get/admin/transactions")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetAdminAllTransactionsAsync([FromQuery]TransactionStatus? status, [FromQuery] DateTime? from, [FromQuery]DateTime?to)
+        public async Task<IActionResult> GetAdminAllTransactionsAsync([FromQuery] TransactionStatus? status, [FromQuery] DateTime? from, [FromQuery] DateTime? to)
         {
-            
+
             var providerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var response = await _paymentService.GetAdminAllTransactionsAsync(status,from,to);
+            var response = await _paymentService.GetAdminAllTransactionsAsync(status, from, to);
             return StatusCode((int)response.StatusCode, response);
         }
 
-        //#region WebHook
-        //[HttpPost("webhook")]
-        //public async Task<IActionResult> HandleWebhook()
-        //{
-        //    var signature = Request.Headers["Stripe-Signature"];
+        #region WebHook
+        [HttpPost("webhook")]
+        public async Task<IActionResult> HandleWebhook()
+        {
+            var signature = Request.Headers["Stripe-Signature"];
 
-        //    using var reader = new StreamReader(HttpContext.Request.Body);
-        //    var json = await reader.ReadToEndAsync();
-        //    var response = await _paymentService.HandleWebhookAsync(json, signature);
-        //    return StatusCode((int)response.StatusCode, response);
-        //}
-        //#endregion
+            using var reader = new StreamReader(HttpContext.Request.Body);
+            var json = await reader.ReadToEndAsync();
+            var response = await _paymentService.HandleWebhookAsync(json, signature);
+            return StatusCode((int)response.StatusCode, response);
+        }
+        #endregion
     }
 }

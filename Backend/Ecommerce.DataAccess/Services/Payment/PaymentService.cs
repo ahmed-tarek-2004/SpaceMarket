@@ -2,6 +2,7 @@
 using Ecommerce.DataAccess.Services.Email;
 using Ecommerce.Entities.DTO.Payment;
 using Ecommerce.Entities.Models.Auth.Identity;
+using Ecommerce.Entities.Models.Auth.Users;
 using Ecommerce.Entities.Shared.Bases;
 using Ecommerce.Utilities.Configurations;
 using Ecommerce.Utilities.Enums;
@@ -18,6 +19,7 @@ using Stripe.V2.MoneyManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -45,10 +47,11 @@ namespace Ecommerce.DataAccess.Services.Payment
         }
 
         #region checkOut
-        public async Task<Response<PaymentResponse>> CheckoutSessionService(string userEmail,PaymentRequest request)
+        public async Task<Response<PaymentResponse>> CheckoutSessionService(string userId, PaymentRequest request)
         {
 
             _logger.LogInformation("Start using SessionCheckout");
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == userId);
             try
             {
                 var options = new SessionCreateOptions
@@ -73,7 +76,12 @@ namespace Ecommerce.DataAccess.Services.Payment
                     Mode = "payment",
                     SuccessUrl = request.SuccessUrl,
                     CancelUrl = request.CancelUrl,
-                    CustomerEmail=userEmail
+                    CustomerEmail = user.Email,
+                    Metadata = new Dictionary<string, string>
+                    {
+                        { "orderId", request.OrderId.ToString() },
+                        { "clientId", user.Id }
+                    }
                 };
 
                 var service = new SessionService();
@@ -103,8 +111,8 @@ namespace Ecommerce.DataAccess.Services.Payment
             {
                 var orders = await _context.Orders
                     .Include(o => o.Items)
-                    .ThenInclude(i=>i.Service)
-                    .ThenInclude(s=>s.Provider)
+                    .ThenInclude(i => i.Service)
+                    .ThenInclude(s => s.Provider)
                     .Where(o => o.Id == handle.OrderId)
                     .FirstOrDefaultAsync();
 
@@ -139,15 +147,15 @@ namespace Ecommerce.DataAccess.Services.Payment
                     _logger.LogInformation($"User: {(user == null ? "null" : user.Email)}");
                     _logger.LogInformation($"Session: {(session == null ? "null" : session.Id)}");
 
-                    
+
                     //var receiptUrl = await GetReceiptUrl(session.PaymentIntentId);
 
                     await _emailService.SendPaymentReceiptAsync(
-                                      user,transaction,
+                                      user, transaction,
                                       session
                                    //,receiptUrl ?? string.Empty
                                    );
-                   
+
                 }
                 return _responseHandler.Success("Success Transaction With Updating Status", "");
             }
@@ -266,17 +274,61 @@ namespace Ecommerce.DataAccess.Services.Payment
                     stripeSignature,
                     stripe.WebhookSecret,
                     throwOnApiVersionMismatch: false);
+                try
+                {
+                    stripeEvent = EventUtility.ConstructEvent(json, stripeSignature, stripe.WebhookSecret);
+                }
+                catch (StripeException ex)
+                {
+                    return _responseHandler.BadRequest<object>(ex.Message);
+                }
 
                 _logger.LogInformation(
                     "Stripe Event received: {EventType}",
                     stripeEvent.Type);
 
+
                 if (stripeEvent.Type == "checkout.session.completed")
                 {
-                    var session = stripeEvent.Data.Object as Session;
-                    _logger.LogInformation(
-                        "Checkout session completed successfully. SessionId: {SessionId}",
-                        session?.Id);
+                        var session = stripeEvent.Data.Object as Session;
+
+                        var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id.ToString() == session.Metadata["orderId"]);
+                        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == session.Metadata["clientId"]);
+
+                        var transaction = new Entities.Models.Transaction
+                        {
+                            Id = Guid.NewGuid(),
+                            OrderId = order.Id,
+                            Status = session.PaymentStatus == "paid" ? TransactionStatus.Paid : TransactionStatus.Pending,
+                            Amount = session.AmountTotal.HasValue ? session.AmountTotal.Value / 100m : 0,
+                            Date = DateTime.UtcNow
+                        };
+
+                        order.Status = session.PaymentStatus == "paid" ? OrderStatus.Paid : OrderStatus.Failed;
+                        await _context.Transactions.AddAsync(transaction);
+                        await _context.SaveChangesAsync();
+                        _logger.LogInformation($"Handeled Successfully");
+
+                        if (session.PaymentStatus == "paid")
+                        {
+                            _logger.LogInformation($"ClientId: {session.Metadata["clientId"]}, OrderId: {session.Metadata["orderId"]}, SessionId: {session.Id}");
+                            _logger.LogInformation($"User: {(user == null ? "null" : user.Email)}");
+                            _logger.LogInformation($"Session: {(session == null ? "null" : session.Id)}");
+
+
+                            //var receiptUrl = await GetReceiptUrl(session.PaymentIntentId);
+
+                            await _emailService.SendPaymentReceiptAsync(
+                                              user, transaction,
+                                              session
+                                           //,receiptUrl ?? string.Empty
+                                           );
+
+                        }
+
+                        _logger.LogInformation(
+                            "Checkout session completed successfully. SessionId: {SessionId}",
+                            session?.Id);
                 }
 
                 return _responseHandler.Success<object>(
