@@ -21,37 +21,11 @@ namespace Ecommerce.DataAccess.Migrations
                 table: "OrderItems",
                 type: "uniqueidentifier",
                 nullable: false,
-                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
-
-            migrationBuilder.CreateTable(
-                name: "ServiceMetrics",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ServiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EventType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ServiceMetrics", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ServiceMetrics_Services_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Services",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                defaultValue: Guid.Empty);
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_ServiceId",
                 table: "OrderItems",
-                column: "ServiceId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ServiceMetrics_ServiceId",
-                table: "ServiceMetrics",
                 column: "ServiceId");
 
             migrationBuilder.AddForeignKey(
@@ -63,15 +37,11 @@ namespace Ecommerce.DataAccess.Migrations
                 onDelete: ReferentialAction.Restrict);
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
                 name: "FK_OrderItems_Services_ServiceId",
                 table: "OrderItems");
-
-            migrationBuilder.DropTable(
-                name: "ServiceMetrics");
 
             migrationBuilder.DropIndex(
                 name: "IX_OrderItems_ServiceId",
@@ -86,5 +56,6 @@ namespace Ecommerce.DataAccess.Migrations
                 table: "Services",
                 newName: "ImagesUrlJson");
         }
+
     }
 }
