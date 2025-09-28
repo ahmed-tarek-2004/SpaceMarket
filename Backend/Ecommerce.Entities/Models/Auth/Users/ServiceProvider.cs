@@ -17,5 +17,7 @@ namespace Ecommerce.Entities.Models.Auth.Users
         public ICollection<Service> Services { get; set; }
         public ICollection<Dataset> Datasets { get; set; }
         public ICollection<Withdrawal> Withdrawals { get; set; }
+        public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
+
     }
 }

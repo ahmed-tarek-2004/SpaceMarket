@@ -16,7 +16,6 @@ namespace Ecommerce.Entities.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public Guid CategoryId { get; set; }
-        //public Guid OrderItemId { get; set; }
         public decimal Price { get; set; }
         public string ImagesUrl { get; set; }
         public ServiceStatus Status { get; set; }

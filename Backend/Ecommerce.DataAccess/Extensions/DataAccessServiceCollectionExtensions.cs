@@ -41,7 +41,7 @@ namespace Ecommerce.DataAccess.Extensions
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<IAuthGoogleService, AuthGoogleService>();
             services.AddScoped<IServiceCatalogService, ServiceCatalogService>();
-            services.AddScoped<IOrderService, OrderService>();
+            //services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IReviewService, ReviewService>();
 
             return services;
