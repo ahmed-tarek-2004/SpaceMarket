@@ -402,7 +402,6 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                 //   Services = Services.Where(s => s.Provider.User.Loaction.Contain(filter.Location));
 
                 var services = Services
-                    .AsNoTracking()
                     .OrderByDescending(s => s.CreatedAt)
                     .Select(s => new ServiceFilterResponse
                     {
