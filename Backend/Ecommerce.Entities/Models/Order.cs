@@ -11,7 +11,6 @@ namespace Ecommerce.Entities.Models
     public class Order
     {
         public Guid Id { get; set; }
-        public string ClientId { get; set; }
         public decimal Amount { get; set; }
         public decimal Commission { get; set; }
         public OrderStatus Status { get; set; }
@@ -22,8 +21,12 @@ namespace Ecommerce.Entities.Models
         public bool IsDeleted { get; set; }
         public DateTime? DeletedAt { get; set; }
 
+        public string ClientId { get; set; }
+        public Guid OrderItemId { get; set; }
+        public Guid TransactionId { get; set; }
+
         public Client Client { get; set; }
-        public ICollection<OrderItem> Items { get; set; }
-        public ICollection<Transaction> Transactions { get; set; }
+        public OrderItem Item { get; set; }  
+        public Transaction Transaction { get; set; }
     }
 }
