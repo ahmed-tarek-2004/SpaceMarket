@@ -11,10 +11,6 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
         builder.Property(t => t.Status).HasConversion<string>().HasMaxLength(50);
         builder.Property(t => t.Date).IsRequired();
 
-        builder.HasOne(t => t.Order)
-            .WithOne(o => o.Transaction)
-            .HasForeignKey<Order>(o => o.TransactionId)
-            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(t => t.Client)
             .WithMany(c => c.Transactions)
