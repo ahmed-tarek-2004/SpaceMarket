@@ -53,7 +53,7 @@
 //                        PriceSnapshot = oi.PriceSnapshot,
 //                        //edit for new migration (AddingServiceToOrderItem )
 //                        Id = oi.Id,
-//                        ServiceId=oi.ServiceId.ToString()
+//                        ServiceId = oi.ServiceId.ToString()
 //                    }).ToList()
 //                })
 //                .AsNoTracking().AsQueryable();
@@ -166,7 +166,7 @@
 //                    ServiceId = oi.ServiceId.ToString(),
 //                    Quantity = oi.Quantity,
 //                    PriceSnapshot = oi.PriceSnapshot,
-//                    DatasetId=DataSetId
+//                    DatasetId = DataSetId
 //                }).ToList()
 
 //            };

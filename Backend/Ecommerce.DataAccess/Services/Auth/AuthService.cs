@@ -48,7 +48,7 @@ namespace Ecommerce.DataAccess.Services.Auth
         public async Task<Response<LoginResponse>> LoginAsync(LoginRequest loginRequest)
         {
             // Find user by email or phone number
-            User? user = await FindUserByEmailOrPhoneAsync(loginRequest.Email, loginRequest.PhoneNumber);
+            User? user = await FindUserByEmailOrPhoneAsync(loginRequest.Email);
 
             if (user == null)
                 return _responseHandler.NotFound<LoginResponse>("User not found.");
@@ -348,14 +348,14 @@ namespace Ecommerce.DataAccess.Services.Auth
 
         public async Task<Response<ForgetPasswordResponse>> ForgotPasswordAsync(ForgetPasswordRequest model)
         {
-            _logger.LogInformation("Starting ForgotPasswordAsync for Email: {Email}, Phone: {Phone}", model.Email, model.PhoneNumber);
+            _logger.LogInformation("Starting ForgotPasswordAsync for Email: {Email}, Phone: {Phone}", model.Email);
 
             // Find user by email or phone number
-            User? user = await FindUserByEmailOrPhoneAsync(model.Email, model.PhoneNumber);
+            User? user = await FindUserByEmailOrPhoneAsync(model.Email);
 
             if (user == null)
             {
-                _logger.LogWarning("User not found for Email: {Email}, Phone: {Phone}", model.Email, model.PhoneNumber);
+                _logger.LogWarning("User not found for Email: {Email}, Phone: {Phone}", model.Email);
                 return _responseHandler.NotFound<ForgetPasswordResponse>("User not found.");
             }
 
@@ -530,12 +530,10 @@ namespace Ecommerce.DataAccess.Services.Auth
                 return "Phone number is already registered.";
             return null;
         }
-        private async Task<User?> FindUserByEmailOrPhoneAsync(string email, string phone)
+        private async Task<User?> FindUserByEmailOrPhoneAsync(string email)
         {
             if (!string.IsNullOrEmpty(email))
                 return await _userManager.FindByEmailAsync(email);
-            if (!string.IsNullOrEmpty(phone))
-                return await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phone);
             return null;
         }
 

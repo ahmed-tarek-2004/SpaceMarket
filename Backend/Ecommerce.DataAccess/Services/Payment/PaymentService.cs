@@ -50,7 +50,7 @@ namespace Ecommerce.DataAccess.Services.Payment
         #region checkOut
         public async Task<Response<PaymentResponse>> CheckoutSessionService(string userId, PaymentRequest request)
         {
-
+           
             _logger.LogInformation("Start using SessionCheckout");
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == userId);
             try
@@ -186,7 +186,6 @@ namespace Ecommerce.DataAccess.Services.Payment
         //    return "#";
         //}
         #endregion
-
         public async Task<Response<List<ProviderGetOrdersDto>>> GetProviderOrdersAsync(string providerId)
         {
             try
@@ -202,7 +201,18 @@ namespace Ecommerce.DataAccess.Services.Payment
                         PaymentStatus = o.Status,
                         CreatedAt = o.CreatedAt
                     }).ToListAsync();
-      
+                var auditLog = new AuditLog
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = providerId,
+                    EntityName = "Orders",
+                    EntityId = Guid.NewGuid(),
+                    Details = $"Provider with ProviderId : {providerId} Retrieved about All Orders",
+                    Action = "Read"
+
+                };
+                await _context.AddAsync(auditLog);
+                await _context.SaveChangesAsync();
 
                 if (!response.Any())
                     return _responseHandler.NotFound<List<ProviderGetOrdersDto>>("No orders found for this provider.");
@@ -216,8 +226,6 @@ namespace Ecommerce.DataAccess.Services.Payment
 
             }
         }
-
-
 
         public async Task<Response<List<TransactionResponse>>> GetAdminAllTransactionsAsync(string adminId, TransactionStatus? status, DateTime? from, DateTime? to)
         {
@@ -241,20 +249,14 @@ namespace Ecommerce.DataAccess.Services.Payment
 
                 var response = await transactions.Select(t => new TransactionResponse
                 {
+                    TransactionId = t.Id,
                     ClientName = t.Client.FullName,
                     ProviderName = t.ServiceProvider.CompanyName,
                     Status = t.Status,
                     Date = t.Date,
                     Amount = t.Amount
                 }).ToListAsync();
-                /*
-                 public string Action { get; set; }
-        public string UserId { get; set; }
-        public string EntityName { get; set; }
-        public Guid EntityId { get; set; }
-        public DateTime Timestamp { get; set; } = DateTime.UtcNow;
-        public string Details { get; set; }
-                 */
+
                 var auditLog = new AuditLog
                 {
                     Id = Guid.NewGuid(),
@@ -305,52 +307,59 @@ namespace Ecommerce.DataAccess.Services.Payment
                     stripeEvent.Type);
 
 
+                //if (stripeEvent.Type == "checkout.session.completed")
+                //{
+                var session = stripeEvent.Data.Object as Session;
+                if (session == null)
+                    return _responseHandler.BadRequest<object>("Event data object is not a session.");
+
+                var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id.ToString() == session.Metadata["orderId"]);
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == session.Metadata["clientId"]);
+
+
+                var transaction = new Entities.Models.Transaction
+                {
+                    Id = Guid.NewGuid(),
+                    OrderId = order.Id,
+                    Date = DateTime.UtcNow
+                };
+
                 if (stripeEvent.Type == "checkout.session.completed")
                 {
-                    var session = stripeEvent.Data.Object as Session;
 
-                    var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id.ToString() == session.Metadata["orderId"]);
-                    var user = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == session.Metadata["clientId"]);
+                    order.Status = OrderStatus.Paid;
+                    transaction.Status = TransactionStatus.Paid;
+                    transaction.Amount = session.AmountTotal.HasValue ? session.AmountTotal.Value / 100m : 0;
+                }
+                else if (stripeEvent.Type == "payment_intent.payment_failed")
+                {
+                    order.Status = OrderStatus.Failed;
+                    transaction.Status = TransactionStatus.Pending;
+                    transaction.Amount = 0;
 
-                    var transaction = new Entities.Models.Transaction
-                    {
-                        Id = Guid.NewGuid(),
-                        OrderId = order.Id,
-                        Status = session.PaymentStatus == "paid" ? TransactionStatus.Paid : TransactionStatus.Pending,
-                        Amount = (session.AmountTotal.HasValue ? session.AmountTotal.Value / 100m : 0),
-                        Date = DateTime.UtcNow
-                    };
+                }
+                else
+                {
+                    order.Status = OrderStatus.PendingPayment;
+                    transaction.Status = TransactionStatus.Pending;
+                    transaction.Amount = 0;
+                }
 
-                    order.Status = session.PaymentStatus == "paid" ? OrderStatus.Paid : OrderStatus.Failed;
-                    await _context.Transactions.AddAsync(transaction);
-                    await _context.SaveChangesAsync();
-                    _logger.LogInformation($"Handeled Successfully");
-
-                    if (session.PaymentStatus == "paid")
-                    {
-                        _logger.LogInformation($"ClientId: {session.Metadata["clientId"]}, OrderId: {session.Metadata["orderId"]}, SessionId: {session.Id}");
-                        _logger.LogInformation($"User: {(user == null ? "null" : user.Email)}");
-                        _logger.LogInformation($"Session: {(session == null ? "null" : session.Id)}");
+                await _context.Transactions.AddAsync(transaction);
+                await _context.SaveChangesAsync();
 
 
-                        //var receiptUrl = await GetReceiptUrl(session.PaymentIntentId);
-
-                        await _emailService.SendPaymentReceiptAsync(
-                                          user, transaction,
-                                          session
-                                       //,receiptUrl ?? string.Empty
-                                       );
-
-                    }
-
+                if (session.PaymentStatus == "paid")
+                {
                     _logger.LogInformation(
-                        "Checkout session completed successfully. SessionId: {SessionId}",
-                        session?.Id);
+                        $"Sending payment receipt. ClientId: {user.Id}, OrderId: {order.Id}, SessionId: {session.Id}");
+
+                    await _emailService.SendPaymentReceiptAsync(user, transaction, session);
                 }
 
                 return _responseHandler.Success<object>(
-                    "",
-                    "Webhook handled successfully.");
+                "",
+                "Webhook handled successfully.");
             }
             catch (Exception ex)
             {

@@ -68,6 +68,7 @@ namespace Ecommerce.DataAccess.Extensions
             return services;
         }
 
+
         public static IServiceCollection AddStripeConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             var stripeSettings = configuration.GetSection("Stripe").Get<StripeSettings>();
