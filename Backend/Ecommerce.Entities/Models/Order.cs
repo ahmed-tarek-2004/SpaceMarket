@@ -23,7 +23,7 @@ namespace Ecommerce.Entities.Models
 
         public string ClientId { get; set; }
         public Guid OrderItemId { get; set; }
-        public Guid TransactionId { get; set; }
+        public Guid? TransactionId { get; set; }
 
         public Client Client { get; set; }
         public OrderItem Item { get; set; }  
