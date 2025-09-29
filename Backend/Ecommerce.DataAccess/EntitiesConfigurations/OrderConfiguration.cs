@@ -32,8 +32,8 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(o => o.Transaction)
-            .WithOne()
-            .HasForeignKey<Order>(o => o.TransactionId)
-            .OnDelete(DeleteBehavior.Cascade);
+           .WithOne(t => t.Order)
+           .HasForeignKey<Transaction>(t => t.OrderId)
+           .OnDelete(DeleteBehavior.Cascade);
     }
 }

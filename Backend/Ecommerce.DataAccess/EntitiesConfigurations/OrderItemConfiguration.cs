@@ -8,7 +8,6 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
     {
         builder.HasKey(oi => oi.Id);
 
-        builder.Property(oi => oi.Quantity).IsRequired();
         builder.Property(oi => oi.PriceSnapshot).HasColumnType("decimal(18,2)");
         builder.Property(oi => oi.DownloadLink).HasMaxLength(1000);
         builder.Property(oi => oi.ApiKey).HasMaxLength(200);
