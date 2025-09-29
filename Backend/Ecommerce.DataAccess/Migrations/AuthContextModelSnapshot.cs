@@ -655,14 +655,7 @@ namespace Ecommerce.DataAccess.Migrations
                     b.HasIndex("OrderItemId")
                         .IsUnique();
 
-<<<<<<< HEAD
-                    b.HasIndex("TransactionId")
-                        .IsUnique();
-
-                    b.ToTable("Orders", (string)null);
-=======
                     b.ToTable("Orders");
->>>>>>> 235d01283defbaea892373db620500bcfd2befe0
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.OrderItem", b =>
