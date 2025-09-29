@@ -4,6 +4,7 @@ using Ecommerce.DataAccess.ApplicationContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ecommerce.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class AuthContextModelSnapshot : ModelSnapshot
+    [Migration("20250929124713_Removed_quantity_from_orderItem")]
+    partial class Removed_quantity_from_orderItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,7 +61,7 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AuditLogs", (string)null);
+                    b.ToTable("AuditLogs");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Auth.Identity.Role", b =>
@@ -176,7 +179,7 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserRefreshTokens", (string)null);
+                    b.ToTable("UserRefreshTokens");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Auth.Users.Client", b =>
@@ -208,7 +211,7 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Clients", (string)null);
+                    b.ToTable("Clients");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Auth.Users.ServiceProvider", b =>
@@ -244,7 +247,7 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ServiceProviders", (string)null);
+                    b.ToTable("ServiceProviders");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Cart", b =>
@@ -268,7 +271,7 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("Carts", (string)null);
+                    b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.CartItem", b =>
@@ -311,7 +314,7 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("CartItems", (string)null);
+                    b.ToTable("CartItems");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.CollisionAlert", b =>
@@ -343,7 +346,7 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasIndex("SatelliteId");
 
-                    b.ToTable("CollisionAlerts", (string)null);
+                    b.ToTable("CollisionAlerts");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.CommissionSetting", b =>
@@ -362,7 +365,7 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("CommissionSettings", (string)null);
+                    b.ToTable("CommissionSettings");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.ComplianceMessage", b =>
@@ -398,7 +401,7 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasIndex("TicketId");
 
-                    b.ToTable("ComplianceMessages", (string)null);
+                    b.ToTable("ComplianceMessages");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.ComplianceService", b =>
@@ -452,7 +455,7 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasIndex("ProviderId");
 
-                    b.ToTable("ComplianceServices", (string)null);
+                    b.ToTable("ComplianceServices");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.ComplianceTicket", b =>
@@ -503,7 +506,7 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasIndex("ProviderId");
 
-                    b.ToTable("ComplianceTickets", (string)null);
+                    b.ToTable("ComplianceTickets");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Dataset", b =>
@@ -577,7 +580,7 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasIndex("ProviderId");
 
-                    b.ToTable("Datasets", (string)null);
+                    b.ToTable("Datasets");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Debris", b =>
@@ -607,7 +610,7 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Debris", (string)null);
+                    b.ToTable("Debris");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Order", b =>
@@ -655,14 +658,7 @@ namespace Ecommerce.DataAccess.Migrations
                     b.HasIndex("OrderItemId")
                         .IsUnique();
 
-<<<<<<< HEAD
-                    b.HasIndex("TransactionId")
-                        .IsUnique();
-
-                    b.ToTable("Orders", (string)null);
-=======
                     b.ToTable("Orders");
->>>>>>> 235d01283defbaea892373db620500bcfd2befe0
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.OrderItem", b =>
@@ -697,7 +693,7 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("OrderItems", (string)null);
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Project", b =>
@@ -758,7 +754,7 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Projects", (string)null);
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Review", b =>
@@ -805,7 +801,7 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.ReviewResponse", b =>
@@ -839,7 +835,7 @@ namespace Ecommerce.DataAccess.Migrations
                     b.HasIndex("ReviewId")
                         .IsUnique();
 
-                    b.ToTable("ReviewResponses", (string)null);
+                    b.ToTable("ReviewResponses");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Satellite", b =>
@@ -886,7 +882,7 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("Satellites", (string)null);
+                    b.ToTable("Satellites");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Service", b =>
@@ -945,7 +941,7 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasIndex("ProviderId");
 
-                    b.ToTable("Services", (string)null);
+                    b.ToTable("Services");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.ServiceCategory", b =>
@@ -977,7 +973,7 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ServiceCategories", (string)null);
+                    b.ToTable("ServiceCategories");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.ServiceMetricEvent", b =>
@@ -1004,7 +1000,7 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("ServiceMetrics", (string)null);
+                    b.ToTable("ServiceMetrics");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Transaction", b =>
@@ -1044,7 +1040,7 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasIndex("ServiceProviderId");
 
-                    b.ToTable("Transactions", (string)null);
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Withdrawal", b =>
@@ -1080,7 +1076,7 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasIndex("ProviderId");
 
-                    b.ToTable("Withdrawals", (string)null);
+                    b.ToTable("Withdrawals");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey", b =>
@@ -1099,7 +1095,7 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DataProtectionKeys", (string)null);
+                    b.ToTable("DataProtectionKeys");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
