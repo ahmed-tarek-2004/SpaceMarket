@@ -155,7 +155,7 @@ public class OrderService(
             {
                 Id = Guid.NewGuid(),
                 ServiceId = service.Id,
-                PriceSnapshot = service.Price,
+                PriceSnapshot = service.Price
             };
 
             providerId = service.ProviderId;

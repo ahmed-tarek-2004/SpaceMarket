@@ -75,12 +75,12 @@ namespace Ecommerce.API.Controllers
         //    return StatusCode((int)response.StatusCode, response);
         //}
 
-        [HttpGet("get/provider/payment")]
+        [HttpGet("get/provider/orders-status")]
         [Authorize(Roles = "ServiceProvider")]
         public async Task<IActionResult> GetProviderPaymentAsync()
         {
             var providerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var response = await _paymentService.GetProviderOrdersAsync(providerId);
+            var response = await _paymentService.GetProviderOrdersStatusAsync(providerId);
             return StatusCode((int)response.StatusCode, response);
         }
         [HttpGet("get/admin/transactions")]

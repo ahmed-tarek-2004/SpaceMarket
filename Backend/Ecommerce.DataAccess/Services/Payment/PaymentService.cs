@@ -186,7 +186,7 @@ namespace Ecommerce.DataAccess.Services.Payment
         //    return "#";
         //}
         #endregion
-        public async Task<Response<List<ProviderGetOrdersDto>>> GetProviderOrdersAsync(string providerId)
+        public async Task<Response<List<ProviderGetOrdersDto>>> GetProviderOrdersStatusAsync(string providerId)
         {
             try
             {
@@ -201,13 +201,14 @@ namespace Ecommerce.DataAccess.Services.Payment
                         PaymentStatus = o.Status,
                         CreatedAt = o.CreatedAt
                     }).ToListAsync();
+
                 var auditLog = new AuditLog
                 {
                     Id = Guid.NewGuid(),
                     UserId = providerId,
                     EntityName = "Orders",
                     EntityId = Guid.NewGuid(),
-                    Details = $"Provider with ProviderId : {providerId} Retrieved about All Orders",
+                    Details = $"Provider with ProviderId : {providerId} Retrieved about All Orders Status",
                     Action = "Read"
 
                 };
@@ -231,12 +232,9 @@ namespace Ecommerce.DataAccess.Services.Payment
         {
             try
             {
-                var transactions = _context
-                .Transactions
-                .Include(t => t.Client)
-                .Include(t => t.ServiceProvider)
-                .AsNoTracking()
-                .AsQueryable();
+                var transactions = _context.Transactions
+                                           .AsNoTracking()
+                                           .AsQueryable();
 
                 if (status.HasValue)
                     transactions = transactions.Where(t => t.Status == status);
@@ -247,16 +245,17 @@ namespace Ecommerce.DataAccess.Services.Payment
                 if (to.HasValue)
                     transactions = transactions.Where(t => t.Date <= to.Value);
 
-                var response = await transactions.Select(t => new TransactionResponse
-                {
-                    TransactionId = t.Id,
-                    ClientName = t.Client.FullName,
-                    ProviderName = t.ServiceProvider.CompanyName,
-                    Status = t.Status,
-                    Date = t.Date,
-                    Amount = t.Amount
-                }).ToListAsync();
-
+                var response = await transactions
+                    .Select(t => new TransactionResponse
+                    {
+                        TransactionId = t.Id,
+                        ClientName = t.Client.FullName,
+                        ProviderName = t.ServiceProvider.CompanyName,
+                        Status = t.Status,
+                        Date = t.Date,
+                        Amount = t.Amount
+                    })
+                    .ToListAsync();
                 var auditLog = new AuditLog
                 {
                     Id = Guid.NewGuid(),

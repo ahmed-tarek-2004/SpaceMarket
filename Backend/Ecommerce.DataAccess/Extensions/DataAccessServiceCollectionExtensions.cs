@@ -20,6 +20,7 @@ using Stripe;
 using System.Net;
 using System.Net.Mail;
 using ReviewService = Ecommerce.Services.Reviews.ReviewService;
+using OrderService = Ecommerce.DataAccess.Services.Order.OrderService;
 //using OrderService = Ecommerce.DataAccess.Services.Order.OrderService;
 
 namespace Ecommerce.DataAccess.Extensions
@@ -47,7 +48,7 @@ namespace Ecommerce.DataAccess.Extensions
             services.AddScoped<IServiceCatalogService, ServiceCatalogService>();
             //services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IReviewService, ReviewService>();
-            //services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IPaymentService, PaymentService>();
             return services;
         }

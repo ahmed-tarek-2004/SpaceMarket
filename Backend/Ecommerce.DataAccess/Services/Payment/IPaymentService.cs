@@ -15,7 +15,7 @@ namespace Ecommerce.DataAccess.Services.Payment
     {
         public Task<Response<PaymentResponse>> CheckoutSessionService(string userId,PaymentRequest request);
         //public Task <Response<string>>HandlePayment(string clientId,HandlePayment handle);
-        public Task<Response<List<ProviderGetOrdersDto>>> GetProviderOrdersAsync(string providerId);
+        public Task<Response<List<ProviderGetOrdersDto>>> GetProviderOrdersStatusAsync(string providerId);
         public Task<Response<object>> HandleWebhookAsync(string json, string stripeSignature);
         public Task<Response<List<TransactionResponse>>> GetAdminAllTransactionsAsync(string adminId,TransactionStatus? status,DateTime? from,DateTime? to);
 
