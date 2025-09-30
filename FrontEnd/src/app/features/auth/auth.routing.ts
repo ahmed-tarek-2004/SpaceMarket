@@ -7,9 +7,10 @@ export const AUTH_ROUTES: Routes = [
     pathMatch: 'full',
   },
   {
-    path: '',
+    path: 'auth',
     loadComponent: () =>
       import('./pages/auth-page/auth-page.component').then((m) => m.AuthPageComponent),
+    data: { hideHeader: true, hideFooter: true },
   },
   {
     path: 'forgot-password',
@@ -32,7 +33,6 @@ export const AUTH_ROUTES: Routes = [
         (m) => m.ResetPasswordPageComponent
       ),
   },
-
   {
     path: 'sign-up',
     loadComponent: () =>
