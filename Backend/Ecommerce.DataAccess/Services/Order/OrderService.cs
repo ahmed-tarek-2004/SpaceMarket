@@ -74,32 +74,11 @@ public class OrderService(
 
         var orders = await PaginatedList<OrderResponse>.CreateAsync(source, filters.PageNumber, filters.PageSize, cancellationToken);
 
-<<<<<<< HEAD
-//        // Ziad : TODO : Edit the order and order items models to include the necessary fields for the response
-//        var source = filteredList.Include(o => o.Items)
-//                .Select(o => new OrderResponse
-//                {
-//                    Id = o.Id,
-//                    Amount = o.Amount,
-//                    Commission = o.Commission,
-//                    Status = o.Status.ToString(),
-//                    OrderItems = o.Items.Select(oi => new OrderItemResponse
-//                    {
-//                        DatasetId = oi.DatasetId,
-//                        Quantity = oi.Quantity,
-//                        PriceSnapshot = oi.PriceSnapshot,
-//                        //edit for new migration (AddingServiceToOrderItem )
-//                        Id = oi.Id,
-//                        ServiceId = oi.ServiceId.ToString()
-//                    }).ToList()
-//                })
-//                .AsNoTracking().AsQueryable();
-=======
         _logger.LogInformation("Fetched {Count} orders for client {ClientId} on page {PageNumber} with page size {PageSize}",
             orders.Items.Count, userId, filters.PageNumber, filters.PageSize);
 
         return _responseHandler.Success(orders, "Orders fetched successfully");
->>>>>>> fd77722843eb0b9e5b8e56fd4b8bdc6a01267ac7
+
 
 
     }
@@ -261,31 +240,11 @@ public class OrderService(
             .Include(o => o.Item)
             .FirstOrDefaultAsync(o => o.Id == request.OrderId && o.ClientId == clientId, cancellationToken);
 
-<<<<<<< HEAD
-//            await _context.Orders.AddAsync(order);
-//            await _context.SaveChangesAsync();
-//            _logger.LogInformation($"Order Requested Successfull with orderId : {order.Id} \n and orderItem with ortemItemId : {order.Items.FirstOrDefault().Id}");
-//            var responseD = new OrderResponse
-//            {
-//                Id = order.Id,
-//                Amount = order.Amount,
-//                Commission = order.Commission,
-//                Status = order.Status.ToString(),
-//                OrderItems = order.Items.Select(oi => new OrderItemResponse
-//                {
-//                    Id = oi.Id,
-//                    ServiceId = oi.ServiceId.ToString(),
-//                    Quantity = oi.Quantity,
-//                    PriceSnapshot = oi.PriceSnapshot,
-//                    DatasetId = DataSetId
-//                }).ToList()
-=======
         if (order == null)
         {
             _logger.LogWarning("Order {OrderId} not found for client {ClientId}", request.OrderId, clientId);
             return _responseHandler.NotFound<OrderResponse>("Order not found");
         }
->>>>>>> fd77722843eb0b9e5b8e56fd4b8bdc6a01267ac7
 
         if (order.Status != OrderStatus.PendingPayment)
         {
