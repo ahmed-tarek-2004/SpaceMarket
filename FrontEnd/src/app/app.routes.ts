@@ -13,6 +13,14 @@ export const routes: Routes = [
     path: 'auth',
     loadChildren: () => import('./features/auth/auth.routing').then((m) => m.AUTH_ROUTES),
   },
+  {
+  path: 'cart',
+  loadComponent: () =>
+    import('./features/cart-items/pages/cart-items-page/cart-items-page.component').then(
+      (m) => m.CartItemsPageComponent
+    ),
+},
+
   // Add other routes here
   { path: '**', redirectTo: '' },
 ];
