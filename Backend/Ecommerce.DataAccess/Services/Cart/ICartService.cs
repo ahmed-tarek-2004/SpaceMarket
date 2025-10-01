@@ -12,7 +12,6 @@ namespace Ecommerce.DataAccess.Services.Cart
     {
         Task<Response<CartResponse>> AddingToCartAsync(string clientId, AddingToCartRequest request);
         Task<Response<CartResponse>> GetCartAsync(string clientId);
-        Task<Response<CartResponse>> UpdateCartItemQuantityAsync(string clientId, UpdateCartItemRequest request);
         Task<Response<CartResponse>> RemoveCartItemAsync(string clientId, Guid cartItemId);
         public Task<Response<CartResponse>> ClearCartItemsAsync(string clientId);
     }

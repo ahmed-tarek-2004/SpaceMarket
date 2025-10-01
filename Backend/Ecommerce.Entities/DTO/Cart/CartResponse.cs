@@ -9,10 +9,10 @@ namespace Ecommerce.Entities.DTO.Cart
 {
     public class CartResponse
     {
-        public string CartId { get; set; }
-        public List<CartItemResponse> CartItems { get; set; }
+        public Guid CartId { get; set; }
         public int TotalItems { get; set; }
         public decimal TotalPrice { get; set; }
-
+        public decimal TotalCommission { get; set; }
+        public List<CartItemResponse> Items { get; set; } = new();
     }
 }

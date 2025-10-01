@@ -14,7 +14,6 @@ namespace Ecommerce.Entities.Models
         public string ProviderId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public string Category { get; set; }
         public string FileUrl { get; set; }
         public string ApiEndpoint { get; set; }
         public decimal Price { get; set; }
@@ -27,8 +26,11 @@ namespace Ecommerce.Entities.Models
 
         public bool IsDeleted { get; set; }
         public DateTime? DeletedAt { get; set; }
+        public Guid CategoryId { get; set; }
 
         public ServiceProvider Provider { get; set; }
+        public ServiceCategory Category { get; set; }
+
     }
 
 }
