@@ -1,0 +1,19 @@
+<div class="pricing-section">
+  <div class="price-box">
+     <h2>{{ currency }}{{ price.toLocaleString() }}</h2>
+    <span class="label">Starting price</span>
+   
+  </div>
+
+<button class="btn-primary" (click)="requestService.emit()">Request Service</button>
+<button class="btn-outline" (click)="contactProvider.emit()">Contact Provider</button>
+
+  <div class="included">
+    <h3>What's included</h3>
+    <ul>
+      @for (item of whatsIncluded; track item) {
+        <li>{{ item }}</li>
+      }
+    </ul>
+  </div>
+</div>
