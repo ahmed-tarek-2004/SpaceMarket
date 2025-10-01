@@ -1,4 +1,676 @@
-<p>
-  landing-page works!
-</p>
+<main class="flex-1">
+  <div class="min-h-screen">
+    <!-- Enhanced Hero Section -->
+    <section
+      class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#07102a] via-[#0B1A3D] to-[#001135] nebula-pulse"
+    >
+      <!-- Enhanced Star Field -->
+      <div class="star-field absolute inset-0 z-0">
+        <div class="star star-twinkle"></div>
+        <div class="star star-twinkle"></div>
+        <div class="star star-twinkle"></div>
+        <div class="star star-twinkle"></div>
+        <div class="star star-twinkle"></div>
+        <div class="star star-twinkle"></div>
+        <div class="star star-twinkle"></div>
+        <div class="star star-twinkle"></div>
+      </div>
 
+      <!-- Constellation Effect -->
+      <svg
+        class="constellation absolute inset-0 w-full h-full z-0"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+      >
+        <line x1="10" y1="20" x2="30" y2="35" class="constellation-line" />
+        <line x1="30" y1="35" x2="60" y2="25" class="constellation-line" />
+        <line x1="60" y1="25" x2="80" y2="40" class="constellation-line" />
+        <line x1="40" y1="60" x2="70" y2="70" class="constellation-line" />
+      </svg>
+
+      <!-- Comet Trail -->
+      <div class="comet-trail" style="clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%)"></div>
+
+      <div class="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+        <div class="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+          <!-- Enhanced Title -->
+          <div class="space-y-4">
+            <h1
+              class="text-4xl sm:text-6xl lg:text-7xl font-bold text-white font-['Exo_2'] leading-tight cosmic-glow"
+            >
+              Your Gateway to the
+              <span
+                class="bg-gradient-to-r from-[#00A8FF] to-[#00F5D4] bg-clip-text text-transparent cosmic-glow"
+                >LEO Economy</span
+              >
+            </h1>
+            <div
+              class="w-24 h-1 bg-gradient-to-r from-[#00A8FF] to-[#00F5D4] mx-auto rounded-full"
+            ></div>
+          </div>
+
+          <!-- Enhanced Description -->
+          <p
+            class="text-lg sm:text-xl lg:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed font-light"
+          >
+            Connect with leading satellite operators, research institutions, and space technology
+            providers. Access cutting-edge services in Low Earth Orbit.
+          </p>
+
+          <!-- Enhanced Buttons -->
+          <div class="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
+            <a href="/marketplace" class="group">
+              <button
+                class="inline-flex items-center justify-center gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-12 bg-gradient-to-r from-[#00A8FF] to-[#0077FF] hover:from-[#00A8FF]/90 hover:to-[#0077FF]/90 text-white px-8 py-4 text-lg font-bold rounded-xl shadow-lg button-pulse hover:scale-105 transition-all duration-300 galaxy-hover"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-rocket mr-2 h-5 w-5"
+                >
+                  <path
+                    d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"
+                  ></path>
+                  <path
+                    d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"
+                  ></path>
+                  <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path>
+                  <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path>
+                </svg>
+                Explore Services
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-arrow-right ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform"
+                >
+                  <path d="M5 12h14"></path>
+                  <path d="m12 5 7 7-7 7"></path>
+                </svg>
+              </button>
+            </a>
+
+            <a href="/login" class="group">
+              <button
+                class="inline-flex items-center justify-center gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border bg-background hover:text-accent-foreground h-12 border-[#00F5D4] text-[#00F5D4] hover:bg-[#00F5D4]/10 px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 hover:scale-105 galaxy-hover"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-users mr-2 h-5 w-5"
+                >
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                Become a Provider
+              </button>
+            </a>
+          </div>
+
+          <!-- Enhanced Trusted By Section -->
+          <div class="pt-12 opacity-80">
+            <p class="text-sm text-gray-400 mb-6 font-medium">
+              Trusted by leading space organizations
+            </p>
+            <div class="flex justify-center items-center space-x-8 text-gray-400">
+              <div class="text-sm font-bold cosmic-glow">NASA</div>
+              <div class="text-sm font-bold cosmic-glow">ESA</div>
+              <div class="text-sm font-bold cosmic-glow">SpaceX</div>
+              <div class="text-sm font-bold cosmic-glow">Blue Origin</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Enhanced Scroll Indicator -->
+      <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <div class="w-6 h-10 border-2 border-[#00A8FF] rounded-full flex justify-center relative">
+          <div class="w-1 h-3 bg-[#00A8FF] rounded-full mt-2 animate-pulse"></div>
+          <div
+            class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-[#00A8FF] rounded-full animate-pulse"
+          ></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Enhanced Services Section -->
+    <section class="py-20 bg-gradient-to-b from-[#07102a] to-[#0B1A3D] relative overflow-hidden">
+      <!-- Background Elements -->
+      <div class="star-field absolute inset-0">
+        <div class="star star-twinkle"></div>
+        <div class="star star-twinkle"></div>
+        <div class="star star-twinkle"></div>
+      </div>
+
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-16">
+          <h2
+            class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white font-['Exo_2'] mb-4 cosmic-glow"
+          >
+            Explore LEO Services
+          </h2>
+          <div
+            class="w-16 h-1 bg-gradient-to-r from-[#00A8FF] to-[#00F5D4] mx-auto mb-6 rounded-full"
+          ></div>
+          <p class="text-lg text-gray-300 max-w-2xl mx-auto font-light">
+            Discover cutting-edge services and solutions available in Low Earth Orbit
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Earth Observation Data -->
+          <a href="/marketplace?category=earth-observation" class="group">
+            <div
+              class="rounded-xl border text-card-foreground shadow-sm group bg-white/5 border-white/10 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#00A8FF]/20 cursor-pointer h-full galaxy-hover"
+            >
+              <div class="p-6 text-center h-full flex flex-col">
+                <div
+                  class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#00A8FF] to-[#0080CC] flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-globe h-8 w-8 text-white"
+                  >
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+                    <path d="M2 12h20"></path>
+                  </svg>
+                </div>
+                <h3
+                  class="text-lg font-semibold text-white mb-2 group-hover:text-[#00A8FF] transition-colors"
+                >
+                  Earth Observation Data
+                </h3>
+                <p class="text-sm text-gray-400 flex-grow font-light">
+                  High-resolution satellite imagery and environmental monitoring
+                </p>
+              </div>
+            </div>
+          </a>
+
+          <!-- Satellite Deployment -->
+          <a href="/marketplace?category=satellite-deployment" class="group">
+            <div
+              class="rounded-xl border text-card-foreground shadow-sm group bg-white/5 border-white/10 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#00A8FF]/20 cursor-pointer h-full galaxy-hover"
+            >
+              <div class="p-6 text-center h-full flex flex-col">
+                <div
+                  class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#00F5D4] to-[#00C4A7] flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-satellite h-8 w-8 text-white"
+                  >
+                    <path d="M13 7 9 3 5 7l4 4"></path>
+                    <path d="m17 11 4 4-4 4-4-4"></path>
+                    <path d="m8 12 4 4 6-6-4-4Z"></path>
+                    <path d="m16 8 3-3"></path>
+                    <path d="M9 21a6 6 0 0 0-6-6"></path>
+                  </svg>
+                </div>
+                <h3
+                  class="text-lg font-semibold text-white mb-2 group-hover:text-[#00A8FF] transition-colors"
+                >
+                  Satellite Deployment
+                </h3>
+                <p class="text-sm text-gray-400 flex-grow font-light">
+                  Launch and deployment services for small satellites
+                </p>
+              </div>
+            </div>
+          </a>
+
+          <!-- In-Orbit Research -->
+          <a href="/marketplace?category=in-orbit-research" class="group">
+            <div
+              class="rounded-xl border text-card-foreground shadow-sm group bg-white/5 border-white/10 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#00A8FF]/20 cursor-pointer h-full galaxy-hover"
+            >
+              <div class="p-6 text-center h-full flex flex-col">
+                <div
+                  class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#33FF99] to-[#00E676] flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-microscope h-8 w-8 text-white"
+                  >
+                    <path d="M6 18h8"></path>
+                    <path d="M3 22h18"></path>
+                    <path d="M14 22a7 7 0 1 0 0-14h-1"></path>
+                    <path d="M9 14h2"></path>
+                    <path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"></path>
+                    <path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"></path>
+                  </svg>
+                </div>
+                <h3
+                  class="text-lg font-semibold text-white mb-2 group-hover:text-[#00A8FF] transition-colors"
+                >
+                  In-Orbit Research
+                </h3>
+                <p class="text-sm text-gray-400 flex-grow font-light">
+                  Microgravity experiments and space-based research platforms
+                </p>
+              </div>
+            </div>
+          </a>
+
+          <!-- Debris Tracking -->
+          <a href="/marketplace?category=debris-tracking" class="group">
+            <div
+              class="rounded-xl border text-card-foreground shadow-sm group bg-white/5 border-white/10 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#00A8FF]/20 cursor-pointer h-full galaxy-hover"
+            >
+              <div class="p-6 text-center h-full flex flex-col">
+                <div
+                  class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#FF8C00] to-[#FF6F00] flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-shield h-8 w-8 text-white"
+                  >
+                    <path
+                      d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"
+                    ></path>
+                  </svg>
+                </div>
+                <h3
+                  class="text-lg font-semibold text-white mb-2 group-hover:text-[#00A8FF] transition-colors"
+                >
+                  Debris Tracking
+                </h3>
+                <p class="text-sm text-gray-400 flex-grow font-light">
+                  Space debris monitoring and collision avoidance services
+                </p>
+              </div>
+            </div>
+          </a>
+
+          <!-- Data Analytics -->
+          <a href="/marketplace?category=data-analytics" class="group">
+            <div
+              class="rounded-xl border text-card-foreground shadow-sm group bg-white/5 border-white/10 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#00A8FF]/20 cursor-pointer h-full galaxy-hover"
+            >
+              <div class="p-6 text-center h-full flex flex-col">
+                <div
+                  class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#9C27B0] to-[#7B1FA2] flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-database h-8 w-8 text-white"
+                  >
+                    <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                    <path d="M3 5V19A9 3 0 0 0 21 19V5"></path>
+                    <path d="M3 12A9 3 0 0 0 21 12"></path>
+                  </svg>
+                </div>
+                <h3
+                  class="text-lg font-semibold text-white mb-2 group-hover:text-[#00A8FF] transition-colors"
+                >
+                  Data Analytics
+                </h3>
+                <p class="text-sm text-gray-400 flex-grow font-light">
+                  AI-powered analysis of satellite and space-based data
+                </p>
+              </div>
+            </div>
+          </a>
+
+          <!-- Communication Services -->
+          <a href="/marketplace?category=communication" class="group">
+            <div
+              class="rounded-xl border text-card-foreground shadow-sm group bg-white/5 border-white/10 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#00A8FF]/20 cursor-pointer h-full galaxy-hover"
+            >
+              <div class="p-6 text-center h-full flex flex-col">
+                <div
+                  class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#FF5722] to-[#E64A19] flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-zap h-8 w-8 text-white"
+                  >
+                    <path
+                      d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5 5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5 5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"
+                    ></path>
+                  </svg>
+                </div>
+                <h3
+                  class="text-lg font-semibold text-white mb-2 group-hover:text-[#00A8FF] transition-colors"
+                >
+                  Communication Services
+                </h3>
+                <p class="text-sm text-gray-400 flex-grow font-light">
+                  Satellite communication and data relay services
+                </p>
+              </div>
+            </div>
+          </a>
+
+          <!-- Advanced Imaging -->
+          <a href="/marketplace?category=imaging" class="group">
+            <div
+              class="rounded-xl border text-card-foreground shadow-sm group bg-white/5 border-white/10 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#00A8FF]/20 cursor-pointer h-full galaxy-hover"
+            >
+              <div class="p-6 text-center h-full flex flex-col">
+                <div
+                  class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#2196F3] to-[#1976D2] flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-camera h-8 w-8 text-white"
+                  >
+                    <path
+                      d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"
+                    ></path>
+                    <circle cx="12" cy="13" r="3"></circle>
+                  </svg>
+                </div>
+                <h3
+                  class="text-lg font-semibold text-white mb-2 group-hover:text-[#00A8FF] transition-colors"
+                >
+                  Advanced Imaging
+                </h3>
+                <p class="text-sm text-gray-400 flex-grow font-light">
+                  Hyperspectral and multispectral imaging solutions
+                </p>
+              </div>
+            </div>
+          </a>
+
+          <!-- Navigation & Positioning -->
+          <a href="/marketplace?category=navigation" class="group">
+            <div
+              class="rounded-xl border text-card-foreground shadow-sm group bg-white/5 border-white/10 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#00A8FF]/20 cursor-pointer h-full galaxy-hover"
+            >
+              <div class="p-6 text-center h-full flex flex-col">
+                <div
+                  class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#4CAF50] to-[#388E3C] flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-navigation h-8 w-8 text-white"
+                  >
+                    <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                  </svg>
+                </div>
+                <h3
+                  class="text-lg font-semibold text-white mb-2 group-hover:text-[#00A8FF] transition-colors"
+                >
+                  Navigation &amp; Positioning
+                </h3>
+                <p class="text-sm text-gray-400 flex-grow font-light">
+                  Precision GPS and navigation enhancement services
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="py-20 bg-gradient-to-br from-[#0B1A3D] via-[#07102a] to-[#001135] relative overflow-hidden"
+    >
+      <!-- Background Elements -->
+      <div class="star-field absolute inset-0">
+        <div class="star star-twinkle"></div>
+        <div class="star star-twinkle"></div>
+      </div>
+
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-16">
+          <h2
+            class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white font-['Exo_2'] mb-4 cosmic-glow"
+          >
+            How It Works
+          </h2>
+          <div
+            class="w-16 h-1 bg-gradient-to-r from-[#00A8FF] to-[#00F5D4] mx-auto mb-6 rounded-full"
+          ></div>
+          <p class="text-lg text-gray-300 max-w-2xl mx-auto font-light">
+            Three simple steps to access the LEO economy
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Enhanced Step Cards -->
+          <div class="text-center pt-4 group galaxy-hover">
+            <div
+              class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#00A8FF] to-[#0080CC] flex items-center justify-center group-hover:scale-110 transition-transform duration-300 relative"
+            >
+              <span class="text-2xl font-bold text-white">1</span>
+              <div class="absolute -inset-2 rounded-full bg-[#00A8FF]/20 animate-pulse"></div>
+            </div>
+            <h3 class="text-xl font-semibold text-white mb-3 cosmic-glow">Discover</h3>
+            <p class="text-gray-300 font-light">
+              Browse our marketplace of verified LEO service providers and find the perfect solution
+              for your mission.
+            </p>
+          </div>
+
+          <div class="text-center pt-4 group galaxy-hover">
+            <div
+              class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#00F5D4] to-[#00C4A7] flex items-center justify-center group-hover:scale-110 transition-transform duration-300 relative"
+            >
+              <span class="text-2xl font-bold text-white">2</span>
+              <div class="absolute -inset-2 rounded-full bg-[#00F5D4]/20 animate-pulse"></div>
+            </div>
+            <h3 class="text-xl font-semibold text-white mb-3 cosmic-glow">
+              Request &amp; Collaborate
+            </h3>
+            <p class="text-gray-300 font-light">
+              Connect directly with providers, discuss requirements, and customize services to meet
+              your specific needs.
+            </p>
+          </div>
+
+          <div class="text-center pt-4 group galaxy-hover">
+            <div
+              class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#33FF99] to-[#00E676] flex items-center justify-center group-hover:scale-110 transition-transform duration-300 relative"
+            >
+              <span class="text-2xl font-bold text-white">3</span>
+              <div class="absolute -inset-2 rounded-full bg-[#33FF99]/20 animate-pulse"></div>
+            </div>
+            <h3 class="text-xl font-semibold text-white mb-3 cosmic-glow">Achieve Mission</h3>
+            <p class="text-gray-300 font-light">
+              Execute your project with confidence, backed by our secure platform and dedicated
+              support team.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Enhanced Why Choose Section -->
+    <section class="py-20 bg-gradient-to-b from-[#07102a] to-[#0B1A3D] relative overflow-hidden">
+      <!-- Background Elements -->
+      <div class="star-field absolute inset-0">
+        <div class="star star-twinkle"></div>
+        <div class="star star-twinkle"></div>
+        <div class="star star-twinkle"></div>
+      </div>
+
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl sm:text-4xl font-bold text-white font-['Exo_2'] mb-4 cosmic-glow">
+            Why Choose Orbital Nexus?
+          </h2>
+          <div
+            class="w-16 h-1 bg-gradient-to-r from-[#00A8FF] to-[#00F5D4] mx-auto mb-6 rounded-full"
+          ></div>
+          <p class="text-lg text-gray-300 max-w-2xl mx-auto font-light">
+            The trusted platform for space industry professionals
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Enhanced Feature Cards -->
+          <div class="text-center pt-4 group galaxy-hover">
+            <div
+              class="w-16 h-16 mx-auto mb-6 rounded-full bg-[#00A8FF]/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-shield h-8 w-8 text-[#00A8FF]"
+              >
+                <path
+                  d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"
+                ></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-white mb-3 cosmic-glow">Verified Providers</h3>
+            <p class="text-gray-300 font-light">
+              All service providers are thoroughly vetted and certified by our expert team.
+            </p>
+          </div>
+
+          <div class="text-center pt-4 group galaxy-hover">
+            <div
+              class="w-16 h-16 mx-auto mb-6 rounded-full bg-[#00F5D4]/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-zap h-8 w-8 text-[#00F5D4]"
+              >
+                <path
+                  d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"
+                ></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-white mb-3 cosmic-glow">Fast Deployment</h3>
+            <p class="text-gray-300 font-light">
+              Rapid project initiation with streamlined processes and dedicated support.
+            </p>
+          </div>
+
+          <div class="text-center pt-4 group galaxy-hover">
+            <div
+              class="w-16 h-16 mx-auto mb-6 rounded-full bg-[#33FF99]/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-users h-8 w-8 text-[#33FF99]"
+              >
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-white mb-3 cosmic-glow">Expert Network</h3>
+            <p class="text-gray-300 font-light">
+              Connect with leading researchers, engineers, and space industry experts.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>

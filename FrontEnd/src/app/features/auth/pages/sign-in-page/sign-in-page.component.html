@@ -1,19 +1,27 @@
-<div class="auth-container">
-  <!-- Shooting Stars -->
-  <div class="shooting-star"></div>
-  <div class="shooting-star"></div>
-  <div class="shooting-star"></div>
+<div class="w-full">
+  <h2
+    class="text-xl lg:text-2xl font-semibold leading-none tracking-tight text-center text-black mb-4 lg:mb-6"
+  >
+    Sign In to Orbital Nexus
+  </h2>
+  <p class="text-black/80 text-sm lg:text-base text-center mb-6">
+    Access your interstellar command portal
+  </p>
 
-  <!-- Logo and Title -->
-  <div class="logo-section">
-    <i class="fa-solid fa-satellite"></i>
-    <h2>Orbital Nexus</h2>
-    <p class="subtitle">Access your LEO services account</p>
-  </div>
+  <!-- Sign In Form -->
+  <app-sign-in-form></app-sign-in-form>
 
-  <!-- Form Card -->
-  <div class="form-card">
-    <h3>Welcome Back</h3>
-    <app-sign-in-form></app-sign-in-form>
+  <!-- Terms and Sign Up Link -->
+  <div class="mt-6 text-center">
+    <p class="text-xs lg:text-sm text-gray-400 mb-4">
+      By signing in, you agree to our
+      <a routerLink="#" class="text-cyan-400 hover:text-cyan-300 hover:underline transition-colors"
+        >Terms of Service</a
+      >
+      and
+      <a routerLink="#" class="text-cyan-400 hover:text-cyan-300 hover:underline transition-colors"
+        >Privacy Policy</a
+      >
+    </p>
   </div>
 </div>

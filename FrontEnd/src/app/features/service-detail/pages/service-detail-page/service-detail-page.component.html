@@ -1,0 +1,32 @@
+<div class="service-detail-container">
+  @if (service$ | async; as service) {
+    <app-service-header [service]="service"></app-service-header>
+
+    <div class="main-content">
+      <div class="left-column">
+        <app-service-preview [images]="service.previewImages"></app-service-preview>
+      </div>
+      <div class="right-column">
+        <app-service-pricing 
+          [price]="service.price"
+          [currency]="service.currency"
+          [whatsIncluded]="service.whatsIncluded"
+          (requestService)="onRequestService(service.id)"
+          (contactProvider)="onContactProvider()">
+        </app-service-pricing>
+      </div>
+    </div>
+
+    <app-service-description-tabs
+      [description]="service.description"
+      [useCases]="service.useCases"
+      [features]="service.features"
+      [providerInfo]="service.providerInfo"
+      [reviews]="service.reviews">
+    </app-service-description-tabs>
+  }
+
+
+
+  
+</div>

@@ -10,8 +10,7 @@ namespace Ecommerce.Entities.DTO.Cart
 {
     public class AddingToCartRequest
     {
-        public Guid ServiceId {  get; set; }
-        public Guid DataSetId {  get; set; }
-        public int Quantity { get; set; } = 1;
+        public Guid? ServiceId { get; set; }
+        public Guid? DataSetId { get; set; }
     }
 }

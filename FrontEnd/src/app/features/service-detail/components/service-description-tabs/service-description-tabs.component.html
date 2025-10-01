@@ -1,0 +1,54 @@
+<div class="tabs-container">
+  <div class="tabs-header">
+    <button 
+      [class.active]="activeTab === 'description'" 
+      (click)="setTab('description')">Description</button>
+    <button 
+      [class.active]="activeTab === 'provider'" 
+      (click)="setTab('provider')">Provider Info</button>
+    <button 
+      [class.active]="activeTab === 'reviews'" 
+      (click)="setTab('reviews')">Reviews</button>
+  </div>
+
+  <div class="tabs-content">
+    @if (activeTab === 'description') {
+      <h3>Description</h3>
+      <p>{{ description }}</p>
+      <h4>Use Cases:</h4>
+      <ul>
+        @for (caseItem of useCases; track caseItem) {
+          <li>{{ caseItem }}</li>
+        }
+      </ul>
+      <h4>Features:</h4>
+      <ul>
+        @for (feature of features; track feature) {
+          <li>{{ feature }}</li>
+        }
+      </ul>
+    }
+
+    @if (activeTab === 'provider') {
+      <h3>Provider Info</h3>
+      <p>{{ providerInfo }}</p>
+    }
+
+    @if (activeTab === 'reviews') {
+      <h3>Reviews</h3>
+      <div class="reviews-list">
+        @for (review of reviews; track review) {
+          <div class="review-item">
+            <div class="review-header">
+              <strong>{{ review.author }}</strong>
+              <span>⭐ {{ review.rating }}</span>
+            </div>
+            <p>{{ review.comment }}</p>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  
+</div>

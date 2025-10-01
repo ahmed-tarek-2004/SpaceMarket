@@ -1,0 +1,64 @@
+.tabs-container {
+  margin-top: 2rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.tabs-header {
+  display: flex;
+  background: #f9f9f9;
+  border-bottom: 1px solid #ddd;
+}
+
+.tabs-header button {
+  flex: 1;
+  padding: .5rem;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  transition: background 0.3s ease;
+}
+
+.tabs-header button:hover {
+  background: #eee;
+}
+
+.tabs-header button.active {
+  background: #17173f;
+  color: #fff;
+  font-weight: bold;
+}
+
+.tabs-content {
+  padding: 1.5rem;
+}
+
+.tabs-content p {
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.tabs-content ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin: 0;
+}
+
+.tabs-content ul li {
+  margin: 0.5rem 0;
+}
+
+.reviews-list .review-item {
+  margin-bottom: 1.2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
