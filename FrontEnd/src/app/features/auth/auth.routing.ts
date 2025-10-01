@@ -3,14 +3,21 @@ import { Routes } from '@angular/router';
 export const AUTH_ROUTES: Routes = [
   {
     path: '',
-    redirectTo: '',
-    pathMatch: 'full',
-  },
-  {
-    path: 'auth',
     loadComponent: () =>
       import('./pages/auth-page/auth-page.component').then((m) => m.AuthPageComponent),
     data: { hideHeader: true, hideFooter: true },
+  },
+  {
+    path: 'sign-in',
+    loadComponent: () =>
+      import('./pages/auth-page/auth-page.component').then((m) => m.AuthPageComponent),
+    data: { hideHeader: true, hideFooter: true, tab: 'signin' },
+  },
+  {
+    path: 'register',
+    loadComponent: () =>
+      import('./pages/auth-page/auth-page.component').then((m) => m.AuthPageComponent),
+    data: { hideHeader: true, hideFooter: true, tab: 'register' },
   },
   {
     path: 'forgot-password',
@@ -18,6 +25,7 @@ export const AUTH_ROUTES: Routes = [
       import('./pages/forget-password-page/forget-password-page.component').then(
         (m) => m.ForgetPasswordPageComponent
       ),
+      data: { hideHeader: true, hideFooter: true },
   },
   {
     path: 'verify-otp',
@@ -25,6 +33,7 @@ export const AUTH_ROUTES: Routes = [
       import('./pages/verify-otp-page/verify-otp-page.component').then(
         (m) => m.VerifyOtpPageComponent
       ),
+      data: { hideHeader: true, hideFooter: true },
   },
   {
     path: 'reset-password',
@@ -32,10 +41,6 @@ export const AUTH_ROUTES: Routes = [
       import('./pages/reset-password-page/reset-password-page.component').then(
         (m) => m.ResetPasswordPageComponent
       ),
-  },
-  {
-    path: 'sign-up',
-    loadComponent: () =>
-      import('./pages/sign-up-page/sign-up-page.component').then((m) => m.SignUpPageComponent),
+      data: { hideHeader: true, hideFooter: true },
   },
 ];

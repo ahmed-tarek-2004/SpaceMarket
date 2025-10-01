@@ -1,13 +1,13 @@
-html, body {
+html,
+body {
   overflow-x: hidden;
   max-width: 100%;
 }
 
 header {
-  overflow-x: hidden;
+  position: relative;
   width: 100%;
 }
-
 
 // Enhanced Space theme animations for LEO header
 @keyframes starTwinkle {
@@ -377,7 +377,7 @@ header {
   .slide-in-right {
     animation: slideInFromRight 0.3s ease-out;
   }
-  
+
   // Ensure mobile menu doesn't cause horizontal scroll
   .fixed {
     max-width: 100vw;
@@ -389,7 +389,7 @@ header {
 @media (max-width: 768px) {
   .star-field .star {
     // Fewer stars on mobile for performance
-    &:nth-child(n+5) {
+    &:nth-child(n + 5) {
       display: none;
     }
   }
@@ -402,7 +402,7 @@ header {
   .orbit-dot {
     animation-duration: 6s;
   }
-  
+
   // Mobile menu text adjustments
   #mobile-menu {
     .text-xl {
@@ -417,5 +417,28 @@ header {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+// Active tab styling
+.active-tab {
+  .w-2.h-2 {
+    background-color: #00a8ff !important;
+  }
+}
+
+// Alternative: If the above doesn't work, use this more specific approach
+:host ::ng-deep {
+  .active-tab {
+    span.w-2.h-2 {
+      background-color: #00a8ff !important;
+    }
+  }
+}
+
+// Ensure the dot color changes for active tabs
+a[routerLink].active-tab {
+  .w-2.h-2 {
+    background-color: #00a8ff !important;
   }
 }

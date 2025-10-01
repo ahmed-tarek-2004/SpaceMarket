@@ -1,47 +1,84 @@
-import { Component, signal, HostListener, inject } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
-import { User } from '../../../core/interfaces/user';
+import { Component, signal, HostListener, inject, computed, OnInit } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
+import { TokenService } from '../../../core/services/token.service';
 import { ROUTES } from '../../config/constants';
 
 @Component({
   selector: 'app-header',
-  imports: [ RouterLink ],
+  imports: [RouterLink, RouterLinkActive],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent {
-  ROUTES = ROUTES
+export class HeaderComponent implements OnInit {
+  ROUTES = ROUTES;
   private router = inject(Router);
-  
+  private authService = inject(AuthService);
+  private tokenService = inject(TokenService);
+
   // mobile menu state
   userMenuOpen = signal(false);
   menuOpen = signal(false);
 
-  // Mock user data - replace with actual authentication service
-  currentUser = signal<User | null>(null);
-  isLoggedIn = signal(false);
+  // Authentication state
+  isLoggedIn = computed(() => this.tokenService.isAuthenticated());
 
-  constructor() {
-    // Check if user is logged in (you would typically get this from a service)
+  // User data - will be populated from token service
+  currentUser = signal<any | null>(null);
+
+  ngOnInit() {
     this.checkAuthStatus();
+
+    // Listen for authentication changes
+    this.tokenService.authState$.subscribe(() => {
+      this.checkAuthStatus();
+    });
   }
 
-  // Mock authentication check - replace with actual service call
   private checkAuthStatus() {
-    // For demo purposes, you can set this to true to see logged-in state
-    const mockUser: User = {
-      id: '1',
-      email: 'john.doe@example.com',
-      phoneNumber: '01012345678',
+    if (this.isLoggedIn()) {
+      this.loadUserData();
+    } else {
+      this.currentUser.set(null);
+    }
+  }
+
+  private loadUserData() {
+    const userData = {
+      id: this.tokenService.getUserId(),
+      email: this.tokenService.getUserEmail(),
+      phoneNumber: this.tokenService.getUserPhone(),
+      role: this.tokenService.getRole(),
+      displayName: this.tokenService.getDisplayName(),
+      name: this.getUserNameFromData(),
       isEmailConfirmed: true,
-      role: "client",
-      accessToken: "132456789",
-      refreshToken: "987754321"
     };
 
-    // Set to null for logged out state, or mockUser for logged in state
-    this.currentUser.set(mockUser);
-    this.isLoggedIn.set(!!mockUser);
+    this.currentUser.set(userData);
+  }
+
+  private getUserNameFromData(): string {
+    // First try to use the display name
+    const displayName = this.tokenService.getDisplayName();
+    if (displayName && displayName.trim() !== '') {
+      return displayName;
+    }
+
+    // Fallback to phone number formatting
+    const phone = this.tokenService.getUserPhone();
+    if (phone) {
+      // Remove country code and format: +201090908451 -> 01090908451
+      const formattedPhone = phone.replace(/^\+20/, '0');
+      return formattedPhone;
+    }
+
+    // Otherwise use email username
+    const email = this.tokenService.getUserEmail();
+    if (email) {
+      return email.split('@')[0];
+    }
+
+    return 'User';
   }
 
   toggleMenu() {
@@ -61,7 +98,7 @@ export class HeaderComponent {
 
   // User information methods
   getUserName(): string {
-    return this.currentUser()?.phoneNumber || 'User';
+    return this.currentUser()?.name || this.currentUser()?.phoneNumber || 'User';
   }
 
   getUserEmail(): string {
@@ -70,22 +107,36 @@ export class HeaderComponent {
 
   getUserInitials(): string {
     const name = this.getUserName();
+
+    // For display names (full names or company names), use first letters of words
+    const displayName = this.tokenService.getDisplayName();
+    if (displayName && displayName.trim() !== '') {
+      return displayName
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase()
+        .substring(0, 2);
+    }
+
+    // For phone numbers, use first digit or 'U'
+    if (/^\d+$/.test(name)) {
+      return name.charAt(0) || 'U';
+    }
+
     return name
       .split(' ')
       .map((n) => n[0])
       .join('')
-      .toUpperCase();
+      .toUpperCase()
+      .substring(0, 2);
   }
 
   logout() {
-    // Implement your logout logic here
+    this.authService.logout();
     this.currentUser.set(null);
-    this.isLoggedIn.set(false);
     this.userMenuOpen.set(false);
-    this.router.navigate(['/']);
-
-    // In a real app, you would call your auth service:
-    // this.authService.logout();
+    this.menuOpen.set(false);
   }
 
   // Close menus on ESC

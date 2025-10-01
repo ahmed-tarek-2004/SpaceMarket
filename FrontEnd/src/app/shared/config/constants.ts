@@ -3,5 +3,5 @@ export const ROUTES = {
   signUp: '/auth/sign-up',
   marketplace: '/marketplace',
   cart: '/cart'
-
+  
 };

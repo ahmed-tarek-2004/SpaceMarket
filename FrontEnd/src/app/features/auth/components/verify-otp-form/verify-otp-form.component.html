@@ -1,41 +1,92 @@
-<form [formGroup]="otpForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="otpForm" (ngSubmit)="onSubmit()" class="otp-form">
+
   <div class="otp-inputs">
     <input
-      #digit1
+      #digitInput
       type="text"
-      id="otp-1"
       inputmode="numeric"
       maxlength="1"
-      autocomplete="one-time-code" 
       formControlName="digit1"
-      (input)="onDigitInput(0)"
-      (keydown.backspace)="onBackspace(0)"
+      (input)="onDigitInput(0, $event)"
+      (keydown)="onKeyDown($event, 0)"
+      (paste)="onPaste($event)"
+      autocomplete="one-time-code"
+      [class.error]="errorMessage"
     />
     <input
-      #digit2
+      #digitInput
       type="text"
-      id="otp-2"
       inputmode="numeric"
       maxlength="1"
       formControlName="digit2"
-      (input)="onDigitInput(1)"
-      (keydown.backspace)="onBackspace(1)"
+      (input)="onDigitInput(1, $event)"
+      (keydown)="onKeyDown($event, 1)"
+      (paste)="onPaste($event)"
+      [class.error]="errorMessage"
     />
-    <input #digit3 type="text" id="otp-3" inputmode="numeric" maxlength="1" formControlName="digit3" (input)="onDigitInput(2)" (keydown.backspace)="onBackspace(2)" />
-    <input #digit4 type="text" id="otp-4" inputmode="numeric" maxlength="1" formControlName="digit4" (input)="onDigitInput(3)" (keydown.backspace)="onBackspace(3)" />
-    <input #digit5 type="text" id="otp-5" inputmode="numeric" maxlength="1" formControlName="digit5" (input)="onDigitInput(4)" (keydown.backspace)="onBackspace(4)" />
-    <input #digit6 type="text" id="otp-6" inputmode="numeric" maxlength="1" formControlName="digit6" (input)="onDigitInput(5)" (keydown.backspace)="onBackspace(5)" />
+    <input
+      #digitInput
+      type="text"
+      inputmode="numeric"
+      maxlength="1"
+      formControlName="digit3"
+      (input)="onDigitInput(2, $event)"
+      (keydown)="onKeyDown($event, 2)"
+      (paste)="onPaste($event)"
+      [class.error]="errorMessage"
+    />
+    <input
+      #digitInput
+      type="text"
+      inputmode="numeric"
+      maxlength="1"
+      formControlName="digit4"
+      (input)="onDigitInput(3, $event)"
+      (keydown)="onKeyDown($event, 3)"
+      (paste)="onPaste($event)"
+      [class.error]="errorMessage"
+    />
+    <input
+      #digitInput
+      type="text"
+      inputmode="numeric"
+      maxlength="1"
+      formControlName="digit5"
+      (input)="onDigitInput(4, $event)"
+      (keydown)="onKeyDown($event, 4)"
+      (paste)="onPaste($event)"
+      [class.error]="errorMessage"
+    />
+    <input
+      #digitInput
+      type="text"
+      inputmode="numeric"
+      maxlength="1"
+      formControlName="digit6"
+      (input)="onDigitInput(5, $event)"
+      (keydown)="onKeyDown($event, 5)"
+      (paste)="onPaste($event)"
+      [class.error]="errorMessage"
+    />
   </div>
 
   @if (errorMessage) {
     <div class="auth-error">{{ errorMessage }}</div>
   }
 
-  <button type="submit" [disabled]="!isOtpComplete() || isLoading">
-    @if (isLoading) {
-      Verifying...
-    } @else {
-      Verify OTP
-    }
-  </button>
+  <div class="w-full pt-2 lg:pt-4">
+    <app-button
+      type="submit"
+      [loading]="isLoading"
+      loadingText="Verifying..."
+      label="Verify OTP"
+      color="bg-[#00A8FF]"
+      hoverColor="hover:bg-[#00A8FF]/90"
+      textColor="text-white"
+      [additionalClasses]="
+        'w-full py-3 font-medium rounded-lg transition-all duration-300 ease-out active:scale-[0.98] shadow-lg hover:shadow-xl hover:scale-[1.02]'
+      "
+      [disabled]="!isOtpComplete() || isLoading"
+    ></app-button>
+  </div>
 </form>
