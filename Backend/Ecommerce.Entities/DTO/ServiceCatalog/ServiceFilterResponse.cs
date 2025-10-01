@@ -16,5 +16,6 @@ namespace Ecommerce.Entities.DTO.ServiceCatalog
         public string ProviderName { get; set; }
         public decimal Price { get; set; }
         public string ImagesUrl { get; set; }
+        public string WebsiteUrl { get; set; }
     }
 }
