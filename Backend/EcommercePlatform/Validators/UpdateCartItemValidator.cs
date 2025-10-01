@@ -10,8 +10,6 @@ namespace Ecommerce.API.Validators
 
             RuleFor(x => x.CartItemId)
                 .NotEmpty().WithMessage("CartItem is required.");
-            RuleFor(x => x.Quantity)
-                .GreaterThanOrEqualTo(0);
         }
 
     }

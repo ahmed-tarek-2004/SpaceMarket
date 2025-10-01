@@ -3,16 +3,23 @@ using FluentValidation;
 
 namespace Ecommerce.API.Validators
 {
-    public class AddingToCartValidator:AbstractValidator<AddingToCartRequest>
+    public class AddingToCartRequestValidator : AbstractValidator<AddingToCartRequest>
     {
-        public AddingToCartValidator()
+        public AddingToCartRequestValidator()
         {
-            RuleFor(x => x.ServiceId)
-                .NotEmpty().WithMessage("Service is required.");
-            RuleFor(x => x.DataSetId)
-                .NotEmpty().WithMessage("Service is required.");
-            RuleFor(x => x.Quantity)
-                .GreaterThan(0).WithMessage("Quantity must be greater than zero.");
+            RuleFor(x => x)
+                .Must(x => (x.ServiceId.HasValue ^ x.DataSetId.HasValue)) // xor: exactly one provided
+                .WithMessage("Provide exactly one of serviceId or dataSetId.");
+
+            When(x => x.ServiceId.HasValue, () =>
+            {
+                RuleFor(x => x.ServiceId.Value).NotEqual(Guid.Empty).WithMessage("serviceId must be a valid guid.");
+            });
+
+            When(x => x.DataSetId.HasValue, () =>
+            {
+                RuleFor(x => x.DataSetId.Value).NotEqual(Guid.Empty).WithMessage("dataSetId must be a valid guid.");
+            });
         }
     }
 }

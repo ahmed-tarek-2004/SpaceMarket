@@ -377,29 +377,23 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     .Where(s => !s.IsDeleted && s.Status == ServiceStatus.Active)
                     .AsNoTracking();
 
-
                 if (filter.CategoryId.HasValue)
                 {
                     Services = Services.Where(s => s.CategoryId == filter.CategoryId);
-                    _logger.LogInformation("Service Filterd By Category successfully ");
+                    _logger.LogInformation("Service Filtered By Category successfully ");
                 }
-
 
                 if (filter.MinPrice.HasValue)
                 {
                     Services = Services.Where(s => s.Price >= filter.MinPrice.Value);
-                    _logger.LogInformation("Service Filterd By MinPrice successfully");
-
+                    _logger.LogInformation("Service Filtered By MinPrice successfully");
                 }
 
                 if (filter.MaxPrice.HasValue)
                 {
                     Services = Services.Where(s => s.Price <= filter.MaxPrice.Value);
-                    _logger.LogInformation("Service Filterd By MaxPrice successfully");
+                    _logger.LogInformation("Service Filtered By MaxPrice successfully");
                 }
-                //Note : Untill We Add It to Model Later
-                //if (!string.IsNullOrEmpty(filter.Location))
-                //   Services = Services.Where(s => s.Provider.User.Loaction.Contain(filter.Location));
 
                 var services = Services
                     .OrderByDescending(s => s.CreatedAt)
@@ -411,13 +405,12 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                         Description = s.Description,
                         ProviderName = s.Provider.CompanyName,
                         CategoryName = s.Category.Name,
-                        Price = s.Price
+                        Price = s.Price,
+                        ImagesUrl = s.ImagesUrl
                     })
-                    //.ToList();
-                    //.AsNoTracking();
                     .AsQueryable();
 
-                 var paginated = await PaginatedList<ServiceFilterResponse>.CreateAsync(services, filter.PageNumber, filter.PageSize);
+                var paginated = await PaginatedList<ServiceFilterResponse>.CreateAsync(services, filter.PageNumber, filter.PageSize);
 
                 return _responseHandler.Success(paginated, "Services fetched successfully.");
             }
@@ -437,7 +430,7 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     .Include(s => s.Provider)
                     //.ThenInclude(p => p.User)
                     .AsNoTracking()
-                   .FirstOrDefaultAsync(s => s.Id == serviceId && s.Status == ServiceStatus.Active && !s.IsDeleted);
+                   .FirstOrDefaultAsync(s => s.Id == serviceId /*&& s.Status == ServiceStatus.Active*/ && !s.IsDeleted);
                 if (service == null)
                 {
                     _logger.LogWarning("Service Not Found ");
@@ -456,6 +449,7 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     Status = service.Status.ToString(),
                     CreatedAt = service.CreatedAt,
                     UpdatedAt = service.UpdatedAt,
+                    WebsiteUrl=service.Provider.WebsiteUrl
                 };
 
                 return _responseHandler.Success(response, $"Services {service.Id} fetched successfully.");
@@ -468,6 +462,348 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
 
         }
         #endregion
+
+        // داخل ServiceCatalogService
+        public async Task<Response<DatasetResponse>> CreateDatasetAsync(string providerId, CreateDatasetRequest request)
+        {
+            try
+            {
+                string? fileUrl = null;
+                string? thumbnailUrl = null;
+
+                if (request.File != null)
+                    fileUrl = await _imageUploadService.UploadAsync(request.File);
+
+                if (request.Thumbnail != null)
+                    thumbnailUrl = await _imageUploadService.UploadAsync(request.Thumbnail);
+
+                var dataset = new Dataset
+                {
+                    Id = Guid.NewGuid(),
+                    ProviderId = providerId,
+                    Title = request.Title,
+                    Description = request.Description,
+                    CategoryId = request.CategoryId,
+                    Price = request.Price,
+                    FileUrl = fileUrl,
+                    ThumbnailUrl = thumbnailUrl,
+                    ApiEndpoint = request.ApiEndpoint,
+                    Status = ServiceStatus.PendingApproval,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                await _context.Datasets.AddAsync(dataset);
+                await _context.SaveChangesAsync();
+
+                var responseDto = new DatasetResponse
+                {
+                    Id = dataset.Id,
+                    Title = dataset.Title,
+                    Description = dataset.Description,
+                    CategoryId = dataset.CategoryId,
+                    Price = dataset.Price,
+                    FileUrl = dataset.FileUrl,
+                    ThumbnailUrl = dataset.ThumbnailUrl,
+                    ApiEndpoint = dataset.ApiEndpoint,
+                    ProviderId = dataset.ProviderId,
+                    ProviderName = dataset.Provider.CompanyName,
+                    Status = dataset.Status.ToString(),
+                    CreatedAt = dataset.CreatedAt
+                };
+
+                return _responseHandler.Created(responseDto, "Dataset created successfully. Pending admin approval.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating dataset for Provider: {ProviderId}", providerId);
+                return _responseHandler.ServerError<DatasetResponse>("An error occurred while creating the dataset.");
+            }
+        }
+
+        public async Task<Response<DatasetResponse>> UpdateDatasetAsync(string providerId, UpdateDatasetRequest request)
+        {
+            try
+            {
+                var dataset = await _context.Datasets
+                    .Include(d => d.Category)
+                    .FirstOrDefaultAsync(d => d.Id == request.Id && d.ProviderId == providerId && !d.IsDeleted);
+
+                if (dataset == null)
+                    return _responseHandler.NotFound<DatasetResponse>("Dataset not found.");
+
+                if (!string.IsNullOrWhiteSpace(request.Title))
+                    dataset.Title = request.Title;
+
+                if (!string.IsNullOrWhiteSpace(request.Description))
+                    dataset.Description = request.Description;
+
+                if (request.CategoryId.HasValue)
+                    dataset.CategoryId = request.CategoryId.Value;
+
+                if (request.Price.HasValue)
+                    dataset.Price = request.Price.Value;
+
+                if (request.File != null)
+                    dataset.FileUrl = await _imageUploadService.UploadAsync(request.File);
+
+                if (request.Thumbnail != null)
+                    dataset.ThumbnailUrl = await _imageUploadService.UploadAsync(request.Thumbnail);
+
+                dataset.UpdatedAt = DateTime.UtcNow;
+                dataset.Status = ServiceStatus.PendingApproval;
+
+                _context.Datasets.Update(dataset);
+                await _context.SaveChangesAsync();
+
+                var response = new DatasetResponse
+                {
+                    Id = dataset.Id,
+                    Title = dataset.Title,
+                    Description = dataset.Description,
+                    CategoryId = dataset.CategoryId,
+                    Price = dataset.Price,
+                    FileUrl = dataset.FileUrl,
+                    ThumbnailUrl = dataset.ThumbnailUrl,
+                    ApiEndpoint = dataset.ApiEndpoint,
+                    ProviderId = dataset.ProviderId,
+                    ProviderName = dataset.Provider.CompanyName,
+                    Status = dataset.Status.ToString(),
+                    CreatedAt = dataset.CreatedAt,
+                    UpdatedAt = dataset.UpdatedAt
+                };
+
+                return _responseHandler.Success(response, "Dataset updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating dataset {DatasetId} for Provider {ProviderId}", request.Id, providerId);
+                return _responseHandler.ServerError<DatasetResponse>("An error occurred while updating the dataset.");
+            }
+        }
+
+        public async Task<Response<bool>> DeleteDatasetAsync(string providerId, Guid datasetId)
+        {
+            try
+            {
+                var dataset = await _context.Datasets
+                    .FirstOrDefaultAsync(d => d.Id == datasetId && d.ProviderId == providerId && !d.IsDeleted);
+
+                if (dataset == null)
+                    return _responseHandler.NotFound<bool>("Dataset not found.");
+
+                dataset.IsDeleted = true;
+                dataset.DeletedAt = DateTime.UtcNow;
+
+                _context.Datasets.Update(dataset);
+                await _context.SaveChangesAsync();
+
+                return _responseHandler.Success(true, "Dataset deleted successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting dataset {DatasetId} for Provider {ProviderId}", datasetId, providerId);
+                return _responseHandler.ServerError<bool>("An error occurred while deleting the dataset.");
+            }
+        }
+
+        public async Task<Response<List<DatasetResponse>>> GetMyDatasetsAsync(string providerId)
+        {
+            try
+            {
+                var datasets = await _context.Datasets
+                    .Include(d => d.Category)
+                    .Where(d => d.ProviderId == providerId && !d.IsDeleted)
+                    .OrderByDescending(d => d.CreatedAt)
+                    .Select(d => new DatasetResponse
+                    {
+                        Id = d.Id,
+                        Title = d.Title,
+                        Description = d.Description,
+                        CategoryId = d.CategoryId,
+                        Price = d.Price,
+                        FileUrl = d.FileUrl,
+                        ThumbnailUrl = d.ThumbnailUrl,
+                        ApiEndpoint = d.ApiEndpoint,
+                        ProviderId = d.ProviderId,
+                        ProviderName = d.Provider.CompanyName,
+                        Status = d.Status.ToString(),
+                        CreatedAt = d.CreatedAt,
+                        UpdatedAt = d.UpdatedAt
+                    })
+                    .ToListAsync();
+
+                return _responseHandler.Success(datasets, "Fetched provider datasets successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching datasets for Provider {ProviderId}", providerId);
+                return _responseHandler.ServerError<List<DatasetResponse>>("An error occurred while fetching your datasets.");
+            }
+        }
+
+        public async Task<Response<List<AdminDatasetResponse>>> GetAllDatasetsAsync(DatasetFilterRequest filter)
+        {
+            try
+            {
+                var query = _context.Datasets
+                    .Include(d => d.Category)
+                    .Include(d => d.Provider)
+                    .ThenInclude(p => p.User)
+                    .AsQueryable();
+
+                if (filter.CategoryId.HasValue)
+                    query = query.Where(d => d.CategoryId == filter.CategoryId);
+
+                if (!string.IsNullOrEmpty(filter.ProviderId))
+                    query = query.Where(d => d.ProviderId == filter.ProviderId);
+
+                if (!string.IsNullOrEmpty(filter.Status))
+                    query = query.Where(d => d.Status.ToString() == filter.Status);
+
+                var datasets = await query
+                    .OrderByDescending(d => d.CreatedAt)
+                    .Select(d => new AdminDatasetResponse
+                    {
+                        Id = d.Id,
+                        Title = d.Title,
+                        ProviderId = d.ProviderId,
+                        ProviderName = d.Provider.CompanyName,
+                        ProviderEmail = d.Provider.User.Email,
+                        CategoryName = d.Category.Name,
+                        Price = d.Price,
+                        Status = d.Status.ToString(),
+                        CreatedAt = d.CreatedAt
+                    })
+                    .ToListAsync();
+
+                return _responseHandler.Success(datasets, "Datasets fetched successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching all datasets for admin");
+                return _responseHandler.ServerError<List<AdminDatasetResponse>>("An error occurred while fetching datasets.");
+            }
+        }
+
+        public async Task<Response<bool>> UpdateDatasetStatusAsync(UpdateDatasetStatusRequest request, string adminId)
+        {
+            try
+            {
+                var dataset = await _context.Datasets
+                    .Include(d => d.Provider)
+                    .ThenInclude(p => p.User)
+                    .FirstOrDefaultAsync(d => d.Id == request.DatasetId && !d.IsDeleted);
+
+                if (dataset == null)
+                    return _responseHandler.NotFound<bool>("Dataset not found.");
+
+                if (!Enum.TryParse<ServiceStatus>(request.Status, true, out var parsedStatus))
+                    return _responseHandler.BadRequest<bool>("Invalid status value.");
+
+                dataset.Status = parsedStatus;
+                dataset.UpdatedAt = DateTime.UtcNow;
+
+                _context.Datasets.Update(dataset);
+
+                await _context.SaveChangesAsync();
+
+                await _emailService.SendServiceStatusChangedEmailAsync(
+                    dataset.Provider.User,
+                    dataset.Title,
+                    parsedStatus.ToString(),
+                    request.Reason
+                );
+
+                return _responseHandler.Success(true, $"Dataset {parsedStatus} successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating dataset status {DatasetId} by Admin {AdminId}", request.DatasetId, adminId);
+                return _responseHandler.ServerError<bool>("An error occurred while updating the dataset status.");
+            }
+        }
+
+        public async Task<Response<PaginatedList<DatasetFilterResponse>>> GetAvailableDatasetsAsync(DatasetFilterRequest filter)
+        {
+            try
+            {
+                var datasets = _context.Datasets
+                    .Include(d => d.Category)
+                    .Include(d => d.Provider)
+                    .Where(d => !d.IsDeleted && d.Status == ServiceStatus.Active)
+                    .AsNoTracking();
+
+                if (filter.CategoryId.HasValue)
+                    datasets = datasets.Where(d => d.CategoryId == filter.CategoryId);
+
+                if (filter.MinPrice.HasValue)
+                    datasets = datasets.Where(d => d.Price >= filter.MinPrice.Value);
+
+                if (filter.MaxPrice.HasValue)
+                    datasets = datasets.Where(d => d.Price <= filter.MaxPrice.Value);
+
+                var query = datasets
+                    .OrderByDescending(d => d.CreatedAt)
+                    .Select(d => new DatasetFilterResponse
+                    {
+                        Id = d.Id,
+                        CategoryId = d.CategoryId,
+                        Title = d.Title,
+                        Description = d.Description,
+                        ProviderName = d.Provider.CompanyName,
+                        Price = d.Price,
+                        ThumbnailUrl = d.ThumbnailUrl
+                    });
+
+                var paginated = await PaginatedList<DatasetFilterResponse>.CreateAsync(query, filter.PageNumber, filter.PageSize);
+
+                return _responseHandler.Success(paginated, "Datasets fetched successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving datasets");
+                return _responseHandler.ServerError<PaginatedList<DatasetFilterResponse>>("An error occurred while retrieving datasets.");
+            }
+        }
+
+        public async Task<Response<DatasetResponse>> GetDatasetDetailAsync(Guid datasetId)
+        {
+            try
+            {
+                var dataset = await _context.Datasets
+                    .Include(d => d.Category)
+                    .Include(d => d.Provider)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(d => d.Id == datasetId && d.Status == ServiceStatus.Active && !d.IsDeleted);
+
+                if (dataset == null)
+                    return _responseHandler.NotFound<DatasetResponse>("Dataset not found.");
+
+                var response = new DatasetResponse
+                {
+                    Id = dataset.Id,
+                    Title = dataset.Title,
+                    Description = dataset.Description,
+                    CategoryId = dataset.CategoryId,
+                    Price = dataset.Price,
+                    FileUrl = dataset.FileUrl,
+                    ThumbnailUrl = dataset.ThumbnailUrl,
+                    ApiEndpoint = dataset.ApiEndpoint,
+                    ProviderId = dataset.ProviderId,
+                    ProviderName = dataset.Provider.CompanyName,
+                    Status = dataset.Status.ToString(),
+                    CreatedAt = dataset.CreatedAt,
+                    UpdatedAt = dataset.UpdatedAt
+                };
+
+                return _responseHandler.Success(response, "Dataset fetched successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting dataset detail {DatasetId}", datasetId);
+                return _responseHandler.ServerError<DatasetResponse>("An error occurred while retrieving the dataset.");
+            }
+        }
 
     }
 }

@@ -284,7 +284,10 @@ namespace Ecommerce.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid>("DatasetId")
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DatasetId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("OrderItemId")
@@ -296,7 +299,7 @@ namespace Ecommerce.DataAccess.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("ServiceId")
+                    b.Property<Guid?>("ServiceId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -517,10 +520,8 @@ namespace Ecommerce.DataAccess.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -574,6 +575,8 @@ namespace Ecommerce.DataAccess.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("ProviderId");
 
@@ -1272,8 +1275,7 @@ namespace Ecommerce.DataAccess.Migrations
                     b.HasOne("Ecommerce.Entities.Models.Dataset", "Dataset")
                         .WithMany()
                         .HasForeignKey("DatasetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Ecommerce.Entities.Models.OrderItem", "Item")
                         .WithMany()
@@ -1283,8 +1285,7 @@ namespace Ecommerce.DataAccess.Migrations
                     b.HasOne("Ecommerce.Entities.Models.Service", "Service")
                         .WithMany("CartItems")
                         .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Cart");
 
@@ -1377,11 +1378,19 @@ namespace Ecommerce.DataAccess.Migrations
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Dataset", b =>
                 {
+                    b.HasOne("Ecommerce.Entities.Models.ServiceCategory", "Category")
+                        .WithMany("Datasets")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Ecommerce.Entities.Models.Auth.Users.ServiceProvider", "Provider")
                         .WithMany("Datasets")
                         .HasForeignKey("ProviderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Category");
 
                     b.Navigation("Provider");
                 });
@@ -1692,6 +1701,8 @@ namespace Ecommerce.DataAccess.Migrations
 
             modelBuilder.Entity("Ecommerce.Entities.Models.ServiceCategory", b =>
                 {
+                    b.Navigation("Datasets");
+
                     b.Navigation("Services");
                 });
 #pragma warning restore 612, 618

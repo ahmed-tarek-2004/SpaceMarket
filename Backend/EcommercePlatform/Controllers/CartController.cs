@@ -58,24 +58,6 @@ namespace Ecommerce.API.Controllers
             return StatusCode((int)response.StatusCode, response);
         }
 
-        [HttpPut("update-quantity")]
-        [Authorize(Roles = "Client,Admin")]
-        public async Task<ActionResult<Response<CartResponse>>> UpdateCartItemQuantity([FromBody] UpdateCartItemRequest request)
-        {
-            var validationResult = await _updateCartItemValidator.ValidateAsync(request);
-            if (!validationResult.IsValid)
-            {
-                string errors = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-                return StatusCode((int)_responseHandler.BadRequest<object>(errors).StatusCode,
-                    _responseHandler.BadRequest<object>(errors));
-            }
-
-            var clientId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            var response = await _cartService.UpdateCartItemQuantityAsync(clientId, request);
-            return StatusCode((int)response.StatusCode, response);
-        }
-
-
         [HttpDelete("remove/{cartItemId:guid}")]
         [Authorize(Roles = "Client,Admin")]
         public async Task<ActionResult<Response<CartResponse>>> RemoveCartItem([FromRoute]Guid cartItemId)

@@ -67,7 +67,13 @@ namespace Ecommerce.DataAccess.Services.Auth
                 var otp = await _otpService.GenerateAndStoreOtpAsync(user.Id);
                 await _emailService.SendOtpEmailAsync(user, otp);
                 _logger.LogInformation($"Otp Sent is : {otp}");
-                return _responseHandler.Success<LoginResponse>(null, "OTP sent to your email. Please provide the OTP to complete login.");
+
+                var otpResponse = new LoginResponse { Id = user.Id };
+
+                return _responseHandler.Success(
+                    otpResponse,
+                    "OTP sent to your email. Please provide the OTP to complete login."
+                );
             }
 
             // Get user roles
@@ -82,6 +88,9 @@ namespace Ecommerce.DataAccess.Services.Auth
             // Generate tokens
             var tokens = await _tokenStoreService.GenerateAndStoreTokensAsync(user.Id, user);
 
+            // Get display name based on role
+            string displayName = await GetUserDisplayNameAsync(user.Id, roles.FirstOrDefault());
+
             var response = new LoginResponse
             {
                 Id = user.Id,
@@ -91,6 +100,7 @@ namespace Ecommerce.DataAccess.Services.Auth
                 IsEmailConfirmed = user.EmailConfirmed,
                 AccessToken = tokens.AccessToken,
                 RefreshToken = tokens.RefreshToken,
+                DisplayName = displayName
             };
 
             return _responseHandler.Success(response, "Login successful.");
@@ -603,6 +613,20 @@ namespace Ecommerce.DataAccess.Services.Auth
             }
         }
 
+        private async Task<string> GetUserDisplayNameAsync(string userId, string role)
+        {
+            if (role == "Client")
+            {
+                var client = await _context.Clients.FindAsync(userId);
+                return client?.FullName ?? string.Empty;
+            }
+            else if (role == "ServiceProvider")
+            {
+                var serviceProvider = await _context.ServiceProviders.FindAsync(userId);
+                return serviceProvider?.CompanyName ?? string.Empty;
+            }
 
+            return string.Empty;
+        }
     }
 }

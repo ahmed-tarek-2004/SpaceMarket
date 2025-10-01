@@ -74,7 +74,6 @@ public class OrderService(
 
         var orders = await PaginatedList<OrderResponse>.CreateAsync(source, filters.PageNumber, filters.PageSize, cancellationToken);
 
-
         _logger.LogInformation("Fetched {Count} orders for client {ClientId} on page {PageNumber} with page size {PageSize}",
             orders.Items.Count, userId, filters.PageNumber, filters.PageSize);
 
@@ -240,7 +239,6 @@ public class OrderService(
         var order = await _context.Orders
             .Include(o => o.Item)
             .FirstOrDefaultAsync(o => o.Id == request.OrderId && o.ClientId == clientId, cancellationToken);
-
 
         if (order == null)
         {

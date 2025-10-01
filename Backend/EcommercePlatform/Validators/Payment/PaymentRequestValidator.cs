@@ -14,8 +14,8 @@ namespace Ecommerce.API.Validators.Payment
             RuleFor(x => x.ServiceUnitAmount)
                 .GreaterThan(0).WithMessage("Service unit amount must be greater than zero");
 
-            RuleFor(x => x.Quantity)
-                .GreaterThan(0).WithMessage("Quantity must be at least 1");
+            //RuleFor(x => x.Quantity)
+            //    .GreaterThan(0).WithMessage("Quantity must be at least 1");
 
             RuleFor(x => x.Currency)
                 .NotEmpty().WithMessage("Currency is required")

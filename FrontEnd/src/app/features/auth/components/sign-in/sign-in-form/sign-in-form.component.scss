@@ -1,118 +1,8 @@
-.form-group {
-  margin-bottom: 1.2rem;
-
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
-    color: #333;
-    font-weight: 500;
-  }
-
-  input {
-    width: 100%;
-    padding: 0.65rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    outline: none;
-  }
-
-  input:focus {
-    border-color: #00c8ff;
-    box-shadow: 0 0 0 2px rgba(0, 200, 255, 0.2);
-  }
-
-  .error {
-    color: #e74c3c;
-    font-size: 0.8rem;
-    margin-top: 0.3rem;
-  }
-}
-
-.remember-forgot {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.2rem;
-  font-size: 0.9rem;
-
-  .remember-me {
-    display: flex;
-    align-items: center;
-    color: #333;
-  }
-  .remember-me input {
-  margin-right: 0.4rem; 
-}
-
-  .forgot-link {
-    color: #00c8ff;
-    text-decoration: none;
-    font-weight: 500;
-
-    &:hover {
-      text-decoration: underline;
-      cursor: pointer;
-    }
-  }
-}
-
-button[type="submit"] {
-  width: 100%;
-  padding: 0.8rem;
-  background: #00c8ff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease;
-
-  &:hover:not(:disabled) {
-    background: #00a3d6;
-  }
-
-  &:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-  }
-}
-
-.form-group {
-  margin-bottom: 1.2rem;
-
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
-    color: #333;
-    font-weight: 500;
-  }
-
-  input {
-    width: 100%;
-    padding: 0.65rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    outline: none;
-  }
-
-  input:focus {
-    border-color: #00c8ff;
-    box-shadow: 0 0 0 2px rgba(0, 200, 255, 0.2);
-  }
-
-  .error {
-    color: #e74c3c;
-    font-size: 0.8rem;
-    margin-top: 0.3rem;
-  }
-}
-
-.auth-error {
+// === Server Error Animation (same as sign-up) ===
+.server-error {
+  opacity: 0;
+  transform: translateY(-20px) scale(0.95);
+  transition: all 0.4s ease;
   color: #e74c3c;
   font-size: 0.85rem;
   margin: 0.5rem 0;
@@ -121,8 +11,14 @@ button[type="submit"] {
   border: 1px solid #e74c3c;
   border-radius: 4px;
   text-align: center;
+
+  &.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
+/* Fix the remember/forgot styles to match */
 .remember-forgot {
   display: flex;
   justify-content: space-between;
@@ -134,56 +30,76 @@ button[type="submit"] {
     display: flex;
     align-items: center;
     color: #333;
-  }
-  .remember-me input {
-    margin-right: 0.4rem;
+    
+    input {
+      margin-right: 0.4rem;
+    }
   }
 
-  .forgot-link {
+  .forgot-link-btn {
+    background: none;
+    border: none;
     color: #00c8ff;
     text-decoration: none;
+    font-size: 0.9rem;
+    padding: 0;
+    cursor: pointer;
     font-weight: 500;
 
     &:hover {
       text-decoration: underline;
-      cursor: pointer;
     }
   }
 }
+// === Input Wrapper Active State (same animation) ===
+.input-wrapper {
+  transition: all 0.3s ease;
 
-button[type="submit"] {
-  width: 100%;
-  padding: 0.8rem;
-  background: #00c8ff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease;
-
-  &:hover:not(:disabled) {
-    background: #00a3d6;
-  }
-
-  &:disabled {
-    background: #ccc;
-    cursor: not-allowed;
+  &.active {
+    transform: translateY(-2px);
   }
 }
 
+// === Password Strength (kept for parity; will remain hidden unless you show it) ===
+.password-strength {
+  opacity: 0;
+  max-height: 0;
+  transform: translateY(-5px);
+  overflow: hidden;
+  transition: all 0.4s ease;
 
-.forgot-link-btn {
-  background: none;
-  border: none;
-  color: #00c8ff;
-  text-decoration: none;
-  font-size: 0.9rem;
-  padding: 0;
-  cursor: pointer;
-  font-weight: 500;
-  &:hover {
-    text-decoration: underline;
+  &.appear {
+    opacity: 1;
+    max-height: 120px;
+    transform: translateY(0);
+  }
+
+  &.disappear {
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(-5px);
+  }
+}
+
+// === Form Grid Staggered Animations (same feel as sign-up) ===
+.form-grid > * {
+  opacity: 0;
+  transform: translateY(15px);
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.form-grid > *:nth-child(1) { animation-delay: 0.1s; }
+.form-grid > *:nth-child(2) { animation-delay: 0.2s; }
+.form-grid > *:nth-child(3) { animation-delay: 0.3s; }
+.form-grid > *:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

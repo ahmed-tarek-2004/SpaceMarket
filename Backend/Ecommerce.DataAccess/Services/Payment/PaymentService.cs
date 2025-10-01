@@ -71,7 +71,7 @@ namespace Ecommerce.DataAccess.Services.Payment
                                 Name = request.ServiceName,
                             }
                         },
-                        Quantity = request.Quantity,
+                        Quantity = 1,
                     }
                 },
                     Mode = "payment",
