@@ -1,141 +1,92 @@
-.auth-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background: linear-gradient(to top, #17173f 0%, #141727 100%);
-  padding: 1rem;
-  position: relative;
-  overflow: hidden;
-}
-.auth-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 2px;
-  height: 2px;
-  background: white;
-  border-radius: 50%;
-  box-shadow:
-    50px 100px white,
-    120px 200px white,
-    300px 150px white,
-    400px 250px white,
-    600px 350px white,
-    800px 100px white,
-    900px 400px white,
-    100px 500px white,
-    200px 600px white,
-    700px 700px white,
-    850px 250px white,
-    950px 550px white,
-    400px 700px white,
-    550px 800px white,
-    750px 900px white,
-    1050px 150px white,
-    1100px 300px white,
-    1150px 450px white,
-    1080px 600px white,
-    1200px 750px white,
-    1250px 500px white,
-    1180px 850px white;
-  animation: twinkle 3s infinite alternate;
-  z-index: 0;
+:host {
+  display: block;
 }
 
-.shooting-star {
-  position: absolute;
-  top: -10px;
-  left: 50%;
-  width: 2px;
-  height: 80px;
-  background: linear-gradient(-45deg, white, rgba(255,255,255,0));
-  opacity: 0;
-  transform: rotate(45deg);
-  animation: shoot 3s ease-in-out infinite;
-}
-
-@keyframes stars-move {
-  from { transform: translateY(0); }
-  to { transform: translateY(-10%); }
-}
-
-@keyframes twinkle {
-  from { opacity: 0.4; }
-  to { opacity: 1; }
-}
-
-@keyframes shoot {
-  0% {
-    opacity: 0;
-    transform: translate(0, 0) rotate(45deg);
+/* Custom animations for the new layout */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
   }
-  10% {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+.reverse {
+  animation-direction: reverse;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
-    transform: translate(-300px, 300px) rotate(45deg);
-    opacity: 0;
-  }
-  100% {
-    opacity: 0;
+    opacity: 0.5;
   }
 }
 
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
 
-  .logo-section {
-    text-align: center;
-    margin-bottom: 2rem;
-    z-index: 2;
-    color: white;
+/* Smooth transitions for form elements */
+.tab-content {
+  transition: all 0.3s ease;
+}
 
-    .logo {
-      width: 40px;
-      height: 40px;
-      margin-bottom: 0.5rem;
-    }
+.form-card {
+  animation: fadeIn 0.5s ease-in-out;
+}
 
-    h2 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin: 0;
-      color: #fff;
-    }
-
-    .subtitle {
-      font-size: 1rem;
-      color: #ccc;
-      margin-top: 0.5rem;
-      font-weight: 500;
-    }
-    i{
-        color: #00c8ff;
-        float: left;
-        margin-top: 10px;
-        font-size: 25px;
-    }
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-
- 
-
-  .form-card {
-    background: #F3F3F4;
-    border-radius: 8px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    max-width: 400px;
-    padding: 1.5rem;
-    z-index: 2;
-    height: 450px;
-    
-
-    h3 {
-      text-align: center;
-      margin-bottom: 1.5rem;
-      color: #000000;
-      font-size: 1.7rem;
-      font-weight: bolder;
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
+}
+
+/* Focus styles for accessibility */
+button:focus,
+input:focus,
+a:focus {
+  outline: 2px solid #00a8ff;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Hover effects */
+.hover-scale {
+  transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+/* Custom scrollbar for the right column */
+.h-full::-webkit-scrollbar {
+  width: 6px;
+}
+
+.h-full::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.h-full::-webkit-scrollbar-thumb {
+  background: rgba(0, 168, 255, 0.5);
+  border-radius: 3px;
+}
+
+.h-full::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 168, 255, 0.7);
+}

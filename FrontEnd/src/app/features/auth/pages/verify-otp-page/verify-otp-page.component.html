@@ -1,21 +1,125 @@
-<div class="auth-container">
-  <!-- Shooting Stars -->
-  <div class="shooting-star"></div>
-  <div class="shooting-star"></div>
-  <div class="shooting-star"></div>
-
-  <!-- Logo and Title -->
-  <div class="logo-section">
-    <div class="brand">
-      <i class="fa-solid fa-satellite"></i>
-      <h2>Orbital Nexus</h2>
-    </div>
-    <p class="subtitle">Enter the code we sent you</p>
+<div class="h-screen bg-gradient-to-br from-[#0B1A3D] to-[#121212] relative overflow-y-auto">
+  <!-- Background stars -->
+  <div class="absolute inset-0 overflow-hidden opacity-20 pointer-events-none">
+    <ng-container *ngFor="let star of stars">
+      <div
+        class="absolute w-1 h-1 bg-white rounded-full animate-pulse"
+        [style.left.%]="star.left"
+        [style.top.%]="star.top"
+        [style.animationDelay.s]="star.delay"
+      ></div>
+    </ng-container>
   </div>
 
-  <!-- Form Card -->
-  <div class="form-card">
-    <h3>Verify OTP</h3>
-    <app-verify-otp-form></app-verify-otp-form>
+  <!-- Shooting Stars -->
+  <div class="shooting-star"></div>
+  <div class="shooting-star" style="animation-delay: 1.5s; left: 30%"></div>
+  <div class="shooting-star" style="animation-delay: 3s; left: 70%"></div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 min-h-screen">
+    <!-- LEFT COLUMN (Same as sign-in page) -->
+    <div class="flex flex-col items-center justify-center p-6 lg:p-12">
+      <div class="w-full max-w-md text-center">
+        <!-- Logo & brand -->
+        <div class="relative mb-8 flex justify-center">
+          <div
+            class="absolute w-32 h-32 border border-cyan-400/20 rounded-full animate-spin-slow"
+          ></div>
+          <div
+            class="absolute w-28 h-28 border border-blue-400/30 rounded-full animate-spin-slow reverse"
+          ></div>
+          <img
+            src="./assets/images/Logo.png"
+            class="relative w-28 h-28 transform hover:scale-105 transition-all duration-300 drop-shadow-xl z-10"
+            alt="LEO Services Logo"
+          />
+          <div
+            class="absolute w-28 h-28 bg-gradient-to-r from-cyan-400/20 to-blue-400/20 rounded-full blur-xl -z-10"
+          ></div>
+        </div>
+
+        <h1
+          class="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-cyan-200 to-blue-200 bg-clip-text text-transparent mb-3"
+        >
+          LEO SERVICES
+        </h1>
+        <p class="text-cyan-100/80 text-lg font-light tracking-wide mb-4">
+          Interstellar Access Portal
+        </p>
+
+        <div class="space-y-4 mt-8">
+          <div
+            class="group flex items-center justify-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/5 hover:border-cyan-400/20"
+          >
+            <div class="relative"><div class="w-3 h-3 bg-cyan-400 rounded-full"></div></div>
+            <div class="text-center">
+              <p class="text-cyan-100 font-medium text-base">Secure Communications</p>
+              <p class="text-gray-300/70 text-sm">Encrypted messaging</p>
+            </div>
+          </div>
+          <div
+            class="group flex items-center justify-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/5 hover:border-blue-400/20"
+          >
+            <div class="relative"><div class="w-3 h-3 bg-blue-400 rounded-full"></div></div>
+            <div class="text-center">
+              <p class="text-cyan-100 font-medium text-base">Cosmic Analytics</p>
+              <p class="text-gray-300/70 text-sm">Real-time data</p>
+            </div>
+          </div>
+          <div
+            class="group flex items-center justify-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/5 hover:border-cyan-400/20"
+          >
+            <div class="relative"><div class="w-3 h-3 bg-cyan-400 rounded-full"></div></div>
+            <div class="text-center">
+              <p class="text-cyan-100 font-medium text-base">Galaxy Coverage</p>
+              <p class="text-gray-300/70 text-sm">Universal access</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Decorative element -->
+        <div class="mt-10 text-center">
+          <div class="inline-flex items-center gap-2 text-cyan-200/60 text-sm">
+            <div class="w-1.5 h-1.5 bg-cyan-400 rounded-full"></div>
+            <span>Trusted by interstellar organizations</span>
+            <div class="w-1.5 h-1.5 bg-cyan-400 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN - OTP Verification -->
+    <div class="flex justify-center items-start lg:items-center p-4 lg:p-8">
+      <div
+        class="w-full max-w-2xl bg-white/5 backdrop-blur-lg border border-cyan-500/20 rounded-2xl shadow-2xl p-6 lg:p-8"
+      >
+        <!-- Header -->
+        <div class="text-center mb-6 lg:mb-8">
+          <h2
+            class="text-xl lg:text-2xl font-semibold leading-none tracking-tight text-cyan-100 mb-2"
+          >
+            Verify OTP
+          </h2>
+          <p class="text-cyan-200/80 text-sm lg:text-base">
+            Enter the verification code sent to your email
+          </p>
+        </div>
+
+        <!-- OTP Form -->
+        <app-verify-otp-form></app-verify-otp-form>
+
+        <!-- Back to Sign In Link -->
+        <div class="text-center mt-6">
+          <p class="text-xs lg:text-sm text-cyan-200/70">
+            <a
+              [routerLink]="ROUTES.signIn"
+              class="text-cyan-400 hover:text-cyan-300 hover:underline transition-colors font-medium"
+            >
+              ← Back to Sign In
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

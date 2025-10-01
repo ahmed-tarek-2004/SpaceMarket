@@ -1,16 +1,21 @@
-// auth.guard.ts
-import { inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Injectable, inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { TokenService } from '../services/token.service';
 
-export const authGuard = () => {
-  const router = inject(Router);
-  
-  const isAuthenticated = !!localStorage.getItem('auth_token');
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthGuard {
+  private tokenService = inject(TokenService);
+  private router = inject(Router);
 
-  if (isAuthenticated) {
-    return true;
-  } else {
-    router.navigate(['/auth/sign-in']);
-    return false;
+  canActivate(): boolean {
+    const token = this.tokenService.getAccessToken();
+    if (token) {
+      return true;
+    } else {
+      this.router.navigate(['/auth/sign-in']);
+      return false;
+    }
   }
-};
+}

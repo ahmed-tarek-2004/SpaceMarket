@@ -13,7 +13,8 @@ namespace Ecommerce.Entities.DTO.ServiceCatalog
         public string Title { get; set; }
         public string Description { get; set; }
         public string CategoryName { get; set; }
-        public string ProviderName {  get; set; }
+        public string ProviderName { get; set; }
         public decimal Price { get; set; }
+        public string ImagesUrl { get; set; }
     }
 }
