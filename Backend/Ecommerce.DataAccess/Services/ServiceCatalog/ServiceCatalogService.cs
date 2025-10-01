@@ -377,32 +377,25 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     .Where(s => !s.IsDeleted && s.Status == ServiceStatus.Active)
                     .AsNoTracking();
 
-
                 if (filter.CategoryId.HasValue)
                 {
                     Services = Services.Where(s => s.CategoryId == filter.CategoryId);
-                    _logger.LogInformation("Service Filterd By Category successfully ");
+                    _logger.LogInformation("Service Filtered By Category successfully ");
                 }
-
 
                 if (filter.MinPrice.HasValue)
                 {
                     Services = Services.Where(s => s.Price >= filter.MinPrice.Value);
-                    _logger.LogInformation("Service Filterd By MinPrice successfully");
-
+                    _logger.LogInformation("Service Filtered By MinPrice successfully");
                 }
 
                 if (filter.MaxPrice.HasValue)
                 {
                     Services = Services.Where(s => s.Price <= filter.MaxPrice.Value);
-                    _logger.LogInformation("Service Filterd By MaxPrice successfully");
+                    _logger.LogInformation("Service Filtered By MaxPrice successfully");
                 }
-                //Note : Untill We Add It to Model Later
-                //if (!string.IsNullOrEmpty(filter.Location))
-                //   Services = Services.Where(s => s.Provider.User.Loaction.Contain(filter.Location));
 
                 var services = Services
-                    .AsNoTracking()
                     .OrderByDescending(s => s.CreatedAt)
                     .Select(s => new ServiceFilterResponse
                     {
@@ -412,13 +405,12 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                         Description = s.Description,
                         ProviderName = s.Provider.CompanyName,
                         CategoryName = s.Category.Name,
-                        Price = s.Price
+                        Price = s.Price,
+                        ImagesUrl = s.ImagesUrl
                     })
-                    //.ToList();
-                    //.AsNoTracking();
                     .AsQueryable();
 
-                 var paginated = await PaginatedList<ServiceFilterResponse>.CreateAsync(services, filter.PageNumber, filter.PageSize);
+                var paginated = await PaginatedList<ServiceFilterResponse>.CreateAsync(services, filter.PageNumber, filter.PageSize);
 
                 return _responseHandler.Success(paginated, "Services fetched successfully.");
             }

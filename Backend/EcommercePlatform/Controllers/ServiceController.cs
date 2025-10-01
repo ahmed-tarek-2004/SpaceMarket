@@ -162,7 +162,7 @@ public class ServiceController : ControllerBase
     /// </summary>
     
     [HttpGet("client/available-service")]
-    [Authorize(Roles ="Client")]
+    [Authorize]
     public async Task<ActionResult<List<ServiceFilterResponse>>> GetAvailableServicesAsync([FromQuery]ServiceFilterRequest filter)
     {
         ValidationResult validationResult = await _filterValidator.ValidateAsync(filter);
@@ -177,7 +177,7 @@ public class ServiceController : ControllerBase
     }
 
     [HttpGet("client/service-detail/{serviceId}")]
-    [Authorize(Roles ="Client")]
+    [Authorize]
     public async Task<ActionResult<ServiceResponse>> GetDetailedServiceAsync([FromRoute]Guid serviceId)
     {
        if(string.IsNullOrEmpty(serviceId.ToString()))

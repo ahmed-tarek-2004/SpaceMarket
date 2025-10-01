@@ -21,5 +21,8 @@ namespace Ecommerce.Entities.Models.Auth.Users
         public ICollection<Project> Projects { get; set; }
         public ICollection<Order> Orders { get; set; }
         public ICollection<Review> Reviews { get; set; }
+        public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
+        public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
+
     }
 }

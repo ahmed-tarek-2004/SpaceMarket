@@ -34,6 +34,7 @@ namespace EcommercePlatform
             builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
             builder.Services.Configure<GoogleAuthSettings>(builder.Configuration.GetSection("Authorization:Google"));
+            builder.Services.Configure<CommissionSettings>(builder.Configuration.GetSection("CommissionSettings"));
             //builder.Services.Configure<UploadcareSettings>(builder.Configuration.GetSection("Uploadcare"));
 
             builder.Services.AddApplicationServices();

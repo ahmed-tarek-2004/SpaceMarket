@@ -20,6 +20,7 @@ namespace Ecommerce.DataAccess.EntitiesConfigurations
 
             builder.Property(r => r.CreatedAt).IsRequired();
             builder.Property(r => r.UpdatedAt);
+            builder.Property(r => r.IsHidden).HasDefaultValue(false);
 
             // Many-to-One with Service
             builder.HasOne(r => r.Service)

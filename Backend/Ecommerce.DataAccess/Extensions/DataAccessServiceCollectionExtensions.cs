@@ -6,9 +6,11 @@ using Ecommerce.DataAccess.Services.ImageUploading;
 using Ecommerce.DataAccess.Services.OAuth;
 using Ecommerce.DataAccess.Services.Order;
 using Ecommerce.DataAccess.Services.OTP;
+using Ecommerce.DataAccess.Services.Reviews;
 using Ecommerce.DataAccess.Services.ServiceCatalog;
 using Ecommerce.DataAccess.Services.ServiceCategory;
 using Ecommerce.DataAccess.Services.Token;
+using Ecommerce.Services.Reviews;
 using Ecommerce.Utilities.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -39,7 +41,8 @@ namespace Ecommerce.DataAccess.Extensions
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<IAuthGoogleService, AuthGoogleService>();
             services.AddScoped<IServiceCatalogService, ServiceCatalogService>();
-            services.AddScoped<IOrderService, OrderService>();
+            //services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IReviewService, ReviewService>();
 
             return services;
         }

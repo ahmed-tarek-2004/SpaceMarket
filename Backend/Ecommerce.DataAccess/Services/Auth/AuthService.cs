@@ -48,7 +48,7 @@ namespace Ecommerce.DataAccess.Services.Auth
         public async Task<Response<LoginResponse>> LoginAsync(LoginRequest loginRequest)
         {
             // Find user by email or phone number
-            User? user = await FindUserByEmailOrPhoneAsync(loginRequest.Email, loginRequest.PhoneNumber);
+            User? user = await FindUserByEmailOrPhoneAsync(loginRequest.Email);
 
             if (user == null)
                 return _responseHandler.NotFound<LoginResponse>("User not found.");
@@ -67,7 +67,13 @@ namespace Ecommerce.DataAccess.Services.Auth
                 var otp = await _otpService.GenerateAndStoreOtpAsync(user.Id);
                 await _emailService.SendOtpEmailAsync(user, otp);
                 _logger.LogInformation($"Otp Sent is : {otp}");
-                return _responseHandler.Success<LoginResponse>(null, "OTP sent to your email. Please provide the OTP to complete login.");
+
+                var otpResponse = new LoginResponse { Id = user.Id };
+
+                return _responseHandler.Success(
+                    otpResponse,
+                    "OTP sent to your email. Please provide the OTP to complete login."
+                );
             }
 
             // Get user roles
@@ -82,6 +88,9 @@ namespace Ecommerce.DataAccess.Services.Auth
             // Generate tokens
             var tokens = await _tokenStoreService.GenerateAndStoreTokensAsync(user.Id, user);
 
+            // Get display name based on role
+            string displayName = await GetUserDisplayNameAsync(user.Id, roles.FirstOrDefault());
+
             var response = new LoginResponse
             {
                 Id = user.Id,
@@ -91,6 +100,7 @@ namespace Ecommerce.DataAccess.Services.Auth
                 IsEmailConfirmed = user.EmailConfirmed,
                 AccessToken = tokens.AccessToken,
                 RefreshToken = tokens.RefreshToken,
+                DisplayName = displayName
             };
 
             return _responseHandler.Success(response, "Login successful.");
@@ -348,14 +358,14 @@ namespace Ecommerce.DataAccess.Services.Auth
 
         public async Task<Response<ForgetPasswordResponse>> ForgotPasswordAsync(ForgetPasswordRequest model)
         {
-            _logger.LogInformation("Starting ForgotPasswordAsync for Email: {Email}, Phone: {Phone}", model.Email, model.PhoneNumber);
+            _logger.LogInformation("Starting ForgotPasswordAsync for Email: {Email}, Phone: {Phone}", model.Email);
 
             // Find user by email or phone number
-            User? user = await FindUserByEmailOrPhoneAsync(model.Email, model.PhoneNumber);
+            User? user = await FindUserByEmailOrPhoneAsync(model.Email);
 
             if (user == null)
             {
-                _logger.LogWarning("User not found for Email: {Email}, Phone: {Phone}", model.Email, model.PhoneNumber);
+                _logger.LogWarning("User not found for Email: {Email}, Phone: {Phone}", model.Email);
                 return _responseHandler.NotFound<ForgetPasswordResponse>("User not found.");
             }
 
@@ -530,12 +540,10 @@ namespace Ecommerce.DataAccess.Services.Auth
                 return "Phone number is already registered.";
             return null;
         }
-        private async Task<User?> FindUserByEmailOrPhoneAsync(string email, string phone)
+        private async Task<User?> FindUserByEmailOrPhoneAsync(string email)
         {
             if (!string.IsNullOrEmpty(email))
                 return await _userManager.FindByEmailAsync(email);
-            if (!string.IsNullOrEmpty(phone))
-                return await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phone);
             return null;
         }
 
@@ -605,6 +613,20 @@ namespace Ecommerce.DataAccess.Services.Auth
             }
         }
 
+        private async Task<string> GetUserDisplayNameAsync(string userId, string role)
+        {
+            if (role == "Client")
+            {
+                var client = await _context.Clients.FindAsync(userId);
+                return client?.FullName ?? string.Empty;
+            }
+            else if (role == "ServiceProvider")
+            {
+                var serviceProvider = await _context.ServiceProviders.FindAsync(userId);
+                return serviceProvider?.CompanyName ?? string.Empty;
+            }
 
+            return string.Empty;
+        }
     }
 }

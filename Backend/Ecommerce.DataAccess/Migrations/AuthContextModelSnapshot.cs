@@ -277,10 +277,17 @@ namespace Ecommerce.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CartId")
+                    b.Property<Guid?>("CartId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<Guid>("DatasetId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("OrderItemId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("PriceSnapshot")
@@ -296,7 +303,11 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasIndex("CartId");
 
+                    b.HasIndex("ClientId");
+
                     b.HasIndex("DatasetId");
+
+                    b.HasIndex("OrderItemId");
 
                     b.HasIndex("ServiceId");
 
@@ -610,7 +621,6 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.Property<string>("ClientId")
                         .IsRequired()
-                        .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("Commission")
@@ -627,6 +637,9 @@ namespace Ecommerce.DataAccess.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
+                    b.Property<Guid>("OrderItemId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -639,6 +652,9 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasIndex("ClientId");
 
+                    b.HasIndex("OrderItemId")
+                        .IsUnique();
+
                     b.ToTable("Orders");
                 });
 
@@ -649,17 +665,15 @@ namespace Ecommerce.DataAccess.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ApiKey")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
-                    b.Property<Guid>("DatasetId")
+                    b.Property<Guid?>("DatasetId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("DownloadLink")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uniqueidentifier");
@@ -667,17 +681,12 @@ namespace Ecommerce.DataAccess.Migrations
                     b.Property<decimal>("PriceSnapshot")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("ServiceId")
+                    b.Property<Guid?>("ServiceId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DatasetId");
-
-                    b.HasIndex("OrderId");
 
                     b.HasIndex("ServiceId");
 
@@ -757,6 +766,11 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsHidden")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("ProviderId")
                         .IsRequired()
@@ -995,11 +1009,19 @@ namespace Ecommerce.DataAccess.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ServiceProviderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -1008,7 +1030,12 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("OrderId")
+                        .IsUnique();
+
+                    b.HasIndex("ServiceProviderId");
 
                     b.ToTable("Transactions");
                 });
@@ -1234,7 +1261,12 @@ namespace Ecommerce.DataAccess.Migrations
                     b.HasOne("Ecommerce.Entities.Models.Cart", "Cart")
                         .WithMany("CartItems")
                         .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Ecommerce.Entities.Models.Auth.Users.Client", "Client")
+                        .WithMany("CartItems")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Ecommerce.Entities.Models.Dataset", "Dataset")
@@ -1242,6 +1274,11 @@ namespace Ecommerce.DataAccess.Migrations
                         .HasForeignKey("DatasetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Ecommerce.Entities.Models.OrderItem", "Item")
+                        .WithMany()
+                        .HasForeignKey("OrderItemId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Ecommerce.Entities.Models.Service", "Service")
                         .WithMany("CartItems")
@@ -1251,7 +1288,11 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.Navigation("Cart");
 
+                    b.Navigation("Client");
+
                     b.Navigation("Dataset");
+
+                    b.Navigation("Item");
 
                     b.Navigation("Service");
                 });
@@ -1353,7 +1394,15 @@ namespace Ecommerce.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Ecommerce.Entities.Models.OrderItem", "Item")
+                        .WithOne("Order")
+                        .HasForeignKey("Ecommerce.Entities.Models.Order", "OrderItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Client");
+
+                    b.Navigation("Item");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.OrderItem", b =>
@@ -1361,24 +1410,14 @@ namespace Ecommerce.DataAccess.Migrations
                     b.HasOne("Ecommerce.Entities.Models.Dataset", "Dataset")
                         .WithMany()
                         .HasForeignKey("DatasetId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Ecommerce.Entities.Models.Order", "Order")
-                        .WithMany("Items")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Ecommerce.Entities.Models.Service", "Service")
                         .WithMany("OrderItems")
                         .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Dataset");
-
-                    b.Navigation("Order");
 
                     b.Navigation("Service");
                 });
@@ -1491,13 +1530,29 @@ namespace Ecommerce.DataAccess.Migrations
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Transaction", b =>
                 {
-                    b.HasOne("Ecommerce.Entities.Models.Order", "Order")
+                    b.HasOne("Ecommerce.Entities.Models.Auth.Users.Client", "Client")
                         .WithMany("Transactions")
-                        .HasForeignKey("OrderId")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Ecommerce.Entities.Models.Order", "Order")
+                        .WithOne("Transaction")
+                        .HasForeignKey("Ecommerce.Entities.Models.Transaction", "OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Ecommerce.Entities.Models.Auth.Users.ServiceProvider", "ServiceProvider")
+                        .WithMany("Transactions")
+                        .HasForeignKey("ServiceProviderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
                     b.Navigation("Order");
+
+                    b.Navigation("ServiceProvider");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Withdrawal", b =>
@@ -1573,11 +1628,15 @@ namespace Ecommerce.DataAccess.Migrations
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Auth.Users.Client", b =>
                 {
+                    b.Navigation("CartItems");
+
                     b.Navigation("Orders");
 
                     b.Navigation("Projects");
 
                     b.Navigation("Reviews");
+
+                    b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Auth.Users.ServiceProvider", b =>
@@ -1585,6 +1644,8 @@ namespace Ecommerce.DataAccess.Migrations
                     b.Navigation("Datasets");
 
                     b.Navigation("Services");
+
+                    b.Navigation("Transactions");
 
                     b.Navigation("Withdrawals");
                 });
@@ -1601,9 +1662,14 @@ namespace Ecommerce.DataAccess.Migrations
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Order", b =>
                 {
-                    b.Navigation("Items");
+                    b.Navigation("Transaction")
+                        .IsRequired();
+                });
 
-                    b.Navigation("Transactions");
+            modelBuilder.Entity("Ecommerce.Entities.Models.OrderItem", b =>
+                {
+                    b.Navigation("Order")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Review", b =>

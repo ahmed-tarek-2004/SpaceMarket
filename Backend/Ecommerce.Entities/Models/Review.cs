@@ -18,6 +18,7 @@ namespace Ecommerce.Entities.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
+        public bool IsHidden { get; set; } = false;
 
         public Service Service { get; set; }
         public Client Client { get; set; }
