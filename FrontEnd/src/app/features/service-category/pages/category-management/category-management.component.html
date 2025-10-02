@@ -1,0 +1,29 @@
+<div class="auth-container">
+  <!-- Shooting Stars -->
+  <div class="shooting-star"></div>
+  <div class="shooting-star"></div>
+  <div class="shooting-star"></div>
+
+  <div class="logo-section">
+    <i class="fa-solid fa-layer-group"></i>
+    <h2>Manage Categories</h2>
+    <p class="subtitle">Add, edit, and remove service categories</p>
+  </div>
+
+  <div class="form-card">
+
+
+    <button class="btn btn-success mb-3 w-100" (click)="onAddNew()">+ Add New Category</button>
+
+<app-category-form
+  *ngIf="showForm()"
+  [mode]="formMode"
+  [category]="selectedCategory"
+  (categorySaved)="onFormSaved($event)"
+  (cancel)="onFormCancel()">
+</app-category-form>
+
+    <app-category-list (editCategory)="onEditCategory($event)"></app-category-list>
+  </div>
+</div>
+

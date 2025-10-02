@@ -1,0 +1,38 @@
+<div class="category-list">
+  <h3>Categories</h3>
+
+  <div *ngIf="isLoading" class="text-muted">Loading...</div>
+
+  <div *ngIf="!isLoading && errorMessage" class="text-muted">{{ errorMessage }}</div>
+
+  <table *ngIf="!isLoading && categories.length > 0" class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Created</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of categories">
+        <td>{{ c.name }}</td>
+        <td>{{ c.description }}</td>
+        <td>{{ c.createdAt ? (c.createdAt | date:'short') : '-' }}</td>
+        <td>
+          <button class="btn btn-sm btn-primary" (click)="onUpdate(c.id)">Edit</button>
+
+          <button *ngIf="!isDeleting(c.id)" class="btn btn-sm btn-danger" (click)="onDelete(c.id)">
+            Delete
+          </button>
+
+          <span *ngIf="isDeleting(c.id)">
+            Confirm?
+            <button class="btn btn-sm btn-success" (click)="confirmDelete()">Yes</button>
+            <button class="btn btn-sm btn-secondary" (click)="cancelDelete()">No</button>
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

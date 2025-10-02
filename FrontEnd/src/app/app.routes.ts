@@ -20,7 +20,13 @@ export const routes: Routes = [
       (m) => m.CartItemsPageComponent
     ),
 },
-
-  // Add other routes here
+{
+  path: 'categories',
+  loadComponent: () =>
+    import('./features/service-category/pages/category-management/category-management.component').then(
+      (m) => m.CategoryManagementPageComponent 
+    ),
+  
+},
   { path: '**', redirectTo: '' },
 ];
