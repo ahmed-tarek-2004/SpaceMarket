@@ -17,9 +17,9 @@ namespace Ecommerce.Entities.Models
         public string FileUrl { get; set; }
         public string ApiEndpoint { get; set; }
         public decimal Price { get; set; }
-        public string MetadataJson { get; set; }
+        //public string MetadataJson { get; set; }
         public string ThumbnailUrl { get; set; }
-        public ServiceStatus Status { get; set; }
+        public ServiceStatus Status { get; set; } = ServiceStatus.PendingApproval;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }

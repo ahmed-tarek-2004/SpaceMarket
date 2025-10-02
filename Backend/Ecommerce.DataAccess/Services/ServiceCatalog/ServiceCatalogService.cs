@@ -465,8 +465,12 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
         // داخل ServiceCatalogService
         public async Task<Response<DatasetResponse>> CreateDatasetAsync(string providerId, CreateDatasetRequest request)
         {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
+                var category = await _context.ServiceCategories.FirstOrDefaultAsync(c => c.Id == request.CategoryId);
+                if (category == null) return _responseHandler.NotFound<DatasetResponse>("Invalid Category Id");
+
                 string? fileUrl = null;
                 string? thumbnailUrl = null;
 
@@ -494,6 +498,16 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                 await _context.Datasets.AddAsync(dataset);
                 await _context.SaveChangesAsync();
 
+                dataset = await _context.Datasets
+                    .Include(d => d.Provider)
+                    .FirstOrDefaultAsync(d => d.Id == dataset.Id);
+
+                if (dataset == null)
+                {
+                    await transaction.RollbackAsync();
+                    return _responseHandler.NotFound<DatasetResponse>("Dataset could not be retrieved after creation.");
+                }
+
                 var responseDto = new DatasetResponse
                 {
                     Id = dataset.Id,
@@ -505,39 +519,51 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     ThumbnailUrl = dataset.ThumbnailUrl,
                     ApiEndpoint = dataset.ApiEndpoint,
                     ProviderId = dataset.ProviderId,
-                    ProviderName = dataset.Provider.CompanyName,
+                    ProviderName = dataset.Provider?.CompanyName ?? "Unknown",
                     Status = dataset.Status.ToString(),
                     CreatedAt = dataset.CreatedAt
                 };
 
+                await transaction.CommitAsync();
                 return _responseHandler.Created(responseDto, "Dataset created successfully. Pending admin approval.");
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
                 _logger.LogError(ex, "Error creating dataset for Provider: {ProviderId}", providerId);
                 return _responseHandler.ServerError<DatasetResponse>("An error occurred while creating the dataset.");
             }
         }
 
+
         public async Task<Response<DatasetResponse>> UpdateDatasetAsync(string providerId, UpdateDatasetRequest request)
         {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 var dataset = await _context.Datasets
                     .Include(d => d.Category)
+                    .Include(d => d.Provider)
                     .FirstOrDefaultAsync(d => d.Id == request.Id && d.ProviderId == providerId && !d.IsDeleted);
 
                 if (dataset == null)
                     return _responseHandler.NotFound<DatasetResponse>("Dataset not found.");
+
+                if (request.CategoryId.HasValue)
+                {
+                    var category = await _context.ServiceCategories.FirstOrDefaultAsync(c => c.Id == request.CategoryId);
+                    if (category == null) return _responseHandler.NotFound<DatasetResponse>("Invalid Category Id");
+                    else dataset.CategoryId = request.CategoryId.Value;
+                }
+
+                if (dataset.Status == ServiceStatus.PendingApproval)
+                    return _responseHandler.BadRequest<DatasetResponse>("Dataset is still pending you can update it when it is reviwed By the platform first.");
 
                 if (!string.IsNullOrWhiteSpace(request.Title))
                     dataset.Title = request.Title;
 
                 if (!string.IsNullOrWhiteSpace(request.Description))
                     dataset.Description = request.Description;
-
-                if (request.CategoryId.HasValue)
-                    dataset.CategoryId = request.CategoryId.Value;
 
                 if (request.Price.HasValue)
                     dataset.Price = request.Price.Value;
@@ -570,11 +596,12 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     CreatedAt = dataset.CreatedAt,
                     UpdatedAt = dataset.UpdatedAt
                 };
-
+                await transaction.CommitAsync();
                 return _responseHandler.Success(response, "Dataset updated successfully.");
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
                 _logger.LogError(ex, "Error updating dataset {DatasetId} for Provider {ProviderId}", request.Id, providerId);
                 return _responseHandler.ServerError<DatasetResponse>("An error occurred while updating the dataset.");
             }
