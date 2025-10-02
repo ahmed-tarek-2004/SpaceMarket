@@ -274,7 +274,12 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     query = query.Where(s => s.ProviderId == filter.ProviderId);
 
                 if (!string.IsNullOrEmpty(filter.Status))
-                    query = query.Where(s => s.Status.ToString() == filter.Status);
+                {
+                    if (Enum.TryParse<ServiceStatus>(filter.Status, true, out var parsedStatus))
+                    {
+                        query = query.Where(s => s.Status == parsedStatus);
+                    }
+                }
 
                 var services = await query
                     .OrderByDescending(s => s.CreatedAt)
@@ -684,7 +689,12 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     query = query.Where(d => d.ProviderId == filter.ProviderId);
 
                 if (!string.IsNullOrEmpty(filter.Status))
-                    query = query.Where(d => d.Status.ToString() == filter.Status);
+                {
+                    if (Enum.TryParse<ServiceStatus>(filter.Status, true, out var parsedStatus))
+                    {
+                        query = query.Where(s => s.Status == parsedStatus);
+                    }
+                }
 
                 var datasets = await query
                     .OrderByDescending(d => d.CreatedAt)
