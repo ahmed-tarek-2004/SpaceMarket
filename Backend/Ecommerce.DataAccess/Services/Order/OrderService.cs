@@ -80,6 +80,7 @@ public class OrderService(
         return _responseHandler.Success(orders, "Orders fetched successfully");
 
 
+
     }
 
     public async Task<Response<OrderResponse>> GetOrderByIdAsync(string clientId, Guid orderId, CancellationToken cancellationToken)
@@ -153,7 +154,7 @@ public class OrderService(
             {
                 Id = Guid.NewGuid(),
                 ServiceId = service.Id,
-                PriceSnapshot = service.Price,
+                PriceSnapshot = service.Price
             };
 
             providerId = service.ProviderId;
@@ -244,6 +245,7 @@ public class OrderService(
             _logger.LogWarning("Order {OrderId} not found for client {ClientId}", request.OrderId, clientId);
             return _responseHandler.NotFound<OrderResponse>("Order not found");
         }
+
 
         if (order.Status != OrderStatus.PendingPayment)
         {

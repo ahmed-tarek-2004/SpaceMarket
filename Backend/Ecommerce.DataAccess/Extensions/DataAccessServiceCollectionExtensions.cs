@@ -7,6 +7,7 @@ using Ecommerce.DataAccess.Services.OAuth;
 using Ecommerce.DataAccess.Services.Order;
 using Ecommerce.DataAccess.Services.OTP;
 using Ecommerce.DataAccess.Services.Reviews;
+using Ecommerce.DataAccess.Services.Payment;
 using Ecommerce.DataAccess.Services.ServiceCatalog;
 using Ecommerce.DataAccess.Services.ServiceCategory;
 using Ecommerce.DataAccess.Services.Token;
@@ -15,8 +16,12 @@ using Ecommerce.Utilities.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Stripe;
 using System.Net;
 using System.Net.Mail;
+using ReviewService = Ecommerce.Services.Reviews.ReviewService;
+using OrderService = Ecommerce.DataAccess.Services.Order.OrderService;
+//using OrderService = Ecommerce.DataAccess.Services.Order.OrderService;
 
 namespace Ecommerce.DataAccess.Extensions
 {
@@ -43,7 +48,8 @@ namespace Ecommerce.DataAccess.Extensions
             services.AddScoped<IServiceCatalogService, ServiceCatalogService>();
             //services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IReviewService, ReviewService>();
-
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IPaymentService, PaymentService>();
             return services;
         }
 
@@ -60,6 +66,16 @@ namespace Ecommerce.DataAccess.Extensions
                     UseDefaultCredentials = false,
                 });
 
+            return services;
+        }
+
+
+        public static IServiceCollection AddStripeConfiguration(this IServiceCollection services, IConfiguration configuration)
+        {
+            var stripeSettings = configuration.GetSection("Stripe").Get<StripeSettings>();
+
+            services.Configure<StripeSettings>(configuration.GetSection("Stripe"));
+            StripeConfiguration.ApiKey = stripeSettings.SecretKey;
             return services;
         }
     }
