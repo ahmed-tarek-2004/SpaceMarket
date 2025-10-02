@@ -834,7 +834,7 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     Price = dataset.Price,
                     FileUrl = dataset.FileUrl,
                     ThumbnailUrl = dataset.ThumbnailUrl,
-                    ApiEndpoint = dataset.ApiEndpoint,
+                    //ApiEndpoint = dataset.ApiEndpoint,
                     ProviderId = dataset.ProviderId,
                     ProviderName = dataset.Provider.CompanyName,
                     Status = dataset.Status.ToString(),
