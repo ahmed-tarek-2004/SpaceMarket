@@ -1,6 +1,6 @@
 import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CartItem } from '../../interfaces/cart-item';
+import { CartItemResponse } from '../../interfaces/cart-item-response';
 import { CartFacadeService } from '../../services/cart-facade.service';
 
 @Component({
@@ -10,15 +10,11 @@ import { CartFacadeService } from '../../services/cart-facade.service';
   styleUrls: ['./cart-item.component.scss'],
 })
 export class CartItemComponent {
-  @Input() cartItem!: CartItem;
+  @Input() cartItem!: CartItemResponse;
   private cartFacade = inject(CartFacadeService);
 
-  updateQuantity(newQuantity: number) {
-    if (newQuantity <= 0) {
-      this.removeItem();
-    } else {
-      this.cartFacade.changeQuantity(this.cartItem.cartItemId, newQuantity);
-    }
+  getProviderInitial(providerName?: string): string {
+    return providerName?.charAt(0).toUpperCase() || 'P';
   }
 
   removeItem() {

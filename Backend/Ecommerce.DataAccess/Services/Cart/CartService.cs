@@ -45,7 +45,7 @@ namespace Ecommerce.DataAccess.Services.Cart
                 bool isDataset = request.DataSetId.HasValue && request.DataSetId.Value != Guid.Empty;
                 bool isService = request.ServiceId.HasValue && request.ServiceId.Value != Guid.Empty;
 
-                if (isDataset == isService) // must provide exactly one
+                if (isDataset == isService)
                     return _responseHandler.BadRequest<CartResponse>("Provide exactly one of serviceId or datasetId.");
 
                 decimal price;
@@ -100,14 +100,13 @@ namespace Ecommerce.DataAccess.Services.Cart
 
                 cart.CartItems ??= new List<CartItem>();
 
-                // check duplicates (no quantity allowed)
+                // check duplicates
                 var exists = cart.CartItems.FirstOrDefault(ci =>
                     (isDataset && ci.DatasetId.HasValue && ci.DatasetId.Value == itemId) ||
                     (!isDataset && ci.ServiceId.HasValue && ci.ServiceId.Value == itemId));
 
                 if (exists != null)
                 {
-                    // ensure navigation properties are loaded for response
                     var existingResponse = BuildCartResponse(cart);
                     return _responseHandler.Success(existingResponse, "Item already exists in cart.");
                 }
@@ -116,16 +115,16 @@ namespace Ecommerce.DataAccess.Services.Cart
                 {
                     Id = Guid.NewGuid(),
                     CartId = cart.Id,
+                    ClientId = clientId,
                     ServiceId = isService ? itemId : null,
                     DatasetId = isDataset ? itemId : null,
                     PriceSnapshot = price,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.UtcNow,
+                    Quantity = 1
                 };
 
-                // add both to context and to in-memory collection so response is accurate
                 await _context.CartItems.AddAsync(newCartItem);
                 cart.CartItems.Add(newCartItem);
-
                 cart.UpdatedAt = DateTime.UtcNow;
 
                 await _context.SaveChangesAsync();
@@ -284,11 +283,14 @@ namespace Ecommerce.DataAccess.Services.Cart
                 decimal unitPrice = ci.PriceSnapshot > 0 ? ci.PriceSnapshot :
                                      (isDataset ? (ci.Dataset?.Price ?? 0m) : (ci.Service?.Price ?? 0m));
 
+                int quantity = ci.Quantity > 0 ? ci.Quantity : 1;
+                decimal itemTotal = unitPrice * quantity;
+
                 decimal commissionAmount = 0m;
                 if (commissionRate > 0m)
-                    commissionAmount = Math.Round(unitPrice * commissionRate / 100m, 2);
+                    commissionAmount = Math.Round(itemTotal * commissionRate / 100m, 2);
 
-                decimal providerAmount = unitPrice - commissionAmount;
+                decimal providerAmount = itemTotal - commissionAmount;
 
                 var item = new CartItemResponse
                 {
@@ -304,11 +306,12 @@ namespace Ecommerce.DataAccess.Services.Cart
                     CommissionAmount = commissionAmount,
                     ProviderAmount = providerAmount,
                     ImageUrl = isDataset ? (ci.Dataset?.ThumbnailUrl ?? "") : (ci.Service?.ImagesUrl ?? ""),
-                    Total = unitPrice
+                    Quantity = quantity,
+                    Total = itemTotal 
                 };
 
                 cartItems.Add(item);
-                totalPrice += unitPrice;
+                totalPrice += itemTotal;
                 totalCommission += commissionAmount;
             }
 
@@ -316,7 +319,7 @@ namespace Ecommerce.DataAccess.Services.Cart
             {
                 CartId = cart.Id,
                 Items = cartItems,
-                TotalItems = cartItems.Count,
+                TotalItems = cartItems.Sum(item => item.Quantity),
                 TotalPrice = totalPrice,
                 TotalCommission = totalCommission
             };

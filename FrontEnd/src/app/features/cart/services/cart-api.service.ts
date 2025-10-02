@@ -2,28 +2,47 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { ApiResponse } from '../../../core/interfaces/api-response';
+import { AddingToCartRequest } from '../interfaces/adding-to-cart-request';
+import { CartResponse } from '../interfaces/cart-response';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CartApiService {
   private baseUrl = `${environment.apiUrl}`;
 
   constructor(private http: HttpClient) {}
 
-  getCartContent(): Observable<any> {
-    return this.http.get(`${this.baseUrl}${environment.cart.cartContent}`);
+  getCartContent(): Observable<ApiResponse<CartResponse>> {
+    return this.http.get<ApiResponse<CartResponse>>(
+      `${this.baseUrl}${environment.cart.cartContent}`
+    );
   }
 
-  updateQuantity(cartItemId: string, quantity: number): Observable<any> {
-    return this.http.put(`${this.baseUrl}${environment.cart.updateQuantity}`, { cartItemId, quantity });
+  addToCart(request: AddingToCartRequest): Observable<ApiResponse<CartResponse>> {
+    return this.http.post<ApiResponse<CartResponse>>(
+      `${this.baseUrl}${environment.cart.addToCart}`,
+      request
+    );
   }
 
-  removeItem(cartItemId: string): Observable<any> {
-    return this.http.delete(`${this.baseUrl}${environment.cart.removeItem}/${cartItemId}`);
+  updateQuantity(cartItemId: string, quantity: number): Observable<ApiResponse<CartResponse>> {
+    return this.http.put<ApiResponse<CartResponse>>(
+      `${this.baseUrl}${environment.cart.updateQuantity}`,
+      { cartItemId, quantity }
+    );
   }
 
-  clearCart(): Observable<any> {
-    return this.http.delete(`${this.baseUrl}${environment.cart.clearCart}`);
+  removeItem(cartItemId: string): Observable<ApiResponse<CartResponse>> {
+    return this.http.delete<ApiResponse<CartResponse>>(
+      `${this.baseUrl}${environment.cart.removeItem}${cartItemId}`
+    );
+  }
+
+  clearCart(): Observable<ApiResponse<CartResponse>> {
+    return this.http.delete<ApiResponse<CartResponse>>(
+      `${this.baseUrl}${environment.cart.clearCart}`
+    );
   }
 }

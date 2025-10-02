@@ -14,13 +14,17 @@ export const environment = {
     refresh: '/Account/refresh-token',
   },
   service: {
-    createService: '/Service/create',
-    availaleService: '/Service/client/available-service',
+    createService: '/Service/create-service',
+    availableService: '/Service/client/available-service',
+    availableDataset: '/Service/dataset/client/available',
+    serviceDetail: '/Service/client/service-detail/',
+    datasetDetails: '/Service/dataset/client/detail/',
   },
   serviceCategory: {
     getAllCategories: '/ServiceCategory',
   },
   cart: {
+    addToCart: '/Cart/add-to-cart',
     cartContent: '/Cart/Cart/cart-content',
     updateQuantity: '/Cart/update-quantity',
     removeItem: `/Cart/remove/`,

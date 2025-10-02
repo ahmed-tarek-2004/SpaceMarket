@@ -1,32 +1,49 @@
-<div class="service-detail-container">
-  @if (service$ | async; as service) {
-    <app-service-header [service]="service"></app-service-header>
-
-    <div class="main-content">
-      <div class="left-column">
-        <app-service-preview [images]="service.previewImages"></app-service-preview>
-      </div>
-      <div class="right-column">
-        <app-service-pricing 
-          [price]="service.price"
-          [currency]="service.currency"
-          [whatsIncluded]="service.whatsIncluded"
-          (requestService)="onRequestService(service.id)"
-          (contactProvider)="onContactProvider()">
-        </app-service-pricing>
-      </div>
+<main class="flex-1">
+  <div class="min-h-screen bg-gradient-to-br from-[#07102a] via-[#0B1A3D] to-[#001135] nebula-pulse">
+    <!-- Star Background -->
+    <div class="star-field absolute inset-0">
+      <div class="star star-twinkle"></div>
+      <div class="star star-twinkle"></div>
+      <div class="star star-twinkle"></div>
+      <div class="star star-twinkle"></div>
     </div>
 
-    <app-service-description-tabs
-      [description]="service.description"
-      [useCases]="service.useCases"
-      [features]="service.features"
-      [providerInfo]="service.providerInfo"
-      [reviews]="service.reviews">
-    </app-service-description-tabs>
-  }
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+      <!-- Back Button -->
+      <div class="mb-6">
+        <button (click)="goBack()"
+          class="flex items-center gap-2 px-4 py-2 rounded-xl border border-[#00A8FF]/30 text-[#00A8FF] hover:bg-[#00A8FF]/10 transition-all duration-300 backdrop-blur-md">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          Back to Marketplace
+        </button>
+      </div>
 
+      @if (service$ | async; as service) {
+      <!-- Service Header -->
+      <div class="bg-white/5 backdrop-blur-md rounded-2xl border border-[#00A8FF]/20 p-8 mb-8 cosmic-glow-hover">
+        <app-service-header [service]="service"></app-service-header>
+      </div>
 
+      <!-- Main Content Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Left Column - Details & Tabs -->
+        <div class="lg:col-span-2">
+          <app-service-preview [service]="service"></app-service-preview>
+        </div>
 
-  
-</div>
+        <!-- Right Column - Additional Info & Provider -->
+        <div class="space-y-8">
+          <app-service-pricing [service]="service"></app-service-pricing>
+        </div>
+      </div>
+      } @else {
+      <!-- Loading State -->
+      <div class="flex justify-center items-center py-20">
+        <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-[#00A8FF]"></div>
+      </div>
+      }
+    </div>
+  </div>
+</main>
