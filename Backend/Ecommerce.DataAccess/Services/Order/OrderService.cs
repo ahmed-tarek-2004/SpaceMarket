@@ -1,4 +1,5 @@
 ﻿using Ecommerce.DataAccess.ApplicationContext;
+using Ecommerce.DataAccess.Services.Notifications;
 using Ecommerce.Entities.DTO.Order;
 using Ecommerce.Entities.DTO.Shared;
 using Ecommerce.Entities.Models;
@@ -12,12 +13,14 @@ namespace Ecommerce.DataAccess.Services.Order;
 public class OrderService(
         ApplicationDbContext context,
         ILogger<OrderService> logger,
-        ResponseHandler responseHandler
+        ResponseHandler responseHandler,
+        INotificationService notificationService
     ) : IOrderService
 {
     private readonly ApplicationDbContext _context = context;
     private readonly ILogger<OrderService> _logger = logger;
     private readonly ResponseHandler _responseHandler = responseHandler;
+    private readonly INotificationService _notificationService = notificationService;
 
     public async Task<Response<PaginatedList<OrderResponse>>> GetAllOrdersAsync(string userId, string role, OrderFilters<OrderSorting> filters, CancellationToken cancellationToken)
     {
@@ -158,6 +161,7 @@ public class OrderService(
             };
 
             providerId = service.ProviderId;
+
         }
         else if (request.OrderItem.Type == ItemType.Dataset)
         {
@@ -365,6 +369,15 @@ public class OrderService(
         var oldStatus = order.Status;
         order.Status = newStatus;
         order.UpdatedAt = DateTime.UtcNow;
+
+
+        await _notificationService.NotifyUserAsync(
+       recipientId: order.ClientId,
+       senderId: userId,
+       title: "OrderStatus",
+       message: $"order #{order.Id} is {order.Status}"
+                );
+
 
         // Create audit log entry
         _context.AuditLogs.Add(new AuditLog

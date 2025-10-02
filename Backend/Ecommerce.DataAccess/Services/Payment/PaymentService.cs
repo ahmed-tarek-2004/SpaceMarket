@@ -1,5 +1,6 @@
 ﻿using Ecommerce.DataAccess.ApplicationContext;
 using Ecommerce.DataAccess.Services.Email;
+using Ecommerce.DataAccess.Services.Notifications;
 using Ecommerce.Entities.DTO.Payment;
 using Ecommerce.Entities.Models;
 using Ecommerce.Entities.Models.Auth.Identity;
@@ -35,8 +36,9 @@ namespace Ecommerce.DataAccess.Services.Payment
         private readonly ApplicationDbContext _context;
         private readonly IEmailService _emailService;
         private readonly StripeSettings stripe;
+        private readonly INotificationService _notificationService;
         public PaymentService(ILogger<PaymentService> logger, UserManager<User> userManager, ApplicationDbContext context
-            , ResponseHandler responseHandler, IOptions<StripeSettings> options, IEmailService emailService)
+            , ResponseHandler responseHandler, IOptions<StripeSettings> options, IEmailService emailService,INotificationService notificationService)
         {
             _logger = logger;
             _userManager = userManager;
@@ -44,6 +46,7 @@ namespace Ecommerce.DataAccess.Services.Payment
             _responseHandler = responseHandler;
             stripe = options.Value;
             _emailService = emailService;
+            _notificationService = notificationService;
             //StripeConfiguration.ApiKey = stripe.SecretKey;
         }
 
@@ -343,10 +346,21 @@ namespace Ecommerce.DataAccess.Services.Payment
                     transaction.Status = TransactionStatus.Pending;
                     transaction.Amount = 0;
                 }
-
+                await _notificationService.NotifyUserAsync(
+                                         recipientId: transaction.ClientId,
+                                         senderId: null,
+                                         title: "Payment Status",
+                                         message: $"order #{order.Id} is {order.Status}"
+                                     );
                 await _context.Transactions.AddAsync(transaction);
                 await _context.SaveChangesAsync();
 
+                await _notificationService.NotifyUserAsync(
+                                          recipientId: transaction.ClientId,
+                                          senderId:null,
+                                          title: "Payment Status",
+                                          message: $"Transaction #{transaction.Id} is {transaction.Status}"
+                                          );
 
                 if (session.PaymentStatus == "paid")
                 {
