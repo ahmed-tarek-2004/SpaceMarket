@@ -14,6 +14,15 @@ export const routes: Routes = [
     path: 'auth',
     loadChildren: () => import('./features/auth/auth.routing').then((m) => m.AUTH_ROUTES),
   },
+ 
+{
+  path: 'categories',
+  loadComponent: () =>
+    import('./features/service-category/pages/category-management/category-management.component').then(
+      (m) => m.CategoryManagementPageComponent 
+    ),
+  
+},
  {
   path: 'service/:id',
   loadComponent: () => import('./features/service-detail/pages/service-detail-page/service-detail-page.component').then(m => m.ServiceDetailPageComponent),
