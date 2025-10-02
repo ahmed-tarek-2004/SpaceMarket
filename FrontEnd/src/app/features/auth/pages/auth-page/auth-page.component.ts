@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SignUpPageComponent } from '../sign-up-page/sign-up-page.component';
 import { SignInPageComponent } from '../sign-in-page/sign-in-page.component';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
 import { Star } from '../../interfaces/star';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-auth-page',
@@ -23,15 +24,12 @@ import { Star } from '../../interfaces/star';
   templateUrl: './auth-page.component.html',
   styleUrls: ['./auth-page.component.scss'],
 })
-export class AuthPageComponent {
+export class AuthPageComponent implements OnInit {
   Math = Math;
-
   selectedTabIndex = 0;
-  selectedTab: 'login' | 'register' = 'login';
-
   stars: Star[] = [];
 
-  constructor() {
+  constructor(private route: ActivatedRoute, private router: Router) {
     this.generateStars(30);
   }
 
@@ -45,8 +43,34 @@ export class AuthPageComponent {
     }
   }
 
+  ngOnInit() {
+    // Listen to route changes to update tab index
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+      this.updateTabFromRoute();
+    });
+
+    // Initial tab setup
+    this.updateTabFromRoute();
+  }
+
+  private updateTabFromRoute() {
+    const currentUrl = this.router.url;
+
+    if (currentUrl.includes('/auth/register') || currentUrl.includes('/sign-up')) {
+      this.selectedTabIndex = 1;
+    } else {
+      this.selectedTabIndex = 0;
+    }
+  }
+
   onTabChange(index: number) {
     this.selectedTabIndex = index;
-    this.selectedTab = index === 0 ? 'login' : 'register';
+
+    // Navigate to the corresponding route
+    if (index === 0) {
+      this.router.navigate(['/auth/sign-in']);
+    } else {
+      this.router.navigate(['/auth/register']);
+    }
   }
 }

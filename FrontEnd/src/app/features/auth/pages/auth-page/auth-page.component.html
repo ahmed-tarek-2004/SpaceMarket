@@ -1,4 +1,4 @@
-<div class="h-screen bg-gradient-to-br from-[#0B1A3D] to-[#121212] relative">
+<div class="h-screen bg-gradient-to-br from-[#0B1A3D] to-[#121212] relative overflow-y-auto">
   <!-- Background stars -->
   <div class="absolute inset-0 overflow-hidden opacity-20 pointer-events-none">
     <ng-container *ngFor="let star of stars">
@@ -11,9 +11,9 @@
     </ng-container>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-2 h-full">
-    <!-- LEFT  -->
-    <div class="flex flex-col items-center justify-center p-6 lg:p-12 h-full">
+  <div class="grid grid-cols-1 lg:grid-cols-2 min-h-screen">
+    <!-- LEFT COLUMN -->
+    <div class="flex flex-col items-center justify-center p-6 lg:p-12">
       <div class="w-full max-w-md text-center">
         <!-- Logo & brand -->
         <div class="relative mb-8 flex justify-center">
@@ -71,6 +71,7 @@
             </div>
           </div>
         </div>
+
         <!-- Decorative element -->
         <div class="mt-10 text-center">
           <div class="inline-flex items-center gap-2 text-cyan-200/60 text-sm">
@@ -82,21 +83,25 @@
       </div>
     </div>
 
-    <!-- RIGHT -->
-    <div class="h-full overflow-y-auto flex justify-center items-center p-4">
+    <!-- RIGHT COLUMN -->
+    <div class="flex justify-center items-start lg:items-center p-4 lg:p-8">
       <mat-card
-        class="w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-6 shadow-2xl"
+        class="w-full max-w-2xl bg-white/5 backdrop-blur-lg border border-cyan-500/20 rounded-2xl shadow-2xl p-4"
       >
         <mat-tab-group
           [selectedIndex]="selectedTabIndex"
           (selectedIndexChange)="onTabChange($event)"
-          class="text-white"
+          class="text-cyan-100"
         >
           <mat-tab label="Sign In">
-            <app-sign-in-page></app-sign-in-page>
+            <div class="p-4 lg:p-6">
+              <app-sign-in-page></app-sign-in-page>
+            </div>
           </mat-tab>
           <mat-tab label="Register">
-            <app-sign-up-page></app-sign-up-page>
+            <div class="p-4 lg:p-6">
+              <app-sign-up-page></app-sign-up-page>
+            </div>
           </mat-tab>
         </mat-tab-group>
       </mat-card>

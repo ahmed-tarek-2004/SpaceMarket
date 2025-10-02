@@ -18,7 +18,6 @@ namespace Ecommerce.DataAccess.EntitiesConfigurations
 
             builder.Property(d => d.Title).IsRequired().HasMaxLength(100);
             builder.Property(d => d.Description).HasMaxLength(500);
-            builder.Property(d => d.Category).HasMaxLength(100);
             builder.Property(d => d.FileUrl).HasMaxLength(500);
             builder.Property(d => d.ApiEndpoint).HasMaxLength(500);
             builder.Property(d => d.Price).HasColumnType("decimal(18,2)");
@@ -42,6 +41,12 @@ namespace Ecommerce.DataAccess.EntitiesConfigurations
                 .WithMany(sp => sp.Datasets)
                 .HasForeignKey(d => d.ProviderId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // Many-to-One with ServiceCategory
+            builder.HasOne(d => d.Category)
+                .WithMany(c => c.Datasets)   // لازم تضيف ICollection<Dataset> Datasets في ServiceCategory
+                .HasForeignKey(d => d.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

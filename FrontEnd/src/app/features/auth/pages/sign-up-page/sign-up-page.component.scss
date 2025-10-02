@@ -6,13 +6,12 @@
   transition: all 0.3s ease;
 }
 
-// Focus styles for accessibility
+/* Remove all scroll-related styles */
 button:focus {
   outline: 2px solid #00a8ff;
   outline-offset: 2px;
 }
 
-// Smooth transitions for tab changes
 .tab-panel {
   animation: fadeIn 0.3s ease-in-out;
 }
@@ -26,4 +25,21 @@ button:focus {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Tab styling */
+.border-cyan-500 {
+  border-color: #00a8ff;
+}
+
+.text-cyan-600 {
+  color: #00a8ff;
+}
+
+.text-gray-500 {
+  color: #6b7280;
+}
+
+.border-transparent {
+  border-color: transparent;
 }

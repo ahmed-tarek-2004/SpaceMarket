@@ -1,0 +1,26 @@
+.service-detail-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.main-content {
+  display: flex;
+  gap: 2rem;
+  margin: 2rem 0;
+
+  .left-column {
+    flex: 2;
+  }
+
+  .right-column {
+    flex: 1;
+  }
+}
+
+@media (max-width: 992px) {
+  .main-content {
+    flex-direction: column;
+  }
+}

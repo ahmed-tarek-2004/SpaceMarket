@@ -1,0 +1,25 @@
+<div class="preview-section">
+  @if (images && images.length > 0) {
+    <div class="main-preview">
+      <img 
+        [src]="images[selectedIndex]" 
+        [alt]="'Preview ' + (selectedIndex + 1)" 
+        loading="lazy" 
+      />
+    </div>
+
+    <div class="thumbnails">
+      @for (img of images; track img; let i = $index) {
+        <img 
+          [src]="img" 
+          [alt]="'Thumbnail ' + (i + 1)" 
+          [class.active]="i === selectedIndex"
+          (click)="selectImage(i)" 
+          loading="lazy"
+        />
+      }
+    </div>
+  }
+</div>
+
+

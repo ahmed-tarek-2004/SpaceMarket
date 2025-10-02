@@ -1,14 +1,16 @@
-﻿using Ecommerce.DataAccess.ApplicationContext;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Ecommerce.DataAccess.ApplicationContext;
 using Ecommerce.Entities.DTO.Cart;
 using Ecommerce.Entities.Models;
 using Ecommerce.Entities.Shared.Bases;
+using Ecommerce.Utilities.Configurations;
+using Ecommerce.Utilities.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 
 namespace Ecommerce.DataAccess.Services.Cart
 {
@@ -17,43 +19,71 @@ namespace Ecommerce.DataAccess.Services.Cart
         private readonly ApplicationDbContext _context;
         private readonly ResponseHandler _responseHandler;
         private readonly ILogger<CartService> _logger;
+        private readonly CommissionSettings _commissionSettings;
 
         public CartService(
             ApplicationDbContext context,
             ResponseHandler responseHandler,
-            ILogger<CartService> logger)
+            ILogger<CartService> logger,
+            IOptions<CommissionSettings> commissionOptions)
         {
             _context = context;
             _responseHandler = responseHandler;
             _logger = logger;
+            _commissionSettings = commissionOptions?.Value ?? new CommissionSettings { RatePercent = 0m };
         }
 
         #region Adding To Cart Region
         public async Task<Response<CartResponse>> AddingToCartAsync(string clientId, AddingToCartRequest request)
         {
-            _logger.LogInformation("Attempting to add Service {ServiceId} to cart for ClientId: {ClientId}", request.ServiceId, clientId);
+            _logger.LogInformation("Attempting to add item (ServiceId: {ServiceId}, DatasetId: {DataSetId}) to cart for ClientId: {ClientId}",
+                request.ServiceId, request.DataSetId, clientId);
 
             await using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-               
-                var service = await _context
-                    .Services
-                    .Include(s => s.Provider)
-                    .FirstOrDefaultAsync(s => s.Id == request.ServiceId);
+                bool isDataset = request.DataSetId.HasValue && request.DataSetId.Value != Guid.Empty;
+                bool isService = request.ServiceId.HasValue && request.ServiceId.Value != Guid.Empty;
 
-                if (service == null)
+                if (isDataset == isService) // must provide exactly one
+                    return _responseHandler.BadRequest<CartResponse>("Provide exactly one of serviceId or datasetId.");
+
+                decimal price;
+                Guid itemId;
+
+                if (isDataset)
                 {
-                    _logger.LogWarning("Service not found or inactive or not approved. Service Id: {ServiceId}", request.ServiceId);
-                    return _responseHandler.NotFound<CartResponse>(
-                        "Service not found, inactive, or not approved by admin."
-                    );
+                    var dataset = await _context.Datasets
+                        .Include(d => d.Provider)
+                        .FirstOrDefaultAsync(d => d.Id == request.DataSetId && !d.IsDeleted && d.Status == ServiceStatus.Active);
+
+                    if (dataset == null)
+                        return _responseHandler.NotFound<CartResponse>("Dataset not found, inactive, or not approved.");
+
+                    price = dataset.Price;
+                    itemId = dataset.Id;
+                }
+                else
+                {
+                    var service = await _context.Services
+                        .Include(s => s.Provider)
+                        .FirstOrDefaultAsync(s => s.Id == request.ServiceId && !s.IsDeleted && s.Status == ServiceStatus.Active);
+
+                    if (service == null)
+                        return _responseHandler.NotFound<CartResponse>("Service not found, inactive, or not approved.");
+
+                    price = service.Price;
+                    itemId = service.Id;
                 }
 
+                // get or create cart
                 var cart = await _context.Carts
                     .Include(c => c.CartItems)
-                    .ThenInclude(ci => ci.Service)
-                    .ThenInclude(s => s.Provider)
+                        .ThenInclude(ci => ci.Service)
+                        .ThenInclude(s => s.Provider)
+                    .Include(c => c.CartItems)
+                        .ThenInclude(ci => ci.Dataset)
+                        .ThenInclude(d => d.Provider)
                     .FirstOrDefaultAsync(c => c.ClientId == clientId);
 
                 if (cart == null)
@@ -62,181 +92,101 @@ namespace Ecommerce.DataAccess.Services.Cart
                     {
                         Id = Guid.NewGuid(),
                         ClientId = clientId,
-                        CartItems = new List<CartItem>()
+                        CartItems = new List<CartItem>(),
+                        CreatedAt = DateTime.UtcNow
                     };
                     _context.Carts.Add(cart);
                 }
 
                 cart.CartItems ??= new List<CartItem>();
-                _logger.LogInformation("CartItems Count: {Count}", cart.CartItems.Count);
 
-                // Check if the service already exists in cart
-                var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ServiceId == request.ServiceId);
-                if (cartItem == null)
+                // check duplicates (no quantity allowed)
+                var exists = cart.CartItems.FirstOrDefault(ci =>
+                    (isDataset && ci.DatasetId.HasValue && ci.DatasetId.Value == itemId) ||
+                    (!isDataset && ci.ServiceId.HasValue && ci.ServiceId.Value == itemId));
+
+                if (exists != null)
                 {
-                    _logger.LogInformation("Adding new CartItem to Cart.");
-                    cartItem = new CartItem
-                    {
-                        Id = Guid.NewGuid(),
-                        CartId = cart.Id,
-                        Service=service,
-                        ServiceId = request.ServiceId,
-                        PriceSnapshot = service.Price,
-                        Quantity = request.Quantity,
-                        DatasetId = request.DataSetId
-                    };
-                    _context.CartItems.Add(cartItem);
+                    // ensure navigation properties are loaded for response
+                    var existingResponse = BuildCartResponse(cart);
+                    return _responseHandler.Success(existingResponse, "Item already exists in cart.");
                 }
-                else
+
+                var newCartItem = new CartItem
                 {
-                    _logger.LogInformation("Increasing quantity for existing CartItem: {ServiceId}", request.ServiceId);
-                    cartItem.Quantity += request.Quantity;
-                    // Optionally update snapshot price if needed:
-                    // cartItem.PriceSnapshot = service.Price;
-                }
+                    Id = Guid.NewGuid(),
+                    CartId = cart.Id,
+                    ServiceId = isService ? itemId : null,
+                    DatasetId = isDataset ? itemId : null,
+                    PriceSnapshot = price,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                // add both to context and to in-memory collection so response is accurate
+                await _context.CartItems.AddAsync(newCartItem);
+                cart.CartItems.Add(newCartItem);
 
                 cart.UpdatedAt = DateTime.UtcNow;
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                // Build response using DTOs
-                var response = await BuildCartResponse(cart);
-
-                _logger.LogInformation("Service {ServiceId} added successfully for ClientId: {ClientId}", request.ServiceId, clientId);
-                return _responseHandler.Success<CartResponse>(response, "Service added to cart successfully.");
+                var response = BuildCartResponse(cart);
+                return _responseHandler.Success(response, "Item added to cart successfully.");
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                _logger.LogError(ex, "Error occurred while adding Service {ServiceId} to cart for ClientId: {ClientId}", request.ServiceId, clientId);
-                return _responseHandler.InternalServerError<CartResponse>("An error occurred while adding Service to cart.");
+                _logger.LogError(ex, "Error occurred while adding item to cart for ClientId: {ClientId}", clientId);
+                return _responseHandler.InternalServerError<CartResponse>("An error occurred while adding item to cart.");
             }
         }
         #endregion
 
-
-
         #region Get Cart As A Client
         public async Task<Response<CartResponse>> GetCartAsync(string clientId)
         {
-
-            _logger.LogInformation("Retrieving cart for ClientId: {clientId}", clientId);
+            _logger.LogInformation("Retrieving cart for ClientId: {ClientId}", clientId);
 
             try
             {
                 var cart = await _context.Carts
                     .AsNoTracking()
                     .Include(c => c.CartItems)
-                    .ThenInclude(ci => ci.Service)
-                    .ThenInclude(s => s.Provider)
+                        .ThenInclude(ci => ci.Service)
+                        .ThenInclude(s => s.Provider)
+                    .Include(c => c.CartItems)
+                        .ThenInclude(ci => ci.Dataset)
+                        .ThenInclude(d => d.Provider)
                     .FirstOrDefaultAsync(c => c.ClientId == clientId);
 
                 if (cart == null || cart.CartItems == null || !cart.CartItems.Any())
                 {
-                    _logger.LogInformation("Cart is empty for Client Id: {clientId}", clientId);
                     return _responseHandler.Success(new CartResponse
                     {
-                        CartId = clientId,
+                        CartId = Guid.Empty, // fixed: do NOT return clientId here
                         TotalItems = 0,
                         TotalPrice = 0,
-                        CartItems = new List<CartItemResponse>()
+                        TotalCommission = 0,
+                        Items = new List<CartItemResponse>()
                     }, "Cart is empty.");
                 }
-                _logger.LogDebug("Cart contains {CartItemCount} items for ClientId: {clientId}", cart.CartItems.Count, clientId);
-                _logger.LogInformation($"Price For item is :{cart.CartItems.FirstOrDefault().PriceSnapshot}");
-                var response = await BuildCartResponse(cart);
 
-                _logger.LogInformation("Cart retrieved successfully for ClientId :{clientId}", clientId);
+                var response = BuildCartResponse(cart);
                 return _responseHandler.Success(response, "Cart retrieved successfully.");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while retrieving cart for ClientId: {clientId}", clientId);
+                _logger.LogError(ex, "Error occurred while retrieving cart for ClientId: {ClientId}", clientId);
                 return _responseHandler.InternalServerError<CartResponse>("An error occurred while retrieving cart.");
             }
         }
         #endregion
 
-
-        #region Update CartItem
-        public async Task<Response<CartResponse>> UpdateCartItemQuantityAsync(string clientId, UpdateCartItemRequest request)
-        {
-            _logger.LogInformation("Attempting to update quantity for CartItemId: {CartItemId} to {Quantity} for ClientId: {ClientId}", request.CartItemId, request.Quantity, clientId);
-
-            await using var transaction = await _context.Database.BeginTransactionAsync();
-            try
-            {
-                var cart = await _context.Carts
-                    .Include(c => c.CartItems)
-                    .ThenInclude(ci => ci.Service)
-                    .ThenInclude(s => s.Provider)
-                    .FirstOrDefaultAsync(c => c.ClientId == clientId);
-
-                if (cart == null)
-                {
-                    _logger.LogWarning("Cart not found for clientId: {clientId}", clientId);
-                    return _responseHandler.NotFound<CartResponse>("Cart not found.");
-                }
-
-                var cartItem = cart.CartItems.FirstOrDefault(ci => ci.Id == request.CartItemId);
-                if (cartItem == null)
-                {
-                    _logger.LogWarning("CartItem not found. CartItemId: {CartItemId}", request.CartItemId);
-                    return _responseHandler.NotFound<CartResponse>("Cart item not found.");
-                }
-                if (request.Quantity < 0)
-                {
-                    _logger.LogWarning("Not Allowed Quantity",
-                        cartItem.ServiceId, request.Quantity, cartItem.Quantity);
-
-                    return _responseHandler.BadRequest<CartResponse>("Not Allowed Quantity");
-                }
-                else if (request.Quantity == 0)
-                {
-                    _logger.LogInformation($"Start Deleting CartItem cartItem:{cartItem.Id} from Database");
-                    cart.UpdatedAt = DateTime.UtcNow;
-                    //var temp = cartItem;
-                    _context.CartItems.Remove(cartItem);
-                    // await _context.SaveChangesAsync();
-                    _logger.LogInformation("Cart item quantity updated successfully to Zero And Delete From Cart.");
-
-                    // var responseForDeleted = await BuildCartResponse(cart);
-
-                    //await transaction.CommitAsync();
-                    // return _responseHandler.Success(responseForDeleted, "Cart item quantity updated successfully to Zero And Delete From Cart.");
-
-                }
-                else
-                {
-                    cartItem.Quantity = request.Quantity;
-                    cart.UpdatedAt = DateTime.UtcNow;
-                    _logger.LogInformation("Cart item quantity updated successfully to Zero And Delete From Cart.");
-                }
-                //cart.CartItems.FirstOrDefault(c => c.Id == cartItem.Id).Quantity = cartItem.Quantity;
-
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
-
-
-                var response = await BuildCartResponse(cart);
-                _logger.LogInformation("Cart item quantity updated successfully for clientId: {clientId}", clientId);
-                return _responseHandler.Success(response, "Cart item quantity updated successfully.");
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                _logger.LogError(ex, "Error occurred while updating cart item quantity for clientId: {clientId}", clientId);
-                return _responseHandler.InternalServerError<CartResponse>("An error occurred while updating cart item quantity.");
-            }
-        }
-
-        #endregion
-
         #region Clear Cart
         public async Task<Response<CartResponse>> ClearCartItemsAsync(string clientId)
         {
-            _logger.LogInformation("Attempting to remove All CartItems for clientId: {clientId}", clientId);
+            _logger.LogInformation("Attempting to clear cart for ClientId: {ClientId}", clientId);
             await using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
@@ -245,39 +195,33 @@ namespace Ecommerce.DataAccess.Services.Cart
                     .FirstOrDefaultAsync(c => c.ClientId == clientId);
 
                 if (cart == null)
-                {
-                    _logger.LogWarning("Cart not found for clientId: {clientId}", clientId);
                     return _responseHandler.NotFound<CartResponse>("Cart not found.");
-                }
 
-                var cartItems = cart.CartItems;
-                if (cartItems == null)
-                {
-                    _logger.LogWarning("No CartItems assigned yet");
-                    return _responseHandler.NotFound<CartResponse>("Cart is empty.");
-                }
+                if (cart.CartItems == null || !cart.CartItems.Any())
+                    return _responseHandler.NotFound<CartResponse>("Cart is already empty.");
 
-                _context.RemoveRange(cartItems);
+                // remove from both context and in-memory collection
+                _context.CartItems.RemoveRange(cart.CartItems);
+                cart.CartItems.Clear();
                 cart.UpdatedAt = DateTime.UtcNow;
 
                 await _context.SaveChangesAsync();
-
                 await transaction.CommitAsync();
-                _logger.LogInformation("Cart cleared successfully for clientId: {clientId}", clientId);
 
                 return _responseHandler.Success(new CartResponse
                 {
-                    CartId = cart.Id.ToString(),
+                    CartId = cart.Id,
                     TotalItems = 0,
                     TotalPrice = 0,
-                    CartItems = new List<CartItemResponse>()
+                    TotalCommission = 0,
+                    Items = new List<CartItemResponse>()
                 }, "Cart cleared successfully.");
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                _logger.LogError(ex, "Error occurred while removing cart item for clientId: {clientId}", clientId);
-                return _responseHandler.InternalServerError<CartResponse>("An error occurred while removing cart item.");
+                _logger.LogError(ex, "Error occurred while clearing cart for ClientId: {ClientId}", clientId);
+                return _responseHandler.InternalServerError<CartResponse>("An error occurred while clearing cart.");
             }
         }
         #endregion
@@ -285,72 +229,96 @@ namespace Ecommerce.DataAccess.Services.Cart
         #region Remove Cart Item
         public async Task<Response<CartResponse>> RemoveCartItemAsync(string clientId, Guid cartItemId)
         {
-            _logger.LogInformation("Attempting to remove CartItemId: {CartItemId} for clientId: {clientId}", cartItemId, clientId);
+            _logger.LogInformation("Attempting to remove CartItemId: {CartItemId} for ClientId: {ClientId}", cartItemId, clientId);
             await using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 var cart = await _context.Carts
                     .Include(c => c.CartItems)
-                    .ThenInclude(ci => ci.Service)
-                    .ThenInclude(s => s.Provider)
+                        .ThenInclude(ci => ci.Service)
+                        .ThenInclude(s => s.Provider)
+                    .Include(c => c.CartItems)
+                        .ThenInclude(ci => ci.Dataset)
+                        .ThenInclude(d => d.Provider)
                     .FirstOrDefaultAsync(c => c.ClientId == clientId);
 
                 if (cart == null)
-                {
-                    _logger.LogWarning("Cart not found for clientId: {clientId}", clientId);
                     return _responseHandler.NotFound<CartResponse>("Cart not found.");
-                }
 
                 var cartItem = cart.CartItems.FirstOrDefault(ci => ci.Id == cartItemId);
                 if (cartItem == null)
-                {
-                    _logger.LogWarning("CartItem not found. CartItemId: {CartItemId}", cartItemId);
                     return _responseHandler.NotFound<CartResponse>("Cart item not found.");
-                }
 
+                // remove from in-memory collection and context to keep response accurate
                 cart.CartItems.Remove(cartItem);
+                _context.CartItems.Remove(cartItem);
+
                 cart.UpdatedAt = DateTime.UtcNow;
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                var response = await BuildCartResponse(cart);
-                _logger.LogInformation("Cart item removed successfully for clientId: {clientId}", clientId);
+                var response = BuildCartResponse(cart);
                 return _responseHandler.Success(response, "Cart item removed successfully.");
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                _logger.LogError(ex, "Error occurred while removing cart item for clientId: {clientId}", clientId);
+                _logger.LogError(ex, "Error occurred while removing cart item for ClientId: {ClientId}", clientId);
                 return _responseHandler.InternalServerError<CartResponse>("An error occurred while removing cart item.");
             }
         }
-
         #endregion
 
-
         #region Helper
-        private async Task<CartResponse> BuildCartResponse(Entities.Models.Cart cart)
+        private CartResponse BuildCartResponse(Entities.Models.Cart cart)
         {
+            var commissionRate = _commissionSettings?.RatePercent ?? 0m;
+            var cartItems = new List<CartItemResponse>();
+            decimal totalPrice = 0m;
+            decimal totalCommission = 0m;
 
-            var cartItems = cart.CartItems.Select(ci => new CartItemResponse
+            foreach (var ci in cart.CartItems)
             {
-                CartItemId = ci.Id,
-                ServiceId = ci.ServiceId,
-                ServiceTitle = ci.Service?.Title??"Empty",
-                ProviderName = ci.Service?.Provider?.CompanyName??"Empty",
-                UnitPrice = ci.Service?.Price??ci.PriceSnapshot,
-                Quantity = ci.Quantity,
-                ImageUrl = ci.Service?.ImagesUrl??"Empty",
-                Total = ci.Service.Price * ci.Quantity,
-            }).ToList();
+                bool isDataset = ci.DatasetId.HasValue && ci.DatasetId.Value != Guid.Empty;
+                decimal unitPrice = ci.PriceSnapshot > 0 ? ci.PriceSnapshot :
+                                     (isDataset ? (ci.Dataset?.Price ?? 0m) : (ci.Service?.Price ?? 0m));
+
+                decimal commissionAmount = 0m;
+                if (commissionRate > 0m)
+                    commissionAmount = Math.Round(unitPrice * commissionRate / 100m, 2);
+
+                decimal providerAmount = unitPrice - commissionAmount;
+
+                var item = new CartItemResponse
+                {
+                    CartItemId = ci.Id,
+                    ItemId = isDataset ? ci.DatasetId : ci.ServiceId,
+                    ItemType = isDataset ? "dataset" : "service",
+                    Title = isDataset ? (ci.Dataset?.Title ?? "Dataset") : (ci.Service?.Title ?? "Service"),
+                    ProviderName = isDataset
+                        ? (ci.Dataset?.Provider?.CompanyName ?? "Unknown")
+                        : (ci.Service?.Provider?.CompanyName ?? "Unknown"),
+                    UnitPrice = unitPrice,
+                    CommissionPercent = commissionRate,
+                    CommissionAmount = commissionAmount,
+                    ProviderAmount = providerAmount,
+                    ImageUrl = isDataset ? (ci.Dataset?.ThumbnailUrl ?? "") : (ci.Service?.ImagesUrl ?? ""),
+                    Total = unitPrice
+                };
+
+                cartItems.Add(item);
+                totalPrice += unitPrice;
+                totalCommission += commissionAmount;
+            }
 
             return new CartResponse
             {
-                CartItems = cartItems,
-                CartId = cart.Id.ToString(),
-                TotalItems = cart.CartItems.Count(),
-                TotalPrice = cartItems.Sum(ci => ci.Total),
+                CartId = cart.Id,
+                Items = cartItems,
+                TotalItems = cartItems.Count,
+                TotalPrice = totalPrice,
+                TotalCommission = totalCommission
             };
         }
         #endregion

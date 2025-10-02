@@ -1,55 +1,70 @@
-<form [formGroup]="signInForm" (ngSubmit)="onSubmit()">
-  <!-- Email -->
-  <div class="form-group">
-    <label for="email">Email</label>
-    <input
-      type="email"
-      id="email"
-      formControlName="email"
-      placeholder="your@email.com"
-      autocomplete="username"
-    />
-    @if (email?.invalid && (email?.dirty || email?.touched)) {
-      <div class="error">{{ getError(email) }}</div>
-    }
-  </div>
-
-  <!-- Password -->
-  <div class="form-group">
-    <label for="password">Password</label>
-    <input
-      type="password"
-      id="password"
-      formControlName="password"
-      placeholder="••••••••"
-      autocomplete="current-password"
-    />
-    @if (password?.invalid && (password?.dirty || password?.touched)) {
-      <div class="error">{{ getError(password) }}</div>
-    }
-  </div>
-
-  @if (facade.getError()) {
-    <div class="auth-error">
-      {{ facade.getError() }}
+<form
+  [formGroup]="signInForm"
+  (ngSubmit)="onSubmit()"
+  class="form-container space-y-4 lg:space-y-6 w-full max-w-full"
+>
+  <div class="form-grid grid grid-cols-1 gap-2 w-full max-w-full">
+    <!-- Email -->
+    <div
+      class="input-wrapper transition-all duration-300 ease-out lg:col-span-1"
+      [class.active]="signInForm.get('email')?.touched && signInForm.get('email')?.valid"
+    >
+      <app-input
+        [formGroup]="signInForm"
+        [errorMessage]="getValidationMessage('email') ?? ''"
+        controlName="email"
+        label="Email"
+        type="email"
+        placeholder="your@email.com"
+        icon="mail"
+        [required]="true"
+        class="w-full"
+      ></app-input>
     </div>
-  }
 
-  
+    <!-- Password -->
+    <div
+      class="input-wrapper transition-all duration-300 ease-out lg:col-span-1"
+      [class.active]="signInForm.get('password')?.touched && signInForm.get('password')?.valid"
+    >
+      <app-input
+        [formGroup]="signInForm"
+        [errorMessage]="getValidationMessage('password') ?? ''"
+        controlName="password"
+        label="Password"
+        type="password"
+        placeholder="••••••••"
+        icon="lock"
+        [required]="true"
+        class="w-full"
+      ></app-input>
+    </div>
+  </div>
 
-  <!-- Remember & Forgot -->
+  <!-- Remember & Forgot (same look as sign-up) -->
   <div class="remember-forgot">
     <label class="remember-me">
-      <input type="checkbox" name="remember" /> Remember me
+      <input type="checkbox" /> Remember me
     </label>
-<button type="button" class="forgot-link-btn" (click)="goToForgotPassword()">Forgot password?</button> </div>
 
-  <!-- Submit Button -->
-  <button type="submit" [disabled]="signInForm.invalid || facade.getIsLoading()">
-    @if (facade.getIsLoading()) {
-      Signing in...
-    } @else {
-      Sign In
-    }
-  </button>
+    <button type="button" class="forgot-link-btn" (click)="goToForgotPassword()">
+      Forgot password?
+    </button>
+  </div>
+
+  <!-- Submit Button (uses same app-button like sign-up) -->
+  <div class="w-full pt-2 lg:pt-4">
+    <app-button
+      type="submit"
+      [loading]="facade.getIsLoading()"
+      loadingText="Signing in..."
+      label="Sign In"
+      color="bg-[#00A8FF]"
+      hoverColor="hover:bg-[#00A8FF]/90"
+      textColor="text-white"
+      [additionalClasses]="
+        'w-full py-3 font-medium rounded-lg transition-all duration-300 ease-out active:scale-[0.98] shadow-lg hover:shadow-xl hover:scale-[1.02]'
+      "
+    ></app-button>
+  </div>
 </form>

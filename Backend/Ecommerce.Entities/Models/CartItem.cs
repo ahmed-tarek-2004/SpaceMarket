@@ -14,14 +14,14 @@ namespace Ecommerce.Entities.Models
 
         public Guid? CartId { get; set; }
         public Cart Cart { get; set; }
-
+        public DateTime CreatedAt { get; set; }
         public string ClientId { get; set; }
         public Client Client { get; set; }
 
-        public Guid ServiceId { get; set; }
+        public Guid? ServiceId { get; set; }
         public Service Service { get; set; }
 
-        public Guid DatasetId { get; set; }
+        public Guid? DatasetId { get; set; }
         public Dataset Dataset { get; set; }
 
         public int Quantity { get; set; } = 1;
