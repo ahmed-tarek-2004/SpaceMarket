@@ -1,4 +1,5 @@
 ﻿using Ecommerce.DataAccess.ApplicationContext;
+using Ecommerce.DataAccess.Services.Notifications;
 using Ecommerce.Entities.DTO.ServiceCategory;
 using Ecommerce.Entities.Shared.Bases;
 using Microsoft.EntityFrameworkCore;
@@ -162,7 +163,6 @@ namespace Ecommerce.DataAccess.Services.ServiceCategory
 
             return _responseHandler.Success(true, "Category deleted successfully.");
         }
-
 
 
         private async Task<GetServiceCategoryResponse?> GetServiceCategoryAsync(Expression<Func<Ecommerce.Entities.Models.ServiceCategory, bool>> predicate)

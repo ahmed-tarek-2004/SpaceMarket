@@ -2,6 +2,7 @@ using Ecommerce.API.Extensions;
 using Ecommerce.DataAccess.ApplicationContext;
 using Ecommerce.DataAccess.Extensions;
 using Ecommerce.DataAccess.Seeder;
+using Ecommerce.DataAccess.Services.Notifications;
 using Ecommerce.Entities.Models.Auth.Identity;
 using Ecommerce.Entities.Shared.Bases;
 using Ecommerce.Utilities.Configurations;
@@ -42,12 +43,15 @@ namespace EcommercePlatform
             builder.Services.AddDatabase(builder.Configuration);
             builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
             builder.Services.AddEmailServices(builder.Configuration);
+            builder.Services.AddStripeConfiguration(builder.Configuration);
+            builder.Services.AddSignalR();
 
             // Enum to string converter
             builder.Services
                 .AddControllers()
                 .AddJsonOptions(options =>
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
 
 
             builder.Services.AddFluentValidation();
@@ -67,6 +71,19 @@ namespace EcommercePlatform
                               .AllowCredentials();
                     });
             });
+
+            //Test It Locally 
+            //builder.Services.AddCors(options =>
+            //{
+            //    options.AddPolicy("AllowAngularApp",
+            //        policy =>
+            //        {
+            //            policy.AllowAnyHeader()
+            //                  .AllowAnyMethod()
+            //                  .AllowCredentials()
+            //                  .SetIsOriginAllowed(_ => true); // origins
+            //        });
+            //});
 
             builder.Services.AddDataProtection()
                 .PersistKeysToDbContext<ApplicationDbContext>()
@@ -109,6 +126,7 @@ namespace EcommercePlatform
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.MapHub<NotificationHub>("/hub/notifications");
 
             app.MapControllers();
 

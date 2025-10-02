@@ -1,4 +1,5 @@
 ﻿using Ecommerce.DataAccess.ApplicationContext;
+using Ecommerce.DataAccess.Services.Notifications;
 using Ecommerce.Entities.DTO.Order;
 using Ecommerce.Entities.DTO.Shared;
 using Ecommerce.Entities.Models;
@@ -12,12 +13,14 @@ namespace Ecommerce.DataAccess.Services.Order;
 public class OrderService(
         ApplicationDbContext context,
         ILogger<OrderService> logger,
-        ResponseHandler responseHandler
+        ResponseHandler responseHandler,
+        INotificationService notificationService
     ) : IOrderService
 {
     private readonly ApplicationDbContext _context = context;
     private readonly ILogger<OrderService> _logger = logger;
     private readonly ResponseHandler _responseHandler = responseHandler;
+    private readonly INotificationService _notificationService = notificationService;
 
     public async Task<Response<PaginatedList<OrderResponse>>> GetAllOrdersAsync(string userId, string role, OrderFilters<OrderSorting> filters, CancellationToken cancellationToken)
     {
@@ -78,6 +81,7 @@ public class OrderService(
             orders.Items.Count, userId, filters.PageNumber, filters.PageSize);
 
         return _responseHandler.Success(orders, "Orders fetched successfully");
+
 
 
     }
@@ -153,10 +157,11 @@ public class OrderService(
             {
                 Id = Guid.NewGuid(),
                 ServiceId = service.Id,
-                PriceSnapshot = service.Price,
+                PriceSnapshot = service.Price
             };
 
             providerId = service.ProviderId;
+
         }
         else if (request.OrderItem.Type == ItemType.Dataset)
         {
@@ -244,6 +249,7 @@ public class OrderService(
             _logger.LogWarning("Order {OrderId} not found for client {ClientId}", request.OrderId, clientId);
             return _responseHandler.NotFound<OrderResponse>("Order not found");
         }
+
 
         if (order.Status != OrderStatus.PendingPayment)
         {
@@ -363,6 +369,15 @@ public class OrderService(
         var oldStatus = order.Status;
         order.Status = newStatus;
         order.UpdatedAt = DateTime.UtcNow;
+
+
+        await _notificationService.NotifyUserAsync(
+       recipientId: order.ClientId,
+       senderId: userId,
+       title: "OrderStatus",
+       message: $"order #{order.Id} is {order.Status}"
+                );
+
 
         // Create audit log entry
         _context.AuditLogs.Add(new AuditLog

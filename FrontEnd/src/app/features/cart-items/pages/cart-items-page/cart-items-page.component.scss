@@ -1,0 +1,102 @@
+.cart-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 2rem;
+  position: relative;
+  background: linear-gradient(to top, #17173f 0%, #141727 100%);
+  overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  z-index: 0;
+}
+
+.cart-page-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  box-shadow:
+    50px 100px white,
+    120px 200px white,
+    300px 150px white,
+    400px 250px white,
+    600px 350px white,
+    800px 100px white,
+    900px 400px white,
+    100px 500px white,
+    200px 600px white,
+    700px 700px white,
+    850px 250px white,
+    950px 550px white,
+    400px 700px white,
+    550px 800px white,
+    750px 900px white,
+    1050px 150px white,
+    1100px 300px white,
+    1150px 450px white,
+    1080px 600px white,
+    1200px 750px white,
+    1250px 500px white,
+    1180px 850px white;
+  animation: twinkle 3s infinite alternate;
+  z-index: 0;
+}
+
+.shooting-star {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 2px;
+  height: 80px;
+  background: linear-gradient(-45deg, white, rgba(255,255,255,0));
+  opacity: 0;
+  transform: rotate(45deg);
+  animation: shoot 3s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  from { opacity: 0.4; }
+  to { opacity: 1; }
+}
+
+@keyframes shoot {
+  0% { opacity: 0; transform: translate(0, 0) rotate(45deg); }
+  10% { opacity: 1; }
+  50% { transform: translate(-300px, 300px) rotate(45deg); opacity: 0; }
+  100% { opacity: 0; }
+}
+
+.card {
+  background: #1f1f3d;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  padding: 2rem;
+  width: 100%;
+  max-width: 900px;
+  color: #fff;
+  z-index: 2;
+  position: relative;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #f9fafb;
+}
+
+.form-section {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #2d2d4d;
+}
+
+.list-section {
+  margin-top: 1.5rem;
+}

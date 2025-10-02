@@ -45,11 +45,15 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                 {
                     uploadedUrl = await _imageUploadService.UploadAsync(request.Image);
                 }
-
+                var provider = await _context.ServiceProviders.FirstOrDefaultAsync(b => b.Id == providerId);
+                if (provider != null)
+                {
+                    return _responseHandler.BadRequest<ServiceResponse>($"Provider with Id :{providerId} >>Not Found<<");
+                }
                 var service = new Service
                 {
                     Id = Guid.NewGuid(),
-                    ProviderId = providerId,
+                    Provider=provider,
                     Title = request.Title,
                     Description = request.Description,
                     CategoryId = request.CategoryId,
@@ -74,6 +78,7 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     CategoryName = category?.Name,
                     Price = service.Price,
                     ImagesUrl = service.ImagesUrl,
+                    WebsiteUrl = service.Provider.WebsiteUrl,
                     Status = service.Status.ToString(),
                     CreatedAt = service.CreatedAt
                 };
@@ -93,6 +98,7 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
             {
                 var service = await _context.Services
                     .Include(s => s.Category)
+                    .Include(s=>s.Provider)
                     .FirstOrDefaultAsync(s => s.Id == request.Id && s.ProviderId == providerId && !s.IsDeleted);
 
                 if (service == null)
@@ -136,6 +142,7 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     CategoryName = category?.Name,
                     Price = service.Price,
                     ImagesUrl = service.ImagesUrl,
+                    WebsiteUrl=service.Provider.WebsiteUrl,
                     Status = service.Status.ToString(),
                     CreatedAt = service.CreatedAt,
                     UpdatedAt = service.UpdatedAt
@@ -192,6 +199,7 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                         CategoryName = s.Category.Name,
                         Price = s.Price,
                         ImagesUrl = s.ImagesUrl,
+                        WebsiteUrl=s.Provider.WebsiteUrl,
                         Status = s.Status.ToString(),
                         CreatedAt = s.CreatedAt,
                         UpdatedAt = s.UpdatedAt
@@ -411,7 +419,8 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                         ProviderName = s.Provider.CompanyName,
                         CategoryName = s.Category.Name,
                         Price = s.Price,
-                        ImagesUrl = s.ImagesUrl
+                        ImagesUrl = s.ImagesUrl,
+                        WebsiteUrl=s.Provider.WebsiteUrl
                     })
                     .AsQueryable();
 
@@ -435,7 +444,7 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     .Include(s => s.Provider)
                     //.ThenInclude(p => p.User)
                     .AsNoTracking()
-                   .FirstOrDefaultAsync(s => s.Id == serviceId && s.Status == ServiceStatus.Active && !s.IsDeleted);
+                   .FirstOrDefaultAsync(s => s.Id == serviceId /*&& s.Status == ServiceStatus.Active*/ && !s.IsDeleted);
                 if (service == null)
                 {
                     _logger.LogWarning("Service Not Found ");
@@ -454,6 +463,7 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     Status = service.Status.ToString(),
                     CreatedAt = service.CreatedAt,
                     UpdatedAt = service.UpdatedAt,
+                    WebsiteUrl = service.Provider.WebsiteUrl
                 };
 
                 return _responseHandler.Success(response, $"Services {service.Id} fetched successfully.");
@@ -826,7 +836,7 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     Price = dataset.Price,
                     FileUrl = dataset.FileUrl,
                     ThumbnailUrl = dataset.ThumbnailUrl,
-                    ApiEndpoint = dataset.ApiEndpoint,
+                    //ApiEndpoint = dataset.ApiEndpoint,
                     ProviderId = dataset.ProviderId,
                     ProviderName = dataset.Provider.CompanyName,
                     Status = dataset.Status.ToString(),

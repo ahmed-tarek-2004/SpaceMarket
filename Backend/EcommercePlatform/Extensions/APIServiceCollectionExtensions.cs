@@ -65,6 +65,7 @@ namespace Ecommerce.API.Extensions
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SigningKey))
                 };
+
             });
 
             return services;

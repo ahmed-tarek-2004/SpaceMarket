@@ -41,6 +41,14 @@ export const routes: Routes = [
     data: { roles: ['ServiceProvider'] },
   },
   {
+    path: 'categories',
+    loadComponent: () =>
+      import('./features/service-category/pages/category-management/category-management.component').then(
+        (m) => m.CategoryManagementPageComponent 
+      ),
+
+  },
+  {
     path: 'marketplace',
     loadComponent: () =>
       import('./features/marketplace/pages/marketplace-page/marketplace-page.component').then(
