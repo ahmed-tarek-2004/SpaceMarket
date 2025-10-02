@@ -26,7 +26,8 @@ export class TokenService {
   }
 
   getRole(): string | null {
-    return localStorage.getItem(this.ROLE_KEY);
+    const r = localStorage.getItem(this.ROLE_KEY);
+    return r ? r.toLowerCase().trim() : null;
   }
 
   getUserId(): string | null {
@@ -58,7 +59,7 @@ export class TokenService {
     localStorage.setItem(this.REFRESH_TOKEN_KEY, tokens.refreshToken);
 
     if (tokens.role) {
-      localStorage.setItem(this.ROLE_KEY, tokens.role);
+      localStorage.setItem(this.ROLE_KEY, tokens.role.toLowerCase().trim());
     }
     if (tokens.userId) {
       localStorage.setItem(this.USER_ID_KEY, tokens.userId);

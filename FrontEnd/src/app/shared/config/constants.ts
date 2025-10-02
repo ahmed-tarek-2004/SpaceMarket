@@ -2,6 +2,7 @@ export const ROUTES = {
   signIn: '/auth/sign-in',
   signUp: '/auth/sign-up',
   marketplace: '/marketplace',
-  cart: '/cart'
-  
+  cart: '/cart',
+  commingSoon: '/coming-soon',
+  createService: '/create-service'
 };

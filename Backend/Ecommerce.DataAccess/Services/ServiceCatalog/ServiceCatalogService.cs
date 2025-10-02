@@ -788,7 +788,8 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                         Description = d.Description,
                         ProviderName = d.Provider.CompanyName,
                         Price = d.Price,
-                        ThumbnailUrl = d.ThumbnailUrl
+                        ThumbnailUrl = d.ThumbnailUrl,
+                        CategoryName = d.Category != null ? d.Category.Name : null
                     });
 
                 var paginated = await PaginatedList<DatasetFilterResponse>.CreateAsync(query, filter.PageNumber, filter.PageSize);
@@ -821,6 +822,7 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     Title = dataset.Title,
                     Description = dataset.Description,
                     CategoryId = dataset.CategoryId,
+                    CategoryName = dataset.Category != null ? dataset.Category.Name : null,
                     Price = dataset.Price,
                     FileUrl = dataset.FileUrl,
                     ThumbnailUrl = dataset.ThumbnailUrl,

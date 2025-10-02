@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { ApiServiceItem } from '../../interfaces/api-service-item';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-service-card',
@@ -12,6 +13,12 @@ import { ApiServiceItem } from '../../interfaces/api-service-item';
 export class ServiceCardComponent {
   /** Accept the exact backend model */
   @Input() service!: ApiServiceItem;
+
+  constructor(private router: Router) {}
+
+  viewDetails(): void {
+    this.router.navigate(['/service', this.service.id]);
+  }
 
   // Add the missing imageUrl getter
   get imageUrl(): string {

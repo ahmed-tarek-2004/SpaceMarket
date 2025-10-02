@@ -1,0 +1,50 @@
+.service-header {
+  color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+
+  h1 {
+    font-size: 2.2rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .tags {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+
+    .category {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+    }
+  }
+
+  .details {
+    display: flex;
+    gap: 2rem;
+    font-size: 1rem;
+    opacity: 0.9;
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+
+    h1 {
+      font-size: 1.6rem;
+    }
+
+    .tags {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .details {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+}

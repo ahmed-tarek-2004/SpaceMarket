@@ -1,0 +1,98 @@
+<main class="flex-1">
+  <section
+    class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#07102a] via-[#0B1A3D] to-[#001135] cosmic-bg-animate">
+
+    <!-- Animated Nebula Background -->
+    <div class="nebula-bg absolute inset-0 z-0">
+      <div class="nebula nebula-1"></div>
+      <div class="nebula nebula-2"></div>
+      <div class="nebula nebula-3"></div>
+    </div>
+
+    <!-- Enhanced Star Field -->
+    <div class="star-field absolute inset-0 z-0">
+      <div class="star star-twinkle" style="top: 20%; left: 10%; animation-delay: 0s;"></div>
+      <div class="star star-twinkle" style="top: 60%; left: 80%; animation-delay: 1s;"></div>
+      <div class="star star-twinkle" style="top: 40%; left: 40%; animation-delay: 2s;"></div>
+      <div class="star star-twinkle" style="top: 80%; left: 30%; animation-delay: 3s;"></div>
+      <div class="star star-pulse" style="top: 30%; left: 70%;"></div>
+      <div class="star star-pulse" style="top: 70%; left: 20%;"></div>
+    </div>
+
+    <!-- Shooting Stars -->
+    <div class="shooting-stars absolute inset-0 z-0">
+      <div class="shooting-star"></div>
+      <div class="shooting-star"></div>
+      <div class="shooting-star"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="relative z-10 text-center px-6 max-w-4xl mx-auto">
+      <!-- Main Title with Enhanced Glow -->
+      <div class="mb-8">
+        <h1 class="text-6xl sm:text-7xl lg:text-8xl font-bold text-white font-['Exo_2'] mb-4 cosmic-text-glow">
+          🚀
+        </h1>
+        <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white font-['Exo_2'] mb-6 cosmic-text-glow">
+          Coming Soon
+        </h2>
+      </div>
+
+      <!-- Description -->
+      <p
+        class="mt-6 text-xl sm:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed font-light backdrop-blur-sm bg-white/5 rounded-2xl p-6 border border-[#00A8FF]/20">
+        We're building the future of the
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#00A8FF] to-[#00F5D4] font-semibold">
+          LEO Economy
+        </span>.
+        Stay tuned for our launch — the journey to orbit begins soon!
+      </p>
+
+      <!-- Enhanced Countdown -->
+      <div class="mt-12 mb-8">
+        <h3 class="text-2xl text-gray-300 mb-6 font-light">Launching in:</h3>
+        <div class="flex flex-wrap justify-center gap-3 sm:gap-4 text-white">
+          <!-- Days -->
+          <div class="countdown-item cosmic-card-hover">
+            <div class="countdown-value cosmic-number-glow">{{ countdown.days }}</div>
+            <div class="countdown-label">Days</div>
+          </div>
+
+          <!-- Hours -->
+          <div class="countdown-item cosmic-card-hover">
+            <div class="countdown-value cosmic-number-glow">{{ countdown.hours }}</div>
+            <div class="countdown-label">Hours</div>
+          </div>
+
+          <!-- Minutes -->
+          <div class="countdown-item cosmic-card-hover">
+            <div class="countdown-value cosmic-number-glow">{{ countdown.minutes }}</div>
+            <div class="countdown-label">Minutes</div>
+          </div>
+
+          <!-- Seconds -->
+          <div class="countdown-item cosmic-card-hover">
+            <div class="countdown-value cosmic-number-glow">{{ countdown.seconds }}</div>
+            <div class="countdown-label">Seconds</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Enhanced Notify Me Form -->
+      <div class="mt-12 max-w-md mx-auto">
+        <p class="text-gray-400 mb-6 text-lg">Be the first to know when we launch</p>
+        <form class="flex flex-col sm:flex-row items-stretch gap-3 cosmic-form-group">
+          <input type="email" placeholder="Enter your email address"
+            class="flex-1 px-5 py-4 rounded-xl bg-white/10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#00A8FF] border border-[#00A8FF]/30 backdrop-blur-md transition-all duration-300 focus:border-[#00A8FF]" />
+          <button type="submit"
+            class="px-8 py-4 bg-gradient-to-r from-[#00A8FF] to-[#0077FF] text-white font-semibold rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cosmic-button-glow flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            Notify Me
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>

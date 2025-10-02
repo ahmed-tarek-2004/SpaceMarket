@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { BranchesComponent } from './Branches.component';
+import { DatasetPreviewComponent } from './dataset-preview.component';
 
-describe('BranchesComponent', () => {
-  let component: BranchesComponent;
-  let fixture: ComponentFixture<BranchesComponent>;
+describe('DatasetPreviewComponent', () => {
+  let component: DatasetPreviewComponent;
+  let fixture: ComponentFixture<DatasetPreviewComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BranchesComponent ]
+      declarations: [ DatasetPreviewComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BranchesComponent);
+    fixture = TestBed.createComponent(DatasetPreviewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
