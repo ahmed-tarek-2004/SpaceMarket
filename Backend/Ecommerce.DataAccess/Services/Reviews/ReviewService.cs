@@ -1,11 +1,13 @@
-﻿using System;
-using Ecommerce.DataAccess.ApplicationContext;
+﻿using Ecommerce.DataAccess.ApplicationContext;
+using Ecommerce.DataAccess.Services.Notifications;
 using Ecommerce.DataAccess.Services.Reviews;
 using Ecommerce.Entities.DTO.Reviews;
 using Ecommerce.Entities.Models;
+using Ecommerce.Entities.Models.Auth.Users;
 using Ecommerce.Entities.Shared.Bases;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace Ecommerce.Services.Reviews
 {
@@ -14,12 +16,13 @@ namespace Ecommerce.Services.Reviews
         private readonly ApplicationDbContext _db;
         private readonly ILogger<ReviewService> _logger;
         private readonly ResponseHandler _responseHandler;
-
-        public ReviewService(ApplicationDbContext db, ILogger<ReviewService> logger, ResponseHandler responseHandler)
+        private readonly INotificationService _notificationService;
+        public ReviewService(ApplicationDbContext db, ILogger<ReviewService> logger, ResponseHandler responseHandler,INotificationService notificationService)
         {
             _db = db;
             _logger = logger;
             _responseHandler = responseHandler;
+            _notificationService=notificationService;
         }
 
         public async Task<Response<ReviewResponseDto>> CreateAsync(CreateReviewRequest request, string clientId)
@@ -39,6 +42,14 @@ namespace Ecommerce.Services.Reviews
 
                 await _db.Reviews.AddAsync(review);
                 await _db.SaveChangesAsync();
+
+
+                await _notificationService.NotifyUserAsync(
+                                           recipientId: clientId,
+                                           senderId: null,
+                                           title: "Review Updated",
+                                           message: "Your Review Has Been Added"
+                                        );
 
                 var dto = await ProjectToDto(review.Id);
                 return _responseHandler.Created(dto, "Review created successfully");
@@ -63,6 +74,15 @@ namespace Ecommerce.Services.Reviews
                 review.UpdatedAt = DateTime.UtcNow;
 
                 await _db.SaveChangesAsync();
+
+                await _notificationService.NotifyUserAsync(
+                                           recipientId: review.ClientId,
+                                           senderId: null,
+                                           title: "Review Update",
+                                           message: "Your Review Has Been Updated"
+                                        );
+
+
 
                 var dto = await ProjectToDto(review.Id);
                 return _responseHandler.Success(dto, "Review updated successfully");

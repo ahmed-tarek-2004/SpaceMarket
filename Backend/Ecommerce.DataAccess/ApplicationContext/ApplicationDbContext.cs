@@ -44,6 +44,7 @@ namespace Ecommerce.DataAccess.ApplicationContext
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Withdrawal> Withdrawals { get; set; }
         public DbSet<ServiceMetricEvent> ServiceMetrics { get; set; }
+        public DbSet<Notification>Notifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
