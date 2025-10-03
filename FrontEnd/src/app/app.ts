@@ -5,6 +5,11 @@ import { ToastContainerComponent } from './shared/components/toast-container/toa
 import { HeaderComponent } from './shared/components/header/header.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { Subscription, filter } from 'rxjs';
+import { AuthService } from './core/services/auth.service';
+import { TokenService } from './core/services/token.service';
+import { ApiResponse } from './core/interfaces/api-response';
+import { INotificationResponse } from './core/interfaces/notification';
+import { NotificationService } from './core/services/notification.service';
 
 @Component({
   selector: 'app-root',
@@ -18,9 +23,21 @@ export class App implements OnInit, OnDestroy {
 
   private sub = new Subscription();
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private tokenService: TokenService,
+    private notificationService: NotificationService
+  ) {}
 
   ngOnInit(): void {
+    const userId = this.tokenService.getUserId();
+
+    if (userId) {
+      // Start notification connection - service handles state management
+      this.notificationService.startConnection();
+    }
+
     this.sub.add(
       this.router.events.pipe(filter((e) => e instanceof NavigationEnd)).subscribe(() => {
         let snapshot = this.activatedRoute.snapshot;
