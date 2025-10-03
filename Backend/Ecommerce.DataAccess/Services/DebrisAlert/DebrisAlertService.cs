@@ -244,6 +244,34 @@ namespace Ecommerce.DataAccess.Services.DebrisTracking
                 return _responseHandler.ServerError<string>("Error while checking debris alerts.");
             }
         }
+        /// <summary>
+        /// Get all satellite names from the catalog
+        /// </summary>
+        public async Task<Response<List<string>>> GetAllCatalogSatelliteNamesAsync()
+        {
+            var names = await _context.SatellitesCatalog
+                .Select(s => s.Name)
+                .ToListAsync();
+
+            return _responseHandler.Success(names, "Satellite names retrieved successfully");
+        }
+
+        /// <summary>
+        /// Get satellite position by Satellite Id
+        /// </summary>
+        public async Task<Response<PositionDto>> GetSatellitePositionAsync(Guid satelliteId)
+        {
+            var satellite = await _context.Satellites
+                .FirstOrDefaultAsync(s => s.Id == satelliteId);
+
+            if (satellite == null)
+                return _responseHandler.NotFound<PositionDto>("Satellite not found");
+
+            var position = _propagationService.PropagateToGeodetic(
+                satellite.TleLine1, satellite.TleLine2, DateTime.UtcNow);
+
+            return _responseHandler.Success(position, $"Position for satellite {satellite.Name} retrieved");
+        }
 
         private double ComputeDistanceKm(PositionDto a, PositionDto b)
         {

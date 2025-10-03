@@ -94,5 +94,24 @@ namespace Ecommerce.API.Controllers
             return StatusCode((int)response.StatusCode, response);
         }
 
+        /// <summary>
+        /// Get all satellite names from catalog
+        /// </summary>
+        [HttpGet("catalog/names")]
+        public async Task<IActionResult> GetAllCatalogSatelliteNames()
+        {
+            var response = await _debrisAlertService.GetAllCatalogSatelliteNamesAsync();
+            return StatusCode((int)response.StatusCode, response);
+        }
+
+        /// <summary>
+        /// Get satellite position by Id
+        /// </summary>
+        [HttpGet("{satelliteId}/position")]
+        public async Task<IActionResult> GetSatellitePosition(Guid satelliteId)
+        {
+            var response = await _debrisAlertService.GetSatellitePositionAsync(satelliteId);
+            return StatusCode((int)response.StatusCode, response);
+        }
     }
 }
