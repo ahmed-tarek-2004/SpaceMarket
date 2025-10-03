@@ -1,4 +1,5 @@
 ﻿using Ecommerce.API.Validators.Payment;
+using Ecommerce.DataAccess.Services.Notifications;
 using Ecommerce.DataAccess.Services.Payment;
 using Ecommerce.Entities.DTO.Payment;
 using Ecommerce.Entities.Shared.Bases;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Stripe;
 using Stripe.V2;
 using System;
@@ -24,14 +26,16 @@ namespace Ecommerce.API.Controllers
         private readonly IValidator<PaymentRequest> _paymentRequestValidator;
         private readonly IValidator<HandlePayment> _handelPaymentValidator;
         private readonly IConfiguration _config;
+        private readonly INotificationService _notificationService;
         //private readonly IValidator<CreatePaymentIntentRequest> _paymentValidator;
         //private readonly IValidator<CashOnDeliveryRequest> _cashOnDeliveryValidator;
 
         public PaymentController( IPaymentService paymentService,ResponseHandler responseHandler
             ,IValidator<PaymentRequest> paymentRequestValidator
             ,IValidator<HandlePayment> handelPaymentValidator
-            ,IConfiguration configuration
+            ,IConfiguration configuration,
             //IValidator<CashOnDeliveryRequest> cashOnDeliveryValidator
+            INotificationService notificationService
             )
         {
             _paymentService = paymentService;
@@ -40,6 +44,7 @@ namespace Ecommerce.API.Controllers
             _paymentRequestValidator = paymentRequestValidator;
             _handelPaymentValidator = handelPaymentValidator;
             _config= configuration;
+            _notificationService = notificationService;
             //_cashOnDeliveryValidator = cashOnDeliveryValidator;
         }
         [HttpPost("checkout-session")]
@@ -95,8 +100,10 @@ namespace Ecommerce.API.Controllers
 
         #region WebHook
         [HttpPost("webhook")]
+        [AllowAnonymous]
         public async Task<IActionResult> HandleWebhook()
         {
+
             var signature = Request.Headers["Stripe-Signature"];
 
             using var reader = new StreamReader(HttpContext.Request.Body);

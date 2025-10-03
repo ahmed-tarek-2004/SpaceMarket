@@ -98,6 +98,16 @@ export const routes: Routes = [
         (m) => m.ComingSoonComponent
       ),
   },
+  {
+    path: 'success',
+    loadComponent: () =>
+      import('./shared/components/success/success.component').then((m) => m.SuccessComponent),
+  },
+  {
+    path: 'error',
+    loadComponent: () =>
+      import('./shared/components/error/error.component').then((m) => m.ErrorComponent),
+  },
   { path: 'forbidden', component: ForbiddenComponent },
   // Add other routes here
   { path: '**', redirectTo: '' },

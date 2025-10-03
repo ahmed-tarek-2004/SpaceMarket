@@ -9,6 +9,10 @@ namespace Ecommerce.API.Validators.Reviews
         {
             RuleFor(x => x.ReviewId).NotEmpty();
             RuleFor(x => x.ReplyText).NotEmpty();
+            RuleFor(x => x.ReviewId)
+           .Must(id => Guid.TryParse(id, out _))
+           .WithMessage("ProviderId must be a valid GUID.");
+
         }
     }
 }

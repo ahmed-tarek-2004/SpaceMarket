@@ -29,6 +29,11 @@ namespace Ecommerce.API.Controllers
         [Authorize(Roles = "Client")]
         public async Task<ActionResult<Response<CartResponse>>> AddToCart([FromBody] AddingToCartRequest request)
         {
+            if (request == null) 
+            {
+                return StatusCode((int)_responseHandler.BadRequest<object>("Non a Valid Body").StatusCode,
+                    _responseHandler.BadRequest<object>("Not a valid Body"));
+            }
             var validationResult = await _addToCartValidator.ValidateAsync(request);
             if (!validationResult.IsValid)
             {

@@ -53,15 +53,6 @@ export class CartPageComponent implements OnInit {
   }
 
   get totalPrice(): number {
-    return this.cart?.totalPrice || 0;
-  }
-
-  checkout(): void {
-    console.log('Proceeding to checkout with items:', this.cartItems);
-    alert(
-      `Checkout not implemented yet. You have ${
-        this.totalItems
-      } items worth $${this.totalPrice.toFixed(2)}.`
-    );
+    return (this.cart?.totalPrice || 0) + (this.cart?.totalCommission || 0);
   }
 }

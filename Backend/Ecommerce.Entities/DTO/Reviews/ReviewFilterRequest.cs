@@ -8,7 +8,7 @@ namespace Ecommerce.Entities.DTO.Reviews
 {
     public class ReviewFilterRequest
     {
-        public Guid? ServiceId { get; set; }
+        public string? ServiceId { get; set; }
         public string? ProviderId { get; set; }
         public int? Rating { get; set; }
     }

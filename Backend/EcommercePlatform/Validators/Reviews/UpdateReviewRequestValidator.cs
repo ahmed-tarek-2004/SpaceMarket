@@ -7,7 +7,10 @@ namespace Ecommerce.API.Validators.Reviews
     {
         public UpdateReviewRequestValidator()
         {
-            RuleFor(x => x.Id).NotEmpty();
+            RuleFor(x => x.Id)
+                .NotEmpty()
+                .Must(id => Guid.TryParse(id, out _))
+                .WithMessage("ServiceId must be a valid GUID."); ;
             // Rating/Text optional
         }
     }

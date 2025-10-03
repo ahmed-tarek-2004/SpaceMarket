@@ -2,11 +2,12 @@ import { Component, signal, HostListener, inject, computed, OnInit } from '@angu
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { TokenService } from '../../../core/services/token.service';
+import { NotificationBellComponent } from '../notification-bell/notification-bell.component';
 import { ROUTES } from '../../config/constants';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, NotificationBellComponent],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })

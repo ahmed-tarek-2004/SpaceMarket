@@ -1,8 +1,8 @@
 export const environment = {
   production: false,
 
-  //apiUrl: 'https://spacemarket.runasp.net/api',
-  apiUrl: 'https://localhost:7299/api',
+  apiUrl: 'https://spacemarket.runasp.net/api',
+  // apiUrl: 'https://localhost:7299/api',
 
   account: {
     signIn: '/Account/login',
@@ -41,5 +41,20 @@ export const environment = {
     updateQuantity: '/Cart/update-quantity',
     removeItem: `/Cart/remove/`,
     clearCart: '/Cart/clear-cart',
+  },
+
+  payment: {
+    checkoutSession: '/Payment/checkout-session',
+    success: '/Payment/success',
+    cancel: '/Payment/cancel',
+  },
+  order: {
+    createOrder: '/Order',
+  },
+
+  notification: {
+    getAll: '/Notifications/user/notification',
+    markAsRead: (id: string) => `/Notifications/user/mark-read/${id}`,
+    getAllForAdmin: '/Notifications/admin/notification',
   },
 };

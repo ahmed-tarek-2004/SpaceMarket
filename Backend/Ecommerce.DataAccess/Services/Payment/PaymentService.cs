@@ -12,14 +12,17 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Stripe;
 using Stripe.Checkout;
+using Stripe.Terminal;
 using Stripe.V2;
-using Stripe.V2.MoneyManagement;
+//using Stripe.V2.MoneyManagement;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
@@ -37,8 +40,9 @@ namespace Ecommerce.DataAccess.Services.Payment
         private readonly IEmailService _emailService;
         private readonly StripeSettings stripe;
         private readonly INotificationService _notificationService;
+        private readonly IConfiguration _configuration;
         public PaymentService(ILogger<PaymentService> logger, UserManager<User> userManager, ApplicationDbContext context
-            , ResponseHandler responseHandler, IOptions<StripeSettings> options, IEmailService emailService,INotificationService notificationService)
+            , ResponseHandler responseHandler, IOptions<StripeSettings> options, IEmailService emailService, INotificationService notificationService, IConfiguration configuration)
         {
             _logger = logger;
             _userManager = userManager;
@@ -48,16 +52,33 @@ namespace Ecommerce.DataAccess.Services.Payment
             _emailService = emailService;
             _notificationService = notificationService;
             //StripeConfiguration.ApiKey = stripe.SecretKey;
+            _configuration = configuration;
         }
 
         #region checkOut
         public async Task<Response<PaymentResponse>> CheckoutSessionService(string userId, PaymentRequest request)
         {
-           
+
             _logger.LogInformation("Start using SessionCheckout");
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == userId);
             try
             {
+                if (!decimal.TryParse(_configuration["CommissionSettings:RatePercent"],
+                              NumberStyles.Any, CultureInfo.InvariantCulture, out var commission))
+                {
+                    commission = 10m;
+                }
+                var amountInCents = (long)Math.Round(request.ServiceUnitAmount * 100, 0);
+
+                var commissionRate = commission / 100m;
+
+                var finalAmount = (long)Math.Round(amountInCents * (1 - commissionRate), 0);
+
+                if (finalAmount <= 0)
+                {
+                    _responseHandler.BadRequest<PaymentResponse>("Invalid amount: must be greater than zero.");
+                }
+
                 var options = new SessionCreateOptions
                 {
                     PaymentMethodTypes = new List<string> { "card" },
@@ -67,7 +88,7 @@ namespace Ecommerce.DataAccess.Services.Payment
                     {
                         PriceData = new SessionLineItemPriceDataOptions
                         {
-                            UnitAmount = (long)(request.ServiceUnitAmount * 100),
+                            UnitAmount = finalAmount,
                             Currency = request.Currency,
                             ProductData = new SessionLineItemPriceDataProductDataOptions
                             {
@@ -287,7 +308,6 @@ namespace Ecommerce.DataAccess.Services.Payment
             _logger.LogInformation(
                 "Received webhook event. Signature: {Signature}",
                 stripeSignature);
-
             try
             {
                 var stripeEvent = EventUtility.ConstructEvent(
@@ -301,6 +321,7 @@ namespace Ecommerce.DataAccess.Services.Payment
                 }
                 catch (StripeException ex)
                 {
+                    _logger.LogError(ex, "Stripe Webhook validation failed");
                     return _responseHandler.BadRequest<object>(ex.Message);
                 }
 
@@ -315,7 +336,13 @@ namespace Ecommerce.DataAccess.Services.Payment
                 if (session == null)
                     return _responseHandler.BadRequest<object>("Event data object is not a session.");
 
-                var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id.ToString() == session.Metadata["orderId"]);
+                var order = await _context.Orders
+                       .Include(o => o.Item)
+                           .ThenInclude(i => i.Service)
+                       .Include(o => o.Item)
+                           .ThenInclude(i => i.Dataset)
+                    .FirstOrDefaultAsync(o => o.Id.ToString() == session.Metadata["orderId"]);
+
                 var user = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == session.Metadata["clientId"]);
 
 
@@ -323,7 +350,9 @@ namespace Ecommerce.DataAccess.Services.Payment
                 {
                     Id = Guid.NewGuid(),
                     OrderId = order.Id,
-                    Date = DateTime.UtcNow
+                    Date = DateTime.UtcNow,
+                    ClientId = user.Id,
+                    ServiceProviderId = order.Item.ServiceId != null ? order.Item.Service.ProviderId : order.Item.Dataset.ProviderId
                 };
 
                 if (stripeEvent.Type == "checkout.session.completed")
@@ -348,16 +377,25 @@ namespace Ecommerce.DataAccess.Services.Payment
                 }
                 await _notificationService.NotifyUserAsync(
                                          recipientId: transaction.ClientId,
-                                         senderId: null,
+                                         senderId: "null",
                                          title: "Payment Status",
                                          message: $"order #{order.Id} is {order.Status}"
                                      );
+
+                var cartItems = await _context.CartItems
+                               .Where(b => b.ClientId == user.Id)
+                               .ToListAsync();
+
+                if (cartItems!=null &&cartItems.Any())
+                    _context.CartItems.RemoveRange(cartItems);
+
+
                 await _context.Transactions.AddAsync(transaction);
                 await _context.SaveChangesAsync();
 
                 await _notificationService.NotifyUserAsync(
                                           recipientId: transaction.ClientId,
-                                          senderId:null,
+                                          senderId: "null",
                                           title: "Payment Status",
                                           message: $"Transaction #{transaction.Id} is {transaction.Status}"
                                           );
