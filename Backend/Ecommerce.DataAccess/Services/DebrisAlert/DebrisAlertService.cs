@@ -44,7 +44,7 @@ namespace Ecommerce.DataAccess.Services.DebrisTracking
             var catalogSat = await _context.SatellitesCatalog.FindAsync(request.CatalogSatelliteId);
             if (catalogSat == null)
                 return _responseHandler.NotFound<Guid>("Satellite not found in catalog");
-            var clientSatellite = await _context.Satellites.FirstOrDefaultAsync(s=> s.ClientId == userId);
+            var clientSatellite = await _context.Satellites.FirstOrDefaultAsync(s=> s.Id == request.CatalogSatelliteId);
 
             if (clientSatellite != null) return _responseHandler.BadRequest<Guid>("Satellite is registered By another user");
 
