@@ -1,17 +1,18 @@
+using System.Text.Json.Serialization;
 using Ecommerce.API.Extensions;
 using Ecommerce.DataAccess.ApplicationContext;
 using Ecommerce.DataAccess.Extensions;
+using Ecommerce.DataAccess.Hubs;
+using Ecommerce.DataAccess.Jobs;
 using Ecommerce.DataAccess.Seeder;
-using Ecommerce.DataAccess.Services.Notifications;
 using Ecommerce.Entities.Models.Auth.Identity;
 using Ecommerce.Entities.Shared.Bases;
 using Ecommerce.Utilities.Configurations;
-
+using Hangfire;
+using Hangfire.SqlServer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
-
 using StackExchange.Redis;
-using System.Text.Json.Serialization;
 
 namespace EcommercePlatform
 {
@@ -22,6 +23,25 @@ namespace EcommercePlatform
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
+
+            #region Hangfire configuration
+            builder.Services.AddHangfire(config =>
+                config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                      .UseSimpleAssemblyNameTypeSerializer()
+                      .UseRecommendedSerializerSettings()
+                      .UseSqlServerStorage(builder.Configuration.GetConnectionString("ProdCS"),
+                          new SqlServerStorageOptions
+                          {
+                              CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                              SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                              QueuePollInterval = TimeSpan.Zero,
+                              UseRecommendedIsolationLevel = true,
+                              DisableGlobalLocks = true
+                          }));
+
+            builder.Services.AddHangfireServer();
+            #endregion
+
 
             builder.Host.UseSerilogLogging();
 
@@ -127,6 +147,17 @@ namespace EcommercePlatform
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapHub<NotificationHub>("/hub/notifications");
+            app.UseHangfireDashboard("/hangfire");
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var recurringJobManager = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
+                recurringJobManager.AddOrUpdate<IDebrisAlertJob>(
+                    "debris-check-job",
+                    job => job.ExecuteAsync(),
+                    Cron.MinuteInterval(5)
+                );
+            }
 
             app.MapControllers();
 

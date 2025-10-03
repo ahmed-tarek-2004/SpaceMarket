@@ -1,4 +1,6 @@
-﻿using Ecommerce.DataAccess.EntitiesConfigurations;
+﻿using Ecommerce.Data.Configurations;
+using Ecommerce.DataAccess.Configurations;
+using Ecommerce.DataAccess.EntitiesConfigurations;
 using Ecommerce.Entities.Models;
 using Ecommerce.Entities.Models.Auth.Identity;
 using Ecommerce.Entities.Models.Auth.Users;
@@ -28,9 +30,6 @@ namespace Ecommerce.DataAccess.ApplicationContext
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<CollisionAlert> CollisionAlerts { get; set; }
         public DbSet<CommissionSetting> CommissionSettings { get; set; }
-        public DbSet<ComplianceMessage> ComplianceMessages { get; set; }
-        public DbSet<ComplianceService> ComplianceServices { get; set; }
-        public DbSet<ComplianceTicket> ComplianceTickets { get; set; }
         public DbSet<Dataset> Datasets { get; set; }
         public DbSet<Debris> Debris { get; set; }
         public DbSet<Order> Orders { get; set; }
@@ -39,6 +38,8 @@ namespace Ecommerce.DataAccess.ApplicationContext
         public DbSet<Review> Reviews { get; set; }
         public DbSet<ReviewResponse> ReviewResponses { get; set; }
         public DbSet<Satellite> Satellites { get; set; }
+        public DbSet<SatelliteCatalog> SatellitesCatalog { get; set; }
+
         public DbSet<Service> Services { get; set; }
         public DbSet<ServiceCategory> ServiceCategories { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
@@ -58,9 +59,6 @@ namespace Ecommerce.DataAccess.ApplicationContext
             modelBuilder.ApplyConfiguration(new CartItemConfiguration());
             modelBuilder.ApplyConfiguration(new CollisionAlertConfiguration());
             modelBuilder.ApplyConfiguration(new CommissionSettingConfiguration());
-            modelBuilder.ApplyConfiguration(new ComplianceMessageConfiguration());
-            modelBuilder.ApplyConfiguration(new ComplianceServiceConfiguration());
-            modelBuilder.ApplyConfiguration(new ComplianceTicketConfiguration());
             modelBuilder.ApplyConfiguration(new DatasetConfiguration());
             modelBuilder.ApplyConfiguration(new DebrisConfiguration());
             modelBuilder.ApplyConfiguration(new OrderConfiguration());
@@ -69,6 +67,7 @@ namespace Ecommerce.DataAccess.ApplicationContext
             modelBuilder.ApplyConfiguration(new ReviewConfiguration());
             modelBuilder.ApplyConfiguration(new ReviewResponseConfiguration());
             modelBuilder.ApplyConfiguration(new SatelliteConfiguration());
+            modelBuilder.ApplyConfiguration(new SatelliteCatalogConfiguration());
             modelBuilder.ApplyConfiguration(new ServiceConfiguration());
             modelBuilder.ApplyConfiguration(new ServiceCategoryConfiguration());
             modelBuilder.ApplyConfiguration(new TransactionConfiguration());

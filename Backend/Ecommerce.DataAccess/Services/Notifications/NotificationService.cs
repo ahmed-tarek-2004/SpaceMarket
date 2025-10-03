@@ -1,4 +1,5 @@
 ﻿using Ecommerce.DataAccess.ApplicationContext;
+using Ecommerce.DataAccess.Hubs;
 using Ecommerce.Entities.DTO.Notification;
 using Ecommerce.Entities.DTO.Payment;
 using Ecommerce.Entities.Models;
@@ -31,25 +32,28 @@ namespace Ecommerce.DataAccess.Services.Notifications
         }
 
 
-        public async Task NotifyUserAsync(string recipientId, string senderId, string title, string message)
+        public async Task NotifyUserAsync(string recipientId, string senderId, string title, string message, object payload = null)
         {
             try
-            {var notification = new Notification
             {
-                RecipientId = recipientId,
-                SenderId = senderId,
-                Title = title,
-                Message = message
-            };
+                var notification = new Notification
+                {
+                    RecipientId = recipientId,
+                    SenderId = senderId,
+                    Title = title,
+                    Message = message
+                };
 
             await _context.Notifications.AddAsync(notification);
             await _context.SaveChangesAsync();
 
                 if (!string.IsNullOrEmpty(recipientId))
                 {
-
-                    await _hub.Clients.Group(recipientId).SendAsync("ReceiveNotification", notification);
-
+                    await _hub.Clients.Group(recipientId).SendAsync("ReceiveNotification", new
+                    {
+                        notification,
+                        payload // هنا هنبعت أي object إضافي (زي CollisionAlertResponse)
+                    });
                 }
             }
             catch (Exception ex)
@@ -57,6 +61,7 @@ namespace Ecommerce.DataAccess.Services.Notifications
                 _logger.LogError(ex, "Error When Adding Notification");
             }
         }
+
 
         public async Task<Response<string>> MarkAsReadAsync(Guid notificationId)
         {
