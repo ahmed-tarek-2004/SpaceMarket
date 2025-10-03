@@ -3,10 +3,13 @@ using Ecommerce.DataAccess.Services.DebrisAlert;
 using Ecommerce.DataAccess.Services.Notifications;
 using Ecommerce.DataAccess.Services.OrbitalPropagation;
 using Ecommerce.Entities.DTO.DebrisTracking;
+using Ecommerce.Entities.DTO.ServiceCatalog;
 using Ecommerce.Entities.Models;
+using Ecommerce.Entities.Shared;
 using Ecommerce.Entities.Shared.Bases;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 
 namespace Ecommerce.DataAccess.Services.DebrisTracking
 {
@@ -262,5 +265,54 @@ namespace Ecommerce.DataAccess.Services.DebrisTracking
         }
 
         private double Deg2Rad(double deg) => deg * Math.PI / 180.0;
+
+        //public async Task<Response<List<SatelliteCatalogResponseDto>>> GetSatelliteCatalogs(SatelliteCatalogFilter filter)
+        //{
+        //    try
+        //    {
+        //        var SatelliteCatalog = _context.SatellitesCatalog.AsQueryable();
+        //        if (!string.IsNullOrEmpty(filter.Name))
+        //        {
+        //            SatelliteCatalog = SatelliteCatalog.Where(q => q.Name == filter.Name);
+        //        }
+        //        if (!string.IsNullOrEmpty(filter.NoradId))
+        //        {
+        //            SatelliteCatalog = SatelliteCatalog.Where(q => q.NoradId == filter.NoradId);
+        //        }
+        //        if (!string.IsNullOrEmpty(filter.TleLine1))
+        //        {
+        //            SatelliteCatalog = SatelliteCatalog.Where(q => q.TleLine1 == filter.TleLine1);
+        //        }
+        //        if (!string.IsNullOrEmpty(filter.TleLine2))
+        //        {
+        //            SatelliteCatalog = SatelliteCatalog.Where(q => q.TleLine2 == filter.TleLine2);
+        //        }
+        //        int pageNumber = filter.PageNumber <= 0 ? 1 : filter.PageNumber;
+        //        int pageSize = filter.PageSize <= 0 ? 10 : filter.PageSize;
+
+        //        var totalRecords = await SatelliteCatalog.CountAsync();
+
+        //        var response = await SatelliteCatalog
+        //            .OrderBy(s => s.Id) // تأكد إن فيه ترتيب ثابت
+        //            .Skip((pageNumber - 1) * pageSize)
+        //            .Take(pageSize)
+        //            .Select(s => new SatelliteCatalogResponseDto
+        //            {
+        //                Id = s.Id,
+        //                Name = s.Name,
+        //                NoradId = s.NoradId,
+        //                TleLine1 = s.TleLine1,
+        //                TleLine2 = s.TleLine2
+        //            })
+        //            .ToListAsync();
+
+        //        var paginated = await PaginatedList<DatasetFilterResponse>.CreateAsync(SatelliteCatalog, filter.PageNumber, filter.PageSize);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "Error in RunDebrisCheckAsync");
+        //        return _responseHandler.ServerError<List<SatelliteCatalogResponseDto>>("Error while checking debris alerts.");
+        //    }
+        //}
     }
 }

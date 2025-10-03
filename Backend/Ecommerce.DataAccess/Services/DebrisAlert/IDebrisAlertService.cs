@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ecommerce.Entities.DTO.DebrisTracking;
+using Ecommerce.Entities.Models;
 using Ecommerce.Entities.Shared.Bases;
 
 namespace Ecommerce.DataAccess.Services.DebrisAlert
@@ -15,5 +16,6 @@ namespace Ecommerce.DataAccess.Services.DebrisAlert
         Task<Response<string>> SetThresholdAsync(Guid satelliteId, UpdateThresholdRequest request, string userId);
         Task<Response<List<CollisionAlertResponse>>> GetAlertHistoryAsync(string userId);
         Task<Response<List<SatelliteResponseDto>>> GetMySatellitesAsync(string userId);
+        //Task<Response<List<SatelliteCatalogResponseDto>>>GetSatelliteCatalogs(SatelliteCatalogFilter filter);
     }
 }
