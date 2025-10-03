@@ -12,14 +12,17 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Stripe;
 using Stripe.Checkout;
+using Stripe.Terminal;
 using Stripe.V2;
 //using Stripe.V2.MoneyManagement;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
@@ -37,8 +40,9 @@ namespace Ecommerce.DataAccess.Services.Payment
         private readonly IEmailService _emailService;
         private readonly StripeSettings stripe;
         private readonly INotificationService _notificationService;
+        private readonly IConfiguration _configuration;
         public PaymentService(ILogger<PaymentService> logger, UserManager<User> userManager, ApplicationDbContext context
-            , ResponseHandler responseHandler, IOptions<StripeSettings> options, IEmailService emailService, INotificationService notificationService)
+            , ResponseHandler responseHandler, IOptions<StripeSettings> options, IEmailService emailService, INotificationService notificationService, IConfiguration configuration)
         {
             _logger = logger;
             _userManager = userManager;
@@ -48,6 +52,7 @@ namespace Ecommerce.DataAccess.Services.Payment
             _emailService = emailService;
             _notificationService = notificationService;
             //StripeConfiguration.ApiKey = stripe.SecretKey;
+            _configuration = configuration;
         }
 
         #region checkOut
@@ -58,6 +63,22 @@ namespace Ecommerce.DataAccess.Services.Payment
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == userId);
             try
             {
+                if (!decimal.TryParse(_configuration["CommissionSettings:RatePercent"],
+                              NumberStyles.Any, CultureInfo.InvariantCulture, out var commission))
+                {
+                    commission = 10m;
+                }
+                var amountInCents = (long)Math.Round(request.ServiceUnitAmount * 100, 0);
+
+                var commissionRate = commission / 100m;
+
+                var finalAmount = (long)Math.Round(amountInCents * (1 - commissionRate), 0);
+
+                if (finalAmount <= 0)
+                {
+                    _responseHandler.BadRequest<PaymentResponse>("Invalid amount: must be greater than zero.");
+                }
+
                 var options = new SessionCreateOptions
                 {
                     PaymentMethodTypes = new List<string> { "card" },
@@ -67,7 +88,7 @@ namespace Ecommerce.DataAccess.Services.Payment
                     {
                         PriceData = new SessionLineItemPriceDataOptions
                         {
-                            UnitAmount = (long)(request.ServiceUnitAmount * 100),
+                            UnitAmount = finalAmount,
                             Currency = request.Currency,
                             ProductData = new SessionLineItemPriceDataProductDataOptions
                             {
@@ -360,6 +381,9 @@ namespace Ecommerce.DataAccess.Services.Payment
                                          title: "Payment Status",
                                          message: $"order #{order.Id} is {order.Status}"
                                      );
+
+                var cartItems = _context.CartItems.Where(b => b.ClientId == user.Id);
+                 _context.RemoveRange(cartItems);
                 await _context.Transactions.AddAsync(transaction);
                 await _context.SaveChangesAsync();
 
