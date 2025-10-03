@@ -1,1 +1,0 @@
-wwwroot\EmailTemplates\OtpVerificationEmail.html
