@@ -1,0 +1,338 @@
+/* Satellite Form Component Styles */
+.satellite-form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(7, 16, 42, 0.95) 0%, rgba(11, 26, 61, 0.98) 100%);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(0, 168, 255, 0.2);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 80px rgba(0, 168, 255, 0.1);
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+
+  /* Cosmic background effects */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 20%, rgba(0, 168, 255, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(0, 245, 212, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Form Header */
+  .form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 1;
+
+    .header-icon {
+      width: 4rem;
+      height: 4rem;
+      margin: 0 auto 1rem;
+      background: linear-gradient(135deg, #00a8ff 0%, #0077ff 100%);
+      border-radius: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: 0 10px 30px rgba(0, 168, 255, 0.3);
+      animation: float 6s ease-in-out infinite;
+
+      svg {
+        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+      }
+    }
+
+    .form-title {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: white;
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #00a8ff 0%, #00f5d4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 30px rgba(0, 168, 255, 0.5);
+    }
+
+    .form-description {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1rem;
+      line-height: 1.6;
+      margin: 0;
+    }
+  }
+
+  /* Form Styles */
+  .satellite-form {
+    position: relative;
+    z-index: 1;
+
+    .form-group {
+      margin-bottom: 1.5rem;
+
+      .form-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        color: white;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+
+        svg {
+          color: #00a8ff;
+          filter: drop-shadow(0 0 5px rgba(0, 168, 255, 0.5));
+        }
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 1rem 1.25rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 0.75rem;
+        color: white;
+        font-size: 1rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(10px);
+
+        &::placeholder {
+          color: rgba(255, 255, 255, 0.4);
+        }
+
+        &:focus {
+          outline: none;
+          border-color: #00a8ff;
+          background: rgba(0, 168, 255, 0.1);
+          box-shadow: 0 0 0 4px rgba(0, 168, 255, 0.1), 0 0 20px rgba(0, 168, 255, 0.2);
+          transform: translateY(-2px);
+        }
+
+        &:hover:not(:focus) {
+          border-color: rgba(0, 168, 255, 0.3);
+          background: rgba(255, 255, 255, 0.08);
+        }
+
+        &.error {
+          border-color: #ff4757;
+          background: rgba(255, 71, 87, 0.1);
+          box-shadow: 0 0 20px rgba(255, 71, 87, 0.2);
+        }
+      }
+
+      .error-message {
+        color: #ff4757;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        animation: slideInFromTop 0.3s ease-out;
+
+        &::before {
+          content: '⚠';
+          font-size: 1rem;
+        }
+      }
+
+      .field-hint {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+        font-style: italic;
+      }
+    }
+
+    /* Form Actions */
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      justify-content: center;
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.875rem 2rem;
+        border-radius: 0.75rem;
+        font-weight: 600;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+
+        svg {
+          transition: transform 0.3s ease;
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          transform: none !important;
+        }
+
+        &.btn-primary {
+          background: linear-gradient(135deg, #00a8ff 0%, #0077ff 100%);
+          color: white;
+          box-shadow: 0 10px 30px rgba(0, 168, 255, 0.3);
+
+          &:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 168, 255, 0.4);
+
+            svg {
+              transform: rotate(90deg);
+            }
+          }
+
+          &:active:not(:disabled) {
+            transform: translateY(-1px);
+          }
+        }
+
+        &.btn-secondary {
+          background: rgba(255, 255, 255, 0.1);
+          color: white;
+          border: 2px solid rgba(255, 255, 255, 0.2);
+
+          &:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+
+            svg {
+              transform: rotate(180deg);
+            }
+          }
+        }
+
+        /* Galaxy hover effect */
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+          transition: left 0.8s;
+        }
+
+        &:hover::before {
+          left: 100%;
+        }
+      }
+    }
+  }
+}
+
+/* Animations */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .satellite-form-container {
+    margin: 1rem;
+    padding: 1.5rem;
+    border-radius: 1rem;
+
+    .form-header {
+      margin-bottom: 1.5rem;
+
+      .form-title {
+        font-size: 1.5rem;
+      }
+
+      .form-description {
+        font-size: 0.875rem;
+      }
+    }
+
+    .satellite-form {
+      .form-group {
+        margin-bottom: 1.25rem;
+
+        .form-input {
+          padding: 0.875rem 1rem;
+        }
+      }
+
+      .form-actions {
+        flex-direction: column;
+        gap: 0.75rem;
+
+        .btn {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    }
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .satellite-form-container {
+    .form-header .header-icon {
+      animation: none;
+    }
+
+    .satellite-form .form-actions .btn {
+      &::before {
+        display: none;
+      }
+
+      &:hover {
+        transform: none;
+      }
+    }
+  }
+
+  @keyframes float {
+    to {
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes slideInFromTop {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

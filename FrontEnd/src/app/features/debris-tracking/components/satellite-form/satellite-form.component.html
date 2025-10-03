@@ -1,0 +1,150 @@
+<div class="satellite-form-container">
+  <!-- Form Header -->
+  <div class="form-header">
+    <h2 class="form-title">Register Satellite</h2>
+    <p class="form-description">Register your satellite for debris tracking and proximity alerts</p>
+  </div>
+
+  <!-- Satellite Registration Form -->
+  <form [formGroup]="satelliteForm" (ngSubmit)="onSubmit()" class="satellite-form">
+    <!-- Catalog Satellite ID Field -->
+    <div class="form-group">
+      <label for="catalogSatelliteId" class="form-label">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+          />
+        </svg>
+        Catalog Satellite ID
+      </label>
+      <input
+        type="text"
+        id="catalogSatelliteId"
+        formControlName="catalogSatelliteId"
+        class="form-input"
+        [class.error]="isFieldInvalid('catalogSatelliteId')"
+        placeholder="Enter satellite catalog ID (e.g., SAT-001)"
+        autocomplete="off"
+      />
+      <div class="error-message" *ngIf="getFieldError('catalogSatelliteId')">
+        {{ getFieldError('catalogSatelliteId') }}
+      </div>
+    </div>
+
+    <!-- Satellite Name Field -->
+    <div class="form-group">
+      <label for="name" class="form-label">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+          />
+        </svg>
+        Satellite Name
+      </label>
+      <input
+        type="text"
+        id="name"
+        formControlName="name"
+        class="form-input"
+        [class.error]="isFieldInvalid('name')"
+        placeholder="Enter satellite name (e.g., Explorer-1)"
+        autocomplete="off"
+      />
+      <div class="error-message" *ngIf="getFieldError('name')">
+        {{ getFieldError('name') }}
+      </div>
+    </div>
+
+    <!-- Proximity Threshold Field -->
+    <div class="form-group">
+      <label for="proximityThresholdKm" class="form-label">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+          />
+        </svg>
+        Proximity Threshold (km)
+      </label>
+      <input
+        type="number"
+        id="proximityThresholdKm"
+        formControlName="proximityThresholdKm"
+        class="form-input"
+        [class.error]="isFieldInvalid('proximityThresholdKm')"
+        placeholder="Enter threshold distance (1-1000 km)"
+        min="1"
+        max="1000"
+        step="0.1"
+      />
+      <div class="error-message" *ngIf="getFieldError('proximityThresholdKm')">
+        {{ getFieldError('proximityThresholdKm') }}
+      </div>
+      <div class="field-hint">Distance threshold for debris proximity alerts (default: 5 km)</div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button
+        type="button"
+        (click)="resetForm()"
+        class="btn btn-secondary"
+        [disabled]="isSubmitting"
+      >
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          />
+        </svg>
+        Reset
+      </button>
+
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="isSubmitting || satelliteForm.invalid"
+      >
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          *ngIf="!isSubmitting"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+          />
+        </svg>
+        <svg
+          class="w-4 h-4 animate-spin"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          *ngIf="isSubmitting"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          />
+        </svg>
+        {{ isSubmitting ? 'Registering...' : 'Register Satellite' }}
+      </button>
+    </div>
+  </form>
+</div>

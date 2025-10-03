@@ -5,6 +5,7 @@ export const ROUTES = {
   cart: '/cart',
   commingSoon: '/coming-soon',
   createService: '/create-service',
+  debrisTracking: '/debris-tracking',
 };
 
 export const ITEM_TYPE = {

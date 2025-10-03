@@ -45,4 +45,12 @@ export const environment = {
     markAsRead: (id: string) => `/Notifications/user/mark-read/${id}`,
     getAllForAdmin: '/Notifications/admin/notification',
   },
+  debrisTracking: {
+    getAllSatellites: '/DebrisAlert/satellites',
+    registerSatellite: '/DebrisAlert/register-satellite',
+    editThreshold: (satelliteId: string) => `/DebrisAlert/${satelliteId}/threshold`,
+    debrisAlertHistory: '/DebrisAlert/alerts/history',
+    debrisCheck: '/DebrisAlert/check',
+    mySatellites: '/DebrisAlert/my-satellites',
+  },
 };

@@ -64,6 +64,13 @@ export const routes: Routes = [
     data: { roles: ['client'] },
   },
   {
+    path: 'debris-tracking',
+    loadComponent: () =>
+      import('./features/debris-tracking/pages/satellites-page/satellites-page').then(
+        (m) => m.SatellitesPage
+      ),
+  },
+  {
     path: 'coming-soon',
     loadComponent: () =>
       import('./shared/components/coming-soon/coming-soon.component').then(

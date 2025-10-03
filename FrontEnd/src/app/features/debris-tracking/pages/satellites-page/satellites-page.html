@@ -1,0 +1,103 @@
+<div class="satellites-page-container">
+  <!-- Form Section -->
+  <div class="form-section">
+    <app-satellite-form (formSubmit)="onFormSubmit($event)" [class.submitting]="isSubmitting">
+    </app-satellite-form>
+  </div>
+
+  <!-- Satellites List Section -->
+  <div class="satellites-section">
+    <div class="section-header">
+      <h2 class="section-title">Your Satellites</h2>
+      <button
+        class="refresh-btn"
+        (click)="refreshSatellites()"
+        [disabled]="isLoadingSatellites()"
+        title="Refresh satellite list"
+      >
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          [class.animate-spin]="isLoadingSatellites()"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          />
+        </svg>
+        Refresh
+      </button>
+    </div>
+
+    <app-satellite-list
+      [satellites]="satellites"
+      [isLoading]="isLoadingSatellites()"
+      [hasError]="hasSatelliteError()"
+      [errorMessage]="satelliteErrorMessage()"
+    >
+    </app-satellite-list>
+  </div>
+
+  <!-- Info Section -->
+  <div class="info-section">
+    <div class="info-cards">
+      <div class="info-card">
+        <div class="card-icon">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+            />
+          </svg>
+        </div>
+        <h3 class="card-title">Real-time Monitoring</h3>
+        <p class="card-description">
+          Get instant alerts when space debris approaches your satellite within the specified
+          threshold.
+        </p>
+      </div>
+
+      <div class="info-card">
+        <div class="card-icon">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+            />
+          </svg>
+        </div>
+        <h3 class="card-title">Advanced Analytics</h3>
+        <p class="card-description">
+          Access detailed tracking history and collision probability assessments for your
+          satellites.
+        </p>
+      </div>
+
+      <div class="info-card">
+        <div class="card-icon">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 10V3L4 14h7v7l9-11h-7z"
+            />
+          </svg>
+        </div>
+        <h3 class="card-title">Instant Alerts</h3>
+        <p class="card-description">
+          Receive immediate notifications via our real-time notification system when potential risks
+          are detected.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
