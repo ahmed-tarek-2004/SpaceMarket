@@ -1,10 +1,14 @@
 ﻿using Ecommerce.DataAccess.ApplicationContext;
+using Ecommerce.DataAccess.Jobs;
 using Ecommerce.DataAccess.Services.Auth;
 using Ecommerce.DataAccess.Services.Cart;
+using Ecommerce.DataAccess.Services.DebrisAlert;
+using Ecommerce.DataAccess.Services.DebrisTracking;
 using Ecommerce.DataAccess.Services.Email;
 using Ecommerce.DataAccess.Services.ImageUploading;
 using Ecommerce.DataAccess.Services.Notifications;
 using Ecommerce.DataAccess.Services.OAuth;
+using Ecommerce.DataAccess.Services.OrbitalPropagation;
 using Ecommerce.DataAccess.Services.Order;
 using Ecommerce.DataAccess.Services.OTP;
 using Ecommerce.DataAccess.Services.Payment;
@@ -52,6 +56,9 @@ namespace Ecommerce.DataAccess.Extensions
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IDebrisAlertService, DebrisAlertService>();
+            services.AddScoped<IOrbitalPropagationService, OrbitalPropagationService>();
+            services.AddScoped<IDebrisAlertJob, DebrisAlertJob>();
             return services;
         }
 

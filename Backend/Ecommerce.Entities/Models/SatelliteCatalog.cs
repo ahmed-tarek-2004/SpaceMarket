@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace Ecommerce.Entities.Models
 {
-    public class Debris
+    public class SatelliteCatalog
     {
         public Guid Id { get; set; }
-        public string NoradId { get; set; }
-        public string Name { get; set; }
-
+        public string NoradId { get; set; }      // ex: "25544"
+        public string Name { get; set; }         // ex: "ISS (ZARYA)"
         public string TleLine1 { get; set; }
         public string TleLine2 { get; set; }
 
-        public DateTime LastFetchedAt { get; set; } // when we last got the Tles from Celestrak/Space-Track
+        public DateTime LastSyncedAt { get; set; } = DateTime.UtcNow;
     }
+
 }

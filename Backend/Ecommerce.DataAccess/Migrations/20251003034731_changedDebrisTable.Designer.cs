@@ -4,6 +4,7 @@ using Ecommerce.DataAccess.ApplicationContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ecommerce.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class AuthContextModelSnapshot : ModelSnapshot
+    [Migration("20251003034731_changedDebrisTable")]
+    partial class changedDebrisTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -326,26 +329,8 @@ namespace Ecommerce.DataAccess.Migrations
                     b.Property<double>("ClosestDistanceKm")
                         .HasColumnType("float");
 
-                    b.Property<double>("DebrisAltitudeKm")
-                        .HasColumnType("float");
-
                     b.Property<Guid>("DebrisId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<double>("DebrisLatitude")
-                        .HasColumnType("float");
-
-                    b.Property<double>("DebrisLongitude")
-                        .HasColumnType("float");
-
-                    b.Property<double>("SatAltitudeKm")
-                        .HasColumnType("float");
-
-                    b.Property<double>("SatLatitude")
-                        .HasColumnType("float");
-
-                    b.Property<double>("SatLongitude")
-                        .HasColumnType("float");
 
                     b.Property<Guid>("SatelliteId")
                         .HasColumnType("uniqueidentifier");
