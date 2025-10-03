@@ -5,6 +5,7 @@ export const ROUTES = {
   cart: '/cart',
   commingSoon: '/coming-soon',
   createService: '/create-service',
+  dashboard: '/dashboard',
 };
 
 export const ITEM_TYPE = {

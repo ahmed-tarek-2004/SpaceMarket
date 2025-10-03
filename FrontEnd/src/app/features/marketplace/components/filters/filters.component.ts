@@ -21,7 +21,6 @@ export class FiltersComponent implements OnInit {
   loadingCategories = false;
   categoriesError: string | null = null;
 
-  // model (only fields the backend accepts)
   categoryId?: string | null = undefined;
   minPrice?: number | null = null;
   maxPrice?: number | null = null;

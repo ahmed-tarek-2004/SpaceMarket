@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ServiceCategory } from '../interfaces/service-category';
-import { ApiResponse } from '../../../core/interfaces/api-response';
+import { ApiResponse } from '../interfaces/api-response.interface';
 
 @Injectable({ providedIn: 'root' })
 export class ServiceCategoryService {

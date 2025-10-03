@@ -1,8 +1,7 @@
 <main class="flex-1">
   <div class="min-h-screen bg-gradient-to-br from-[#07102a] via-[#0B1A3D] to-[#001135] nebula-pulse">
-    <!-- Enhanced Hero Section -->
+    <!-- Hero Section -->
     <div class="relative bg-gradient-to-br from-[#07102a] via-[#0B1A3D] to-[#001135] py-16 md:py-20 overflow-hidden">
-      <!-- Space Background Elements -->
       <div class="star-field absolute inset-0">
         <div class="star star-twinkle"></div>
         <div class="star star-twinkle"></div>
@@ -10,329 +9,318 @@
         <div class="star star-twinkle"></div>
       </div>
 
-      <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div class="text-center max-w-4xl mx-auto">
-          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white font-['Exo_2'] mb-6 cosmic-glow">
-            Create New Service
-          </h1>
-          <p class="text-xl text-gray-300 mb-8 leading-relaxed">
-            Add your space service to the LEO Marketplace and reach customers across the cosmos
-          </p>
-        </div>
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center max-w-4xl mx-auto">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white font-['Exo_2'] mb-6 cosmic-glow">
+          Create New Service
+        </h1>
+        <p class="text-xl text-gray-300 mb-8 leading-relaxed">
+          Add your space service to the LEO Marketplace and reach customers across the cosmos
+        </p>
       </div>
     </div>
 
     <!-- Main Content -->
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
-      <!-- Error Message -->
+      <!-- Error -->
       @if (error$ | async; as error) {
-        <div class="bg-red-500/20 border border-red-500/50 rounded-2xl p-6 mb-8">
-          <div class="flex items-center gap-3">
-            <svg class="h-5 w-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <div class="text-red-200">{{ error }}</div>
-          </div>
+      <div class="bg-red-500/20 border border-red-500/50 rounded-2xl p-6 mb-8">
+        <div class="flex items-center gap-3">
+          <svg class="h-5 w-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div class="text-red-200">{{ error }}</div>
         </div>
+      </div>
       }
 
+      <!-- Flex Row: Form + Preview -->
       <div class="flex flex-col lg:flex-row gap-8">
-        <!-- Form Section -->
+        <!-- Form -->
         <div class="lg:w-2/3">
-          <div class="bg-white/5 backdrop-blur-md rounded-2xl border border-[#00A8FF]/20 p-6 cosmic-glow-hover">
-            <form [formGroup]="createServiceForm" (ngSubmit)="onSubmit()" class="space-y-6">
-              <!-- Title Field -->
-              <div>
-                <label for="title" class="block text-sm font-medium text-gray-300 mb-2">
-                  Service Title *
-                </label>
-                <input
-                  id="title"
-                  type="text"
-                  formControlName="title"
-                  class="w-full h-12 px-4 rounded-xl bg-white/5 border border-[#00A8FF]/30 text-white placeholder-gray-400 focus:outline-none focus:border-[#00A8FF] focus:ring-2 focus:ring-[#00A8FF]/20 transition-all duration-300 backdrop-blur-md"
-                  placeholder="Enter service title"
-                />
-                @if (createServiceForm.get('title')?.invalid && createServiceForm.get('title')?.touched) {
-                  <p class="mt-1 text-sm text-red-400">
-                    @if (createServiceForm.get('title')?.errors?.['required']) {
-                      Title is required
-                    }
-                    @if (createServiceForm.get('title')?.errors?.['minlength']) {
-                      Title must be at least 3 characters long
-                    }
-                  </p>
-                }
-              </div>
-
-              <!-- Description Field -->
-              <div>
-                <label for="description" class="block text-sm font-medium text-gray-300 mb-2">
-                  Description *
-                </label>
-                <textarea
-                  id="description"
-                  formControlName="description"
-                  rows="4"
-                  class="w-full px-4 py-3 rounded-xl bg-white/5 border border-[#00A8FF]/30 text-white placeholder-gray-400 focus:outline-none focus:border-[#00A8FF] focus:ring-2 focus:ring-[#00A8FF]/20 transition-all duration-300 backdrop-blur-md resize-vertical"
-                  placeholder="Describe your service in detail"
-                ></textarea>
-                @if (createServiceForm.get('description')?.invalid && createServiceForm.get('description')?.touched) {
-                  <p class="mt-1 text-sm text-red-400">
-                    @if (createServiceForm.get('description')?.errors?.['required']) {
-                      Description is required
-                    }
-                    @if (createServiceForm.get('description')?.errors?.['minlength']) {
-                      Description must be at least 10 characters long
-                    }
-                  </p>
-                }
-              </div>
-
-              <!-- Category and Price Row -->
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Category Field -->
-                <div>
-                  <label for="categoryId" class="block text-sm font-medium text-gray-300 mb-2">
-                    Category *
-                  </label>
-                  <div class="relative">
-                    <select
-                      id="categoryId"
-                      formControlName="categoryId"
-                      class="w-full h-12 px-4 pr-10 rounded-xl bg-[#0B1A3D] border border-[#00A8FF]/30 text-white focus:outline-none focus:border-[#00A8FF] focus:ring-2 focus:ring-[#00A8FF]/20 transition-all duration-300 backdrop-blur-md appearance-none cursor-pointer"
-                    >
-                      <option value="" disabled selected>Select a category</option>
-                      @for (category of categories; track category.id) {
-                        <option [value]="category.id">{{ category.name }}</option>
-                      }
-                    </select>
-                    <!-- Custom dropdown arrow -->
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-[#00A8FF]">
-                      <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </div>
-                  </div>
-                  @if (createServiceForm.get('categoryId')?.invalid && createServiceForm.get('categoryId')?.touched) {
-                    <p class="mt-1 text-sm text-red-400">Please select a category</p>
-                  }
-                </div>
-
-                <!-- Price Field -->
-                <div>
-                  <label for="price" class="block text-sm font-medium text-gray-300 mb-2">
-                    Price ($) *
-                  </label>
-                  <input
-                    id="price"
-                    type="number"
-                    formControlName="price"
-                    step="0.01"
-                    min="0"
-                    class="w-full h-12 px-4 rounded-xl bg-white/5 border border-[#00A8FF]/30 text-white placeholder-gray-400 focus:outline-none focus:border-[#00A8FF] focus:ring-2 focus:ring-[#00A8FF]/20 transition-all duration-300 backdrop-blur-md"
-                    placeholder="0.00"
-                  />
-                  @if (createServiceForm.get('price')?.invalid && createServiceForm.get('price')?.touched) {
-                    <p class="mt-1 text-sm text-red-400">
-                      @if (createServiceForm.get('price')?.errors?.['required']) {
-                        Price is required
-                      }
-                      @if (createServiceForm.get('price')?.errors?.['min']) {
-                        Price must be a positive number
-                      }
-                    </p>
-                  }
-                </div>
-              </div>
-
-              <!-- Image Upload Field -->
-              <div>
-                <label for="image" class="block text-sm font-medium text-gray-300 mb-2">
-                  Service Image *
-                </label>
-                <div class="flex items-center justify-center w-full">
-                  <label
-                    for="image"
-                    class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-[#00A8FF]/30 rounded-xl cursor-pointer bg-white/5 hover:bg-white/10 transition-all duration-300 backdrop-blur-md"
-                  >
-                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                      <svg class="w-8 h-8 mb-4 text-[#00A8FF]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-                      </svg>
-                      <p class="mb-2 text-sm text-gray-400">
-                        <span class="font-semibold">Click to upload</span> or drag and drop
-                      </p>
-                      <p class="text-xs text-gray-500">PNG, JPG, JPEG (MAX. 10MB)</p>
-                    </div>
-                    <input
-                      id="image"
-                      type="file"
-                      (change)="onFileSelected($event)"
-                      class="hidden"
-                      accept="image/*"
-                    />
-                  </label>
-                </div>
-                @if (selectedFile) {
-                  <div class="mt-2 flex items-center gap-2 text-sm text-[#00A8FF]">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    {{ selectedFile.name }}
-                  </div>
-                }
-              </div>
-
-              <!-- Form Actions -->
-              <div class="flex flex-col sm:flex-row gap-4 pt-6">
-                <button
-                  type="submit"
-                  [disabled]="createServiceForm.invalid || (isLoading$ | async) || !selectedFile"
-                  class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium h-12 px-6 py-2 bg-gradient-to-r from-[#00A8FF] to-[#0077FF] hover:from-[#00A8FF]/90 hover:to-[#0077FF]/90 text-white button-pulse transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  @if (isLoading$ | async) {
-                    <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                    Creating Service...
-                  } @else {
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    Create Service
-                  }
-                </button>
-                <button
-                  type="button"
-                  (click)="onCancel()"
-                  class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium h-12 px-6 py-2 border border-[#00A8FF]/30 text-[#00A8FF] hover:bg-[#00A8FF]/10 transition-all duration-300"
-                >
-                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                  Cancel
-                </button>
-              </div>
-            </form>
+          <div class="flex gap-2 items-center mb-6">
+            <button (click)="setTab('createService')"
+              [class]="tab === 'createService' ? 'px-4 py-2 rounded-xl bg-gradient-to-r from-[#00A8FF] to-[#0077FF] text-white' : 'px-4 py-2 rounded-xl border border-[#00A8FF]/30 text-[#00A8FF] hover:bg-[#00A8FF]/10'">
+              Create Service
+            </button>
+            <button (click)="setTab('createDataset')"
+              [class]="tab === 'createDataset' ? 'px-4 py-2 rounded-xl bg-gradient-to-r from-[#00A8FF] to-[#0077FF] text-white' : 'px-4 py-2 rounded-xl border border-[#00A8FF]/30 text-[#00A8FF] hover:bg-[#00A8FF]/10'">
+              Create Dataset
+            </button>
           </div>
+
+          @if (tab === 'createService') {
+          <app-create-service [categories]="categories"></app-create-service>
+          }
+          @if (tab === 'createDataset') {
+          <app-create-dataset [categories]="categories" (thumbnailPreviewChanged)="onThumbnailPreviewChanged($event)"
+            (formValuesChanged)="datasetFormValues.next($event)">></app-create-dataset>
+          }
         </div>
 
-        <!-- Preview Section -->
+        <!-- Preview Card -->
         <div class="lg:w-1/3">
-          <div class="bg-white/5 backdrop-blur-md rounded-2xl border border-[#00A8FF]/20 p-6 cosmic-glow-hover sticky top-8">
-            <h3 class="text-white font-semibold text-lg mb-6 flex items-center gap-2">
-              <svg class="h-5 w-5 text-[#00A8FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-              </svg>
-              Service Preview
-            </h3>
-            
-            <!-- Preview Card -->
-            <div class="rounded-2xl border text-card-foreground shadow-2xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md border-[#00A8FF]/20 overflow-hidden">
-              <div class="service-card-content flex-1 flex flex-col">
-                <!-- Image Preview -->
-                <div class="relative overflow-hidden flex-shrink-0">
-                  @if (imagePreview) {
-                    <img [alt]="createServiceForm.get('title')?.value || 'Service preview'"
-                      class="w-full h-48 object-cover" [src]="imagePreview" />
-                  } @else {
-                    <div class="w-full h-48 bg-gradient-to-br from-[#00A8FF]/20 to-[#0077FF]/20 flex items-center justify-center">
+          <div class="sticky top-8">
+            <!-- Service Preview -->
+            @if (tab === 'createService') {
+            <div class="bg-white/5 backdrop-blur-md rounded-2xl border border-[#00A8FF]/20 p-6 cosmic-glow-hover mb-6">
+              <h3 class="text-white font-semibold text-lg mb-6 flex items-center gap-2">
+                <svg class="h-5 w-5 text-[#00A8FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                Service Preview
+              </h3>
+
+              <!-- Preview Card -->
+              <div
+                class="rounded-2xl border text-card-foreground shadow-2xl group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md border-[#00A8FF]/20 hover:border-[#00A8FF]/40 hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] overflow-hidden cosmic-glow-hover h-full flex flex-col">
+                <div class="service-card-content flex-1 flex flex-col">
+                  <!-- Image Preview -->
+                  <div class="relative overflow-hidden flex-shrink-0">
+                    @if (imagePreview) {
+                    <img [alt]="currentServiceFormValues.title || 'Service preview'"
+                      class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700"
+                      [src]="imagePreview" />
+                    } @else {
+                    <div
+                      class="w-full h-48 bg-gradient-to-br from-[#00A8FF]/20 to-[#0077FF]/20 flex items-center justify-center">
                       <svg class="w-12 h-12 text-[#00A8FF]/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                     </div>
-                  }
-                  <div class="absolute inset-0 bg-gradient-to-t from-[#0B1A3D]/80 to-transparent"></div>
+                    }
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#0B1A3D]/80 to-transparent"></div>
 
-                  <!-- Category badge -->
-                  @if (selectedCategoryName) {
+                    <!-- Category badge -->
+                    @if (selectedCategoryName) {
                     <div
                       class="inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold transition-colors absolute top-3 right-3 bg-[#00A8FF]/20 text-white backdrop-blur-md border-[#00A8FF]/30">
                       {{ selectedCategoryName }}
                     </div>
-                  }
-                </div>
-
-                <!-- Content Preview -->
-                <div class="p-6 flex-1 flex flex-col">
-                  <!-- Provider -->
-                  <div class="flex items-center space-x-2 mb-3">
-                    <div class="w-6 h-6 bg-gradient-to-r from-[#00A8FF] to-[#0077FF] rounded-full flex items-center justify-center">
-                      <span class="text-white text-xs font-bold">{{ getProviderInitial() }}</span>
-                    </div>
-                    <span class="text-sm text-gray-300 font-medium">Your Service</span>
+                    }
                   </div>
 
-                  <!-- Title -->
-                  <h3 class="text-lg font-semibold text-white mb-3 line-clamp-2">
-                    {{ createServiceForm.get('title')?.value || 'Service Title' }}
-                  </h3>
+                  <!-- Content Preview -->
+                  <div class="p-6 flex-1 flex flex-col">
+                    <!-- Provider -->
+                    <div class="flex items-center space-x-2 mb-3">
+                      <div
+                        class="w-6 h-6 bg-gradient-to-r from-[#00A8FF] to-[#0077FF] rounded-full flex items-center justify-center">
+                        <span class="text-white text-xs font-bold">{{ getProviderInitial() }}</span>
+                      </div>
+                      <span class="text-sm text-gray-300 font-medium">Your Service</span>
+                    </div>
 
-                  <!-- Description -->
-                  @if (createServiceForm.get('description')?.value) {
+                    <!-- Title -->
+                    <h3
+                      class="text-lg font-semibold text-white mb-3 line-clamp-2 group-hover:text-[#00A8FF] transition-colors duration-300 flex-shrink-0">
+                      {{ currentServiceFormValues.title || 'Service Title' }}
+                    </h3>
+
+                    <!-- Description -->
+                    @if (currentServiceFormValues.description) {
                     <p class="text-sm text-gray-300 mb-4 line-clamp-3 flex-1">
-                      {{ createServiceForm.get('description')?.value }}
+                      {{ currentServiceFormValues.description }}
                     </p>
-                  } @else {
+                    } @else {
                     <p class="text-sm text-gray-400 mb-4 line-clamp-3 flex-1 italic">
                       Service description will appear here
                     </p>
-                  }
+                    }
 
-                  <!-- Price -->
-                  <div class="mb-4 flex-shrink-0">
-                    <span class="text-2xl font-bold text-[#00A8FF]">
-                      ${{ (createServiceForm.get('price')?.value || 0) | number:'1.2-2' }}
-                    </span>
+                    <!-- Price -->
+                    <div class="mb-4 flex-shrink-0">
+                      <span class="text-2xl font-bold text-[#00A8FF]">
+                        ${{ (currentServiceFormValues.price || 0) | number:'1.2-2' }}
+                      </span>
+                    </div>
                   </div>
-                </div>
 
-                <!-- Action Button -->
-                <div class="flex items-center p-6 pt-0 flex-shrink-0">
-                  <button
-                    class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium h-12 px-4 py-2 w-full bg-gradient-to-r from-[#00A8FF] to-[#0077FF] text-white opacity-50 cursor-default">
-                    View Details
-                    <svg class="lucide lucide-arrow-right ml-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7-7l7 7-7 7" />
-                    </svg>
-                  </button>
+                  <!-- Action Button -->
+                  <div class="flex items-center p-6 pt-0 flex-shrink-0">
+                    <button
+                      class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium h-12 px-4 py-2 w-full bg-gradient-to-r from-[#00A8FF] to-[#0077FF] hover:from-[#00A8FF]/90 hover:to-[#0077FF]/90 text-white button-pulse group-hover:scale-105 transition-all duration-300 opacity-50 cursor-default">
+                      View Details
+                      <svg class="lucide lucide-arrow-right ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M5 12h14m-7-7l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
+            }
+
+            <!-- Dataset Preview -->
+            @if (tab === 'createDataset') {
+            <div class="bg-white/5 backdrop-blur-md rounded-2xl border border-[#00A8FF]/20 p-6 cosmic-glow-hover mb-6">
+              <h3 class="text-white font-semibold text-lg mb-6 flex items-center gap-2">
+                <svg class="h-5 w-5 text-[#00A8FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Dataset Preview
+              </h3>
+
+              <!-- Preview Card -->
+              <div
+                class="rounded-2xl border text-card-foreground shadow-2xl group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md border-[#00A8FF]/20 hover:border-[#00A8FF]/40 hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] overflow-hidden cosmic-glow-hover h-full flex flex-col">
+                <div class="service-card-content flex-1 flex flex-col">
+                  <!-- Thumbnail Section - Updated to match service preview -->
+                  <div class="relative overflow-hidden flex-shrink-0">
+                    @if (datasetThumbnailPreview) {
+                    <!-- Thumbnail Image with hover effect -->
+                    <img [src]="datasetThumbnailPreview" alt="Dataset thumbnail"
+                      class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700">
+                    } @else {
+                    <!-- Default Dataset Icon Section - Updated to match service preview -->
+                    <div
+                      class="w-full h-48 bg-gradient-to-br from-[#00A8FF]/20 to-[#0077FF]/20 flex items-center justify-center">
+                      <svg class="w-12 h-12 text-[#00A8FF]/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                    }
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#0B1A3D]/80 to-transparent"></div>
+
+                    <!-- Category badge -->
+                    @if (currentDatasetFormValues.categoryName) {
+                    <div
+                      class="inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold transition-colors absolute top-3 right-3 bg-[#00A8FF]/20 text-white backdrop-blur-md border-[#00A8FF]/30">
+                      {{ currentDatasetFormValues.categoryName }}
+                    </div>
+                    }
+                  </div>
+
+                  <!-- Content Preview -->
+                  <div class="p-6 flex-1 flex flex-col">
+                    <!-- Provider -->
+                    <div class="flex items-center space-x-2 mb-3">
+                      <div
+                        class="w-6 h-6 bg-gradient-to-r from-[#00A8FF] to-[#0077FF] rounded-full flex items-center justify-center">
+                        <span class="text-white text-xs font-bold">{{ getProviderInitial() }}</span>
+                      </div>
+                      <span class="text-sm text-gray-300 font-medium">Your Dataset</span>
+                    </div>
+
+                    <!-- Title -->
+                    <h3
+                      class="text-lg font-semibold text-white mb-3 line-clamp-2 group-hover:text-[#00A8FF] transition-colors duration-300 flex-shrink-0">
+                      {{ currentDatasetFormValues.title || 'Dataset Title' }}
+                    </h3>
+
+                    <!-- Description -->
+                    @if (currentDatasetFormValues.description) {
+                    <p class="text-sm text-gray-300 mb-4 line-clamp-3 flex-1">
+                      {{ currentDatasetFormValues.description }}
+                    </p>
+                    } @else {
+                    <p class="text-sm text-gray-400 mb-4 line-clamp-3 flex-1 italic">
+                      Dataset description will appear here
+                    </p>
+                    }
+
+                    <!-- Price -->
+                    <div class="mb-4 flex-shrink-0">
+                      <span class="text-2xl font-bold text-[#00A8FF]">
+                        ${{ (currentDatasetFormValues.price || 0) | number:'1.2-2' }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Action Button - Updated to match service preview style but with dataset text -->
+                  <div class="flex items-center p-6 pt-0 flex-shrink-0">
+                    <button
+                      class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium h-12 px-4 py-2 w-full bg-gradient-to-r from-[#00A8FF] to-[#0077FF] hover:from-[#00A8FF]/90 hover:to-[#0077FF]/90 text-white button-pulse group-hover:scale-105 transition-all duration-300 opacity-50 cursor-default">
+                      View Details
+                      <svg class="lucide lucide-arrow-right ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M5 12h14m-7-7l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            }
 
             <!-- Tips Section -->
-            <div class="mt-6 pt-6 border-t border-[#00A8FF]/20">
+            <div class="bg-white/5 backdrop-blur-md rounded-2xl border border-[#00A8FF]/20 p-6">
               <h4 class="text-white font-medium mb-3 flex items-center gap-2">
                 <svg class="h-4 w-4 text-[#00A8FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 Tips for a great listing
               </h4>
               <ul class="text-sm text-gray-400 space-y-2">
+                @if (tab === 'createService') {
                 <li class="flex items-start gap-2">
-                  <svg class="h-4 w-4 text-[#00A8FF] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg class="h-4 w-4 text-[#00A8FF] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                   </svg>
                   Use a clear, high-quality image
                 </li>
                 <li class="flex items-start gap-2">
-                  <svg class="h-4 w-4 text-[#00A8FF] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg class="h-4 w-4 text-[#00A8FF] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                   </svg>
                   Write a detailed description
                 </li>
                 <li class="flex items-start gap-2">
-                  <svg class="h-4 w-4 text-[#00A8FF] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg class="h-4 w-4 text-[#00A8FF] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                   </svg>
                   Choose the right category
                 </li>
                 <li class="flex items-start gap-2">
-                  <svg class="h-4 w-4 text-[#00A8FF] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg class="h-4 w-4 text-[#00A8FF] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                   </svg>
                   Set a competitive price
                 </li>
+                } @else if (tab === 'createDataset') {
+                <li class="flex items-start gap-2">
+                  <svg class="h-4 w-4 text-[#00A8FF] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Use a descriptive title
+                </li>
+                <li class="flex items-start gap-2">
+                  <svg class="h-4 w-4 text-[#00A8FF] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Provide clear documentation
+                </li>
+                <li class="flex items-start gap-2">
+                  <svg class="h-4 w-4 text-[#00A8FF] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Choose relevant categories
+                </li>
+                <li class="flex items-start gap-2">
+                  <svg class="h-4 w-4 text-[#00A8FF] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Ensure data quality and format
+                </li>
+                }
               </ul>
             </div>
           </div>
