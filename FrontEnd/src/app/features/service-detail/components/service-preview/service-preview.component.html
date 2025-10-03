@@ -1,25 +1,27 @@
-<div class="preview-section">
-  @if (images && images.length > 0) {
-    <div class="main-preview">
-      <img 
-        [src]="images[selectedIndex]" 
-        [alt]="'Preview ' + (selectedIndex + 1)" 
-        loading="lazy" 
-      />
+<div class="lg:col-span-2 space-y-8">
+  <!-- Enhanced Tabs Component -->
+  <div class="bg-white/5 backdrop-blur-md rounded-2xl border border-[#00A8FF]/20 cosmic-glow-hover overflow-hidden">
+    <!-- Tabs Header -->
+    <div class="flex border-b border-[#00A8FF]/20">
+      <button [class]="activeTab === 'description' ? 
+                      'border-b-2 border-[#00A8FF] text-[#00A8FF]' : 
+                      'text-gray-400 hover:text-white'" (click)="setTab('description')"
+        class="flex-1 py-4 px-6 font-semibold transition-all duration-300 hover:bg-white/5">
+        Description
+      </button>
     </div>
 
-    <div class="thumbnails">
-      @for (img of images; track img; let i = $index) {
-        <img 
-          [src]="img" 
-          [alt]="'Thumbnail ' + (i + 1)" 
-          [class.active]="i === selectedIndex"
-          (click)="selectImage(i)" 
-          loading="lazy"
-        />
+    <!-- Tabs Content -->
+    <div class="p-6">
+      <!-- Description Tab -->
+      @if (activeTab === 'description') {
+      <div class="space-y-6">
+        <h3 class="text-2xl font-bold text-white mb-4">Service Overview</h3>
+        <p class="text-gray-300 leading-relaxed">
+          {{ service.description || 'No description available.' }}
+        </p>
+      </div>
       }
     </div>
-  }
+  </div>
 </div>
-
-

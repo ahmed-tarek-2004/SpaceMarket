@@ -1,5 +1,8 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
+import { RoleGuard } from './core/guards/role.guard';
+import { ForbiddenComponent } from './shared/components/forbidden/forbidden.component';
+import { DatasetDetailPageComponent } from './features/dataset-details/pages/service-detail-page/dataset-detail-page.component';
 
 export const routes: Routes = [
   {
@@ -14,20 +17,37 @@ export const routes: Routes = [
     path: 'auth',
     loadChildren: () => import('./features/auth/auth.routing').then((m) => m.AUTH_ROUTES),
   },
- 
-{
-  path: 'categories',
-  loadComponent: () =>
-    import('./features/service-category/pages/category-management/category-management.component').then(
-      (m) => m.CategoryManagementPageComponent 
-    ),
-  
-},
- {
-  path: 'service/:id',
-  loadComponent: () => import('./features/service-detail/pages/service-detail-page/service-detail-page.component').then(m => m.ServiceDetailPageComponent),
-  
-},
+  {
+    path: 'service/:id',
+    loadComponent: () =>
+      import(
+        './features/service-detail/pages/service-detail-page/service-detail-page.component'
+      ).then((m) => m.ServiceDetailPageComponent),
+  },
+  {
+    path: 'dataset/:id',
+    loadComponent: () =>
+      import(
+        './features/dataset-details/pages/service-detail-page/dataset-detail-page.component'
+      ).then((m) => m.DatasetDetailPageComponent),
+  },
+  {
+    path: 'create-service',
+    loadComponent: () =>
+      import(
+        './features/create-services/pages/create-service-page/create-service-page.component'
+      ).then((m) => m.CreateServicePageComponent),
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['ServiceProvider'] },
+  },
+  {
+    path: 'categories',
+    loadComponent: () =>
+      import('./features/service-category/pages/category-management/category-management.component').then(
+        (m) => m.CategoryManagementPageComponent 
+      ),
+
+  },
   {
     path: 'marketplace',
     loadComponent: () =>
@@ -41,7 +61,17 @@ export const routes: Routes = [
       import('./features/cart/pages/cart-page/cart-page.component').then(
         (m) => m.CartPageComponent
       ),
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['client'] },
   },
+  {
+    path: 'coming-soon',
+    loadComponent: () =>
+      import('./shared/components/coming-soon/coming-soon.component').then(
+        (m) => m.ComingSoonComponent
+      ),
+  },
+  { path: 'forbidden', component: ForbiddenComponent },
   // Add other routes here
   { path: '**', redirectTo: '' },
 ];

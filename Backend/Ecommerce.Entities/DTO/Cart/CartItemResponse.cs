@@ -19,5 +19,6 @@ namespace Ecommerce.Entities.DTO.Cart
         public decimal ProviderAmount { get; set; }
         public string? ProviderName { get; set; }
         public string? ImageUrl { get; set; }
+        public int Quantity { get; set; }
     }
 }

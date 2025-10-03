@@ -1,27 +1,21 @@
 <div
-  class="rounded-2xl border text-card-foreground shadow-xl group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md border-[#00A8FF]/20 hover:border-[#00A8FF]/40 transition-all duration-500 cosmic-glow-hover"
->
+  class="rounded-2xl mb-6 border text-card-foreground shadow-xl group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md border-[#00A8FF]/20 hover:border-[#00A8FF]/40 transition-all duration-500 cosmic-glow-hover">
   <div class="p-6">
     <div class="flex flex-col md:flex-row gap-6">
       <!-- Image Section -->
       <div class="relative flex-shrink-0">
         <div class="w-32 h-32 rounded-xl overflow-hidden">
-          <img
-            [alt]="cartItem.serviceTitle"
+          <img [alt]="cartItem.title"
             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-            [src]="cartItem.imageUrl"
-          />
+            [src]="cartItem.imageUrl || 'assets/images/default-service.jpg'" />
         </div>
         <!-- Overlay -->
-        <div
-          class="absolute inset-0 bg-gradient-to-t from-[#0B1A3D]/80 to-transparent rounded-xl"
-        ></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#0B1A3D]/80 to-transparent rounded-xl"></div>
 
-        <!-- Quantity Badge -->
+        <!-- Item Type Badge -->
         <div
-          class="absolute -top-2 -right-2 bg-[#00F5D4] text-black rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold border-2 border-[#0B1A3D]"
-        >
-          {{ cartItem.quantity }}
+          class="absolute -top-2 -right-2 bg-[#00F5D4] text-black rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold border-2 border-[#0B1A3D]">
+          {{ cartItem.itemType === 'service' ? 'S' : 'D' }}
         </div>
       </div>
 
@@ -31,86 +25,65 @@
         <div class="flex items-center justify-between mb-3">
           <div class="flex items-center space-x-2">
             <div
-              class="w-6 h-6 bg-gradient-to-r from-[#00A8FF] to-[#0077FF] rounded-full flex items-center justify-center"
-            >
+              class="w-6 h-6 bg-gradient-to-r from-[#00A8FF] to-[#0077FF] rounded-full flex items-center justify-center">
               <span class="text-white text-xs font-bold">
-                {{ cartItem.providerName.charAt(0) }}
+                {{ getProviderInitial(cartItem.providerName) }}
               </span>
             </div>
             <span class="text-sm text-gray-300 font-medium">
-              {{ cartItem.providerName }}
+              {{ cartItem.providerName || 'Provider' }}
             </span>
           </div>
         </div>
 
         <!-- Title -->
         <h3 class="text-lg font-semibold text-white mb-2 line-clamp-2">
-          {{ cartItem.serviceTitle }}
+          {{ cartItem.title }}
         </h3>
 
-        <!-- Price and Quantity Controls -->
-        <div class="flex items-center justify-between">
-          <div>
-            <div class="text-2xl font-bold text-[#00A8FF]">${{ cartItem.total | number }}</div>
-            <div class="text-sm text-gray-400">
-              ${{ cartItem.unitPrice | number }} × {{ cartItem.quantity }}
-            </div>
+        <!-- Price and Commission -->
+        <div class="space-y-2 mb-4">
+          <div class="flex items-center justify-between">
+            <span class="text-gray-400">Unit Price:</span>
+            <span class="text-white font-semibold">${{ cartItem.unitPrice | number:'1.2-2' }}</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-gray-400">Total:</span>
+            <span class="text-2xl font-bold text-[#00A8FF]">${{ cartItem.total | number:'1.2-2' }}</span>
+          </div>
+          @if (cartItem.commissionAmount && cartItem.commissionAmount > 0) {
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-gray-400">Commission:</span>
+            <span class="text-yellow-400">
+              ${{ cartItem.commissionAmount | number:'1.2-2' }}
+              @if (cartItem.commissionPercent) {
+              ({{ cartItem.commissionPercent }}%)
+              }
+            </span>
+          </div>
+          }
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-gray-400">Provider Gets:</span>
+            <span class="text-green-400">${{ cartItem.providerAmount | number:'1.2-2' }}</span>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex items-center justify-between pt-4 border-t border-[#00A8FF]/20">
+          <!-- Item ID for reference -->
+          <div class="text-xs text-gray-500">
+            ID: {{ cartItem.itemId }}
           </div>
 
-          <div class="flex items-center space-x-3">
-            <!-- Quantity Controls -->
-            <div
-              class="flex items-center space-x-2 bg-white/5 rounded-xl border border-[#00A8FF]/20 p-1"
-            >
-              <button
-                (click)="updateQuantity(cartItem.quantity - 1)"
-                class="w-8 h-8 flex items-center justify-center rounded-lg text-[#00A8FF] hover:bg-[#00A8FF]/10 transition-colors duration-300"
-              >
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M20 12H4"
-                  />
-                </svg>
-              </button>
-
-              <span class="text-white font-medium min-w-8 text-center">
-                {{ cartItem.quantity }}
-              </span>
-
-              <button
-                (click)="updateQuantity(cartItem.quantity + 1)"
-                class="w-8 h-8 flex items-center justify-center rounded-lg text-[#00A8FF] hover:bg-[#00A8FF]/10 transition-colors duration-300"
-              >
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
-              </button>
-            </div>
-
-            <!-- Remove Button -->
-            <button
-              (click)="removeItem()"
-              class="flex items-center space-x-2 px-4 py-2 text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-xl transition-all duration-300 border border-red-400/20 hover:border-red-400/40"
-            >
-              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                />
-              </svg>
-              <span class="text-sm font-medium">Remove</span>
-            </button>
-          </div>
+          <!-- Remove Button -->
+          <button (click)="removeItem()"
+            class="flex items-center space-x-2 px-4 py-2 text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-xl transition-all duration-300 border border-red-400/20 hover:border-red-400/40">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            <span class="text-sm font-medium">Remove</span>
+          </button>
         </div>
       </div>
     </div>

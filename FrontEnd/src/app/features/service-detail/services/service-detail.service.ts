@@ -1,25 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { Service } from '../interfaces/service.interface';
-import { Review } from '../interfaces/service.interface';
+import { map, Observable } from 'rxjs';
+import { ServiceDetailsResponse } from '../interfaces/service.interface';
+import { environment } from '../../../../environments/environment';
+import { ApiResponse } from '../../../core/interfaces/api-response';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ServiceDetailService {
-  private baseUrl = 'https://spacemarket.runasp.net/api/Service/client'; 
+  private baseUrl = `${environment.apiUrl}${environment.service.serviceDetail}`;
 
   constructor(private http: HttpClient) {}
 
-getService(serviceId: string): Observable<Service> {
-  return this.http.get<Service>(`https://spacemarket.runasp.net/api/Service/client/service-detail/${serviceId}`);
+  getService(serviceId: string): Observable<ServiceDetailsResponse> {
+    return this.http
+      .get<ApiResponse<ServiceDetailsResponse>>(`${this.baseUrl}${serviceId}`)
+      .pipe(map((response) => response.data));
+  }
 }
-
-
-
-}
-
-
-

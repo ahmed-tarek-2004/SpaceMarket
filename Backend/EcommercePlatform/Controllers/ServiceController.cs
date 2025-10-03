@@ -288,7 +288,7 @@ public class ServiceController : ControllerBase
     }
 
     [HttpGet("dataset/client/available")]
-    [Authorize(Roles = "Client")]
+    [Authorize]
     public async Task<ActionResult<Response<PaginatedList<DatasetFilterResponse>>>> GetAvailableDatasets([FromQuery] DatasetFilterRequest filter)
     {
         var validation = await _datasetFilterValidator.ValidateAsync(filter);
@@ -304,7 +304,7 @@ public class ServiceController : ControllerBase
     }
 
     [HttpGet("dataset/client/detail/{id}")]
-    [Authorize(Roles = "Client")]
+    [Authorize]
     public async Task<ActionResult<Response<DatasetResponse>>> GetDatasetDetail(Guid id)
     {
         var response = await _serviceCatalogService.GetDatasetDetailAsync(id);

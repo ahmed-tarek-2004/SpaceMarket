@@ -1,0 +1,104 @@
+<div class="flex flex-col lg:flex-row gap-8">
+  <!-- Service Image -->
+  <div class="lg:w-2/5">
+    <div class="relative rounded-2xl overflow-hidden">
+      <img [src]="getImageUrl(dataset)" [alt]="dataset.title"
+        class="w-full h-64 lg:h-80 object-cover group-hover:scale-105 transition-transform duration-700" />
+      <div class="absolute inset-0 bg-gradient-to-t from-[#0B1A3D]/80 to-transparent"></div>
+
+      <!-- Category Badge -->
+      @if (dataset.categoryName) {
+      <div class="absolute top-4 right-4">
+        <span
+          class="inline-flex items-center rounded-full border px-3 py-1 text-sm font-semibold bg-[#00A8FF]/20 text-white backdrop-blur-md border-[#00A8FF]/30">
+          {{ dataset.categoryName }}
+        </span>
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- Service Info -->
+  <div class="lg:w-3/5 flex flex-col justify-between">
+    <div>
+      <!-- Provider -->
+      <div class="flex items-center gap-3 mb-4">
+        <div
+          class="w-10 h-10 bg-gradient-to-r from-[#00A8FF] to-[#0077FF] rounded-full flex items-center justify-center">
+          <span class="text-white font-bold text-sm">{{ getProviderInitial(dataset) }}</span>
+        </div>
+        <span class="text-gray-300 font-medium">{{ dataset.providerName }}</span>
+      </div>
+
+      <!-- Title -->
+      <h1 class="text-3xl lg:text-4xl font-bold text-white mb-4 cosmic-glow">
+        {{ dataset.title }}
+      </h1>
+
+      <!-- Description -->
+      @if (dataset.description) {
+      <p class="text-gray-300 text-lg leading-relaxed mb-6">
+        {{ dataset.description }}
+      </p>
+      }
+    </div>
+
+    <!-- Success Message -->
+    @if (addToCartMessage) {
+    <div class="mb-4 p-4 rounded-xl backdrop-blur-md border 
+                {{ addToCartMessage.includes('successfully') || addToCartMessage.includes('Added') ? 
+                   'bg-green-500/10 border-green-500/20 text-green-400' : 
+                   'bg-yellow-500/10 border-yellow-500/20 text-yellow-400' }}">
+      <div class="flex items-center gap-2">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        {{ addToCartMessage }}
+      </div>
+    </div>
+    }
+
+    <!-- Price & Action -->
+    <div class="space-y-4">
+      <div class="flex items-baseline gap-2">
+        <span class="text-4xl font-bold text-[#00A8FF]">
+          ${{ (dataset.price || 0) | number:'1.2-2' }}
+        </span>
+        <span class="text-gray-400 text-lg">starting price</span>
+      </div>
+
+      <div class="flex gap-3">
+        <button (click)="onAddToCart(dataset.id)" [disabled]="isAddingToCart || isProvider"
+          [attr.aria-disabled]="isAddingToCart || isProvider"
+          class="flex-1 h-14 bg-gradient-to-r from-[#00A8FF] to-[#0077FF] hover:from-[#00A8FF]/90 hover:to-[#0077FF]/90 text-white font-semibold rounded-xl transition-all duration-300"
+          [ngClass]="{
+            'opacity-70 cursor-not-allowed': isAddingToCart || isProvider,
+            'hover:scale-105 button-pulse': !isAddingToCart && !isProvider
+          }">
+          @if (isAddingToCart) {
+          <div class="flex items-center justify-center gap-2">
+            <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            Adding...
+          </div>
+          } @else if (isProvider) {
+          Not available for providers
+          } @else {
+          Add to Cart
+          }
+        </button>
+
+        <button [routerLink]="ROUTES.commingSoon"
+          class="flex-1 h-14 border border-[#00A8FF]/30 text-[#00A8FF] hover:bg-[#00A8FF]/10 font-semibold rounded-xl transition-all duration-300 hover:scale-105">
+          Contact Provider
+        </button>
+      </div>
+
+      <!-- Provider UX hint when disabled -->
+      @if (isProvider) {
+      <p class="mt-3 text-sm text-yellow-300">
+        As a provider you can't add services to the cart. If you want to purchase, sign in with a buyer account.
+      </p>
+      }
+    </div>
+  </div>
+</div>
