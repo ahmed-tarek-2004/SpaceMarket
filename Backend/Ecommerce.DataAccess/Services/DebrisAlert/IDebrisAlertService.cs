@@ -14,5 +14,7 @@ namespace Ecommerce.DataAccess.Services.DebrisAlert
         Task<Response<Guid>> RegisterSatelliteAsync(RegisterSatelliteRequest request, string userId);
         Task<Response<string>> SetThresholdAsync(Guid satelliteId, UpdateThresholdRequest request, string userId);
         Task<Response<List<CollisionAlertResponse>>> GetAlertHistoryAsync(string userId);
+        Task<Response<List<string>>> GetAllCatalogSatelliteNamesAsync();
+        Task<Response<PositionDto>> GetSatellitePositionAsync(Guid satelliteId);
     }
 }
