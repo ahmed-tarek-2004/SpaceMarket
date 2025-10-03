@@ -17,7 +17,7 @@ using Microsoft.Extensions.Options;
 using Stripe;
 using Stripe.Checkout;
 using Stripe.V2;
-using Stripe.V2.MoneyManagement;
+//using Stripe.V2.MoneyManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +38,7 @@ namespace Ecommerce.DataAccess.Services.Payment
         private readonly StripeSettings stripe;
         private readonly INotificationService _notificationService;
         public PaymentService(ILogger<PaymentService> logger, UserManager<User> userManager, ApplicationDbContext context
-            , ResponseHandler responseHandler, IOptions<StripeSettings> options, IEmailService emailService,INotificationService notificationService)
+            , ResponseHandler responseHandler, IOptions<StripeSettings> options, IEmailService emailService, INotificationService notificationService)
         {
             _logger = logger;
             _userManager = userManager;
@@ -53,7 +53,7 @@ namespace Ecommerce.DataAccess.Services.Payment
         #region checkOut
         public async Task<Response<PaymentResponse>> CheckoutSessionService(string userId, PaymentRequest request)
         {
-           
+
             _logger.LogInformation("Start using SessionCheckout");
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == userId);
             try
@@ -287,7 +287,6 @@ namespace Ecommerce.DataAccess.Services.Payment
             _logger.LogInformation(
                 "Received webhook event. Signature: {Signature}",
                 stripeSignature);
-
             try
             {
                 var stripeEvent = EventUtility.ConstructEvent(
@@ -301,6 +300,7 @@ namespace Ecommerce.DataAccess.Services.Payment
                 }
                 catch (StripeException ex)
                 {
+                    _logger.LogError(ex, "Stripe Webhook validation failed");
                     return _responseHandler.BadRequest<object>(ex.Message);
                 }
 
@@ -315,7 +315,13 @@ namespace Ecommerce.DataAccess.Services.Payment
                 if (session == null)
                     return _responseHandler.BadRequest<object>("Event data object is not a session.");
 
-                var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id.ToString() == session.Metadata["orderId"]);
+                var order = await _context.Orders
+                       .Include(o => o.Item)
+                           .ThenInclude(i => i.Service)
+                       .Include(o => o.Item)
+                           .ThenInclude(i => i.Dataset)
+                    .FirstOrDefaultAsync(o => o.Id.ToString() == session.Metadata["orderId"]);
+
                 var user = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == session.Metadata["clientId"]);
 
 
@@ -323,7 +329,9 @@ namespace Ecommerce.DataAccess.Services.Payment
                 {
                     Id = Guid.NewGuid(),
                     OrderId = order.Id,
-                    Date = DateTime.UtcNow
+                    Date = DateTime.UtcNow,
+                    ClientId = user.Id,
+                    ServiceProviderId = order.Item.ServiceId != null ? order.Item.Service.ProviderId : order.Item.Dataset.ProviderId
                 };
 
                 if (stripeEvent.Type == "checkout.session.completed")
@@ -348,7 +356,7 @@ namespace Ecommerce.DataAccess.Services.Payment
                 }
                 await _notificationService.NotifyUserAsync(
                                          recipientId: transaction.ClientId,
-                                         senderId: null,
+                                         senderId: "null",
                                          title: "Payment Status",
                                          message: $"order #{order.Id} is {order.Status}"
                                      );
@@ -357,7 +365,7 @@ namespace Ecommerce.DataAccess.Services.Payment
 
                 await _notificationService.NotifyUserAsync(
                                           recipientId: transaction.ClientId,
-                                          senderId:null,
+                                          senderId: "null",
                                           title: "Payment Status",
                                           message: $"Transaction #{transaction.Id} is {transaction.Status}"
                                           );

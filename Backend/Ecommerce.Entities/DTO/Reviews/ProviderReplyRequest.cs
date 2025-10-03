@@ -8,7 +8,7 @@ namespace Ecommerce.Entities.DTO.Reviews
 {
     public class ProviderReplyRequest
     {
-        public Guid ReviewId { get; set; }
+        public string ReviewId { get; set; }
         public string ReplyText { get; set; } = default!;
     }
 }

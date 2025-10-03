@@ -168,7 +168,7 @@ namespace Ecommerce.DataAccess.Services.Cart
                         TotalPrice = 0,
                         TotalCommission = 0,
                         Items = new List<CartItemResponse>()
-                    }, "Cart is empty.");
+                    }, "Cart is empty (Has 0 Cart Item/s).");
                 }
 
                 var response = BuildCartResponse(cart);
