@@ -8,6 +8,8 @@ namespace Ecommerce.API.Validators
         public AddingToCartRequestValidator()
         {
             RuleFor(x => x)
+                .NotNull()
+                .NotEmpty()
                 .Must(x => (x.ServiceId.HasValue ^ x.DataSetId.HasValue)) // xor: exactly one provided
                 .WithMessage("Provide exactly one of serviceId or dataSetId.");
 
