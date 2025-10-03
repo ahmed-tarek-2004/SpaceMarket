@@ -10,6 +10,7 @@ using Ecommerce.Utilities.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Data;
 using System.Threading;
 
 namespace Ecommerce.DataAccess.Services.ServiceCatalog
@@ -46,7 +47,7 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     uploadedUrl = await _imageUploadService.UploadAsync(request.Image);
                 }
                 var provider = await _context.ServiceProviders.FirstOrDefaultAsync(b => b.Id == providerId);
-                if (provider != null)
+                if (provider == null)
                 {
                     return _responseHandler.BadRequest<ServiceResponse>($"Provider with Id :{providerId} >>Not Found<<");
                 }
@@ -295,12 +296,14 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     {
                         Id = s.Id,
                         Title = s.Title,
+                        Description = s.Description,
                         ProviderId = s.ProviderId,
                         ProviderName = s.Provider.CompanyName,
                         ProviderEmail = s.Provider.User.Email,
                         CategoryName = s.Category.Name,
                         Price = s.Price,
                         Status = s.Status.ToString(),
+                        ImagesUrl = s.ImagesUrl,
                         CreatedAt = s.CreatedAt
                     })
                     .ToListAsync();
@@ -661,6 +664,7 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                         Title = d.Title,
                         Description = d.Description,
                         CategoryId = d.CategoryId,
+                        CategoryName = d.Category != null ? d.Category.Name : null,
                         Price = d.Price,
                         FileUrl = d.FileUrl,
                         ThumbnailUrl = d.ThumbnailUrl,
@@ -712,12 +716,14 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     {
                         Id = d.Id,
                         Title = d.Title,
+                        Description = d.Description,
                         ProviderId = d.ProviderId,
                         ProviderName = d.Provider.CompanyName,
                         ProviderEmail = d.Provider.User.Email,
                         CategoryName = d.Category.Name,
                         Price = d.Price,
                         Status = d.Status.ToString(),
+                        ThumbnailUrl = d.ThumbnailUrl,
                         CreatedAt = d.CreatedAt
                     })
                     .ToListAsync();

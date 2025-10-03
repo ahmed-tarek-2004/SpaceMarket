@@ -103,10 +103,10 @@
 
         <!-- Dashboard Button (Only for logged-in users) -->
         @if (isLoggedIn()) {
-        <a routerLink="/dashboard" class="hidden md:inline-flex">
+        <a  [routerLink]="getDashboardRoute()" class="hidden md:inline-flex">
           <button
             class="inline-flex items-center gap-2 h-10 rounded-xl px-4 text-sm font-semibold text-gray-300 hover:text-white hover:bg-[#00A8FF]/15 transition-all duration-300 border border-transparent hover:border-[#00A8FF]/30 relative galaxy-hover group"
-            title="Dashboard">
+            title="Dashboard" [routerLink]="ROUTES.dashboard">
             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5.121 17.804A4 4 0 019 16h6a4 4 0 013.879 1.804M12 12a4 4 0 100-8 4 4 0 000 8z" />
@@ -146,6 +146,18 @@
                   <div class="font-semibold">{{ getUserName() }}</div>
                   <div class="text-xs text-gray-400">{{ getUserEmail() }}</div>
                 </div>
+
+                <!-- Create Dataset in Dropdown (for service providers) -->
+                @if (isServiceProvider()) {
+                <a routerLink="/create-service"
+                  class="flex items-center gap-2 px-3 py-2 text-sm text-[#00D8FF] hover:text-[#00D8FF] hover:bg-[#00D8FF]/10 rounded-lg transition-colors border-l-2 border-[#00D8FF]">
+                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                  </svg>
+                  Create Dataset
+                </a>
+                }
+
                 <a routerLink="/profile"
                   class="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
                   <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -290,23 +302,31 @@
 
     <!-- Enhanced Mobile Action Buttons -->
     <div class="space-y-3 relative z-10">
+      <!-- Create Dataset Button for Mobile (Service Providers) -->
+      @if (isServiceProvider()) {
+      <a routerLink="/create-service" (click)="closeMenu()"
+        class="fade-in-up nav-item-delay-5 w-full text-center px-4 py-3 rounded-xl bg-gradient-to-r from-[#00D8FF] to-[#00A8FF] text-white font-bold button-pulse hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 border border-[#00D8FF]/50">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        Create Dataset
+      </a>
+      }
+
       <!-- Cart Button for Mobile -->
       <a [routerLink]="ROUTES.cart" (click)="closeMenu()"
-        class="fade-in-up nav-item-delay-5 w-full text-center px-4 py-3 border border-white/10 rounded-xl text-sm text-gray-200 hover:bg-white/5 galaxy-hover transition-all duration-300 flex items-center justify-center gap-2">
+        class="fade-in-up nav-item-delay-6 w-full text-center px-4 py-3 border border-white/10 rounded-xl text-sm text-gray-200 hover:bg-white/5 galaxy-hover transition-all duration-300 flex items-center justify-center gap-2">
         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
         </svg>
         Shopping Cart
-        <span class="bg-[#00A8FF] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center ml-1">
-          0
-        </span>
       </a>
 
       <!-- Dashboard Button (Only for logged-in users) -->
       @if (isLoggedIn()) {
-      <a routerLink="/dashboard" (click)="closeMenu()"
-        class="fade-in-up nav-item-delay-6 w-full text-center px-4 py-3 border border-white/10 rounded-xl text-sm text-gray-200 hover:bg-white/5 galaxy-hover transition-all duration-300 flex items-center justify-center gap-2">
+      <a  [routerLink]="getDashboardRoute()" (click)="closeMenu()"
+        class="fade-in-up nav-item-delay-7 w-full text-center px-4 py-3 border border-white/10 rounded-xl text-sm text-gray-200 hover:bg-white/5 galaxy-hover transition-all duration-300 flex items-center justify-center gap-2">
         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M5.121 17.804A4 4 0 019 16h6a4 4 0 013.879 1.804M12 12a4 4 0 100-8 4 4 0 000 8z" />
@@ -330,6 +350,17 @@
           </div>
         </div>
 
+        <!-- Create Dataset in Mobile Profile (for service providers) -->
+        @if (isServiceProvider()) {
+        <a routerLink="/create-service" (click)="closeMenu()"
+          class="fade-in-up flex items-center gap-2 w-full text-center px-4 py-2 text-sm text-[#00D8FF] hover:text-[#00D8FF] hover:bg-[#00D8FF]/10 transition-all duration-300 border-l-2 border-[#00D8FF] ml-4">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Create Dataset
+        </a>
+        }
+
         <a routerLink="/profile" (click)="closeMenu()"
           class="fade-in-up block w-full text-center px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-300">
           My Profile
@@ -344,7 +375,7 @@
       <!-- Sign In Button (Only for logged-out users) -->
       @if (!isLoggedIn()) {
       <a routerLink="/login" (click)="closeMenu()"
-        class="fade-in-up nav-item-delay-7 block w-full text-center px-4 py-3 rounded-xl bg-gradient-to-r from-[#00A8FF] to-[#0077FF] text-white font-bold button-pulse hover:shadow-lg transition-all duration-300">
+        class="fade-in-up nav-item-delay-8 block w-full text-center px-4 py-3 rounded-xl bg-gradient-to-r from-[#00A8FF] to-[#0077FF] text-white font-bold button-pulse hover:shadow-lg transition-all duration-300">
         Sign in
       </a>
       }

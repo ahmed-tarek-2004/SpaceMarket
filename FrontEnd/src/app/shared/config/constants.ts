@@ -4,5 +4,6 @@ export const ROUTES = {
   marketplace: '/marketplace',
   cart: '/cart',
   commingSoon: '/coming-soon',
-  createService: '/create-service'
+  createService: '/create-service',
+  dashboard: '/dashboard',
 };

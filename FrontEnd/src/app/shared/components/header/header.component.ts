@@ -26,6 +26,12 @@ export class HeaderComponent implements OnInit {
   // User data - will be populated from token service
   currentUser = signal<any | null>(null);
 
+  // Service provider check
+  isServiceProvider = computed(() => {
+    const role = this.tokenService.getRole();
+    return role === 'serviceprovider' || role === 'admin' || role === 'provider';
+  });
+
   ngOnInit() {
     this.checkAuthStatus();
 
@@ -130,6 +136,22 @@ export class HeaderComponent implements OnInit {
       .join('')
       .toUpperCase()
       .substring(0, 2);
+  }
+
+  getDashboardRoute(): string {
+    const role = this.tokenService.getRole()?.toLowerCase();
+
+    switch (role) {
+      case 'admin':
+        return '/admin-dashboard';
+      case 'provider':
+      case 'serviceprovider':
+        return '/provider-dashboard';
+      case 'client':
+        return '/client-dashboard';
+      default:
+        return '/dashboard'; // fallback
+    }
   }
 
   logout() {

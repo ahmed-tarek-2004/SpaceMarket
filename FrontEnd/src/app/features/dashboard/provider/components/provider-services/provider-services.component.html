@@ -1,0 +1,231 @@
+<div *ngIf="showDeleteModal" appAppendToBody
+  class="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+  <div id="deleteTitle" class="relative w-full max-w-md bg-white rounded-lg shadow-xl p-0">
+    <div class="p-6">
+      <div class="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full">
+        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z">
+          </path>
+        </svg>
+      </div>
+
+      <div class="mt-3 text-center">
+        <h3 class="text-lg font-medium text-gray-900">Delete Service</h3>
+        <div class="mt-2">
+          <p class="text-sm text-gray-500">
+            Are you sure you want to delete "<strong>{{ serviceToDelete?.title }}</strong>"?
+          </p>
+          <p class="text-sm text-gray-500 mt-1">
+            This action cannot be undone.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-gray-50 px-6 py-3 rounded-b-lg flex justify-end space-x-3">
+      <button type="button" (click)="closeDeleteModal()" [disabled]="serviceToDelete && isDeleting(serviceToDelete.id)"
+        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed">
+        Cancel
+      </button>
+      <button type="button" (click)="confirmDelete()" [disabled]="serviceToDelete && isDeleting(serviceToDelete.id)"
+        class="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed">
+        <span *ngIf="serviceToDelete && isDeleting(serviceToDelete.id)" class="flex items-center">
+          <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+            </path>
+          </svg>
+          Deleting...
+        </span>
+        <span *ngIf="!(serviceToDelete && isDeleting(serviceToDelete.id))">
+          Delete
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <h2 class="text-2xl font-bold text-white">My Services</h2>
+    <button [routerLink]="ROUTES.createService"
+      class="px-6 py-3 bg-gradient-to-r from-[#00F5D4] to-[#00A8FF] text-black font-semibold rounded-xl hover:from-[#00F5D4]/90 hover:to-[#00A8FF]/90 transition-all duration-300">
+      + Add New Service
+    </button>
+  </div>
+
+  <!-- Services List -->
+  @if (loading) {
+  <div class="flex justify-center items-center py-12">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-[#00A8FF]"></div>
+  </div>
+  } @else {
+  <div class="grid gap-4">
+    @for (service of services; track service.id) {
+    <div
+      class="bg-white/5 rounded-2xl border border-[#00A8FF]/20 p-6 hover:border-[#00A8FF]/40 transition-all duration-300">
+      <div class="flex items-start justify-between">
+        <div class="flex-1">
+          <!-- Header with title and actions -->
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              @if (service.isEditing) {
+              <input [(ngModel)]="service.editData.title"
+                class="text-white font-semibold text-lg bg-white/10 border border-[#00A8FF]/30 rounded-xl px-3 py-1 mb-2 focus:outline-none focus:border-[#00A8FF]"
+                placeholder="Service title">
+              } @else {
+              <h4 class="text-white font-semibold text-lg">{{ service.title }}</h4>
+              }
+              <span [class]="getStatusClasses(service.status)" class="px-3 py-1 rounded-full text-xs font-medium">
+                {{ service.status }}
+              </span>
+            </div>
+
+            <div class="flex items-center space-x-2">
+              @if (service.isEditing) {
+              <button (click)="updateService(service)" [disabled]="isUpdating(service.id)"
+                class="px-4 py-2 bg-gradient-to-r from-[#00A8FF] to-[#0077FF] text-white rounded-xl text-sm hover:from-[#00A8FF]/90 hover:to-[#0077FF]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center min-w-20">
+                @if (isUpdating(service.id)) {
+                <div class="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+                }
+                {{ isUpdating(service.id) ? 'Saving...' : 'Save' }}
+              </button>
+              <button (click)="cancelEdit(service)" [disabled]="isUpdating(service.id)"
+                class="px-4 py-2 bg-white/10 text-gray-300 rounded-xl text-sm hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300">
+                Cancel
+              </button>
+              } @else {
+              <button (click)="startEdit(service)"
+                class="px-4 py-2 bg-white/10 text-gray-300 rounded-xl text-sm hover:bg-white/20 transition-all duration-300">
+                Edit
+              </button>
+              <button (click)="openDeleteModal(service)" [disabled]="isDeleting(service.id)"
+                class="px-4 py-2 bg-red-500/20 text-red-400 rounded-xl text-sm hover:bg-red-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center min-w-20">
+                @if (isDeleting(service.id)) {
+                <div class="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-red-400 mr-2"></div>
+                }
+                {{ isDeleting(service.id) ? 'Deleting...' : 'Delete' }}
+              </button>
+              }
+              <button (click)="toggleDetails(service)"
+                class="flex items-center space-x-2 px-4 py-2 bg-white/10 text-gray-300 rounded-xl hover:bg-white/20 transition-all duration-300">
+                <span class="text-sm font-medium">
+                  {{ service.showDetails ? 'Hide' : 'Details' }}
+                </span>
+                <svg [class]="service.showDetails ? 'rotate-180' : ''" class="h-4 w-4 transition-transform duration-300"
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Basic Info -->
+          <div class="space-y-3">
+            @if (service.isEditing) {
+            <textarea [(ngModel)]="service.editData.description" rows="3"
+              class="w-full bg-white/10 border border-[#00A8FF]/30 rounded-xl px-3 py-2 text-white text-sm placeholder-gray-400 focus:outline-none focus:border-[#00A8FF] resize-none"
+              placeholder="Service description">
+            </textarea>
+            <div class="flex items-center space-x-4">
+              <input type="number" [(ngModel)]="service.editData.price"
+                class="bg-white/10 border border-[#00A8FF]/30 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-[#00A8FF]"
+                placeholder="Price" min="0" step="0.01">
+            </div>
+            <!-- Image Upload for Edit -->
+            <div>
+              <label class="block text-gray-300 text-sm mb-2">Update Service Image (Optional)</label>
+              <input type="file" (change)="onImageSelected($event)" accept="image/jpeg,image/png,image/webp"
+                class="w-full bg-white/10 border border-[#00A8FF]/30 rounded-xl px-3 py-2 text-white text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#00A8FF] file:text-white hover:file:bg-[#00A8FF]/90 transition-all duration-300">
+              <p class="text-gray-400 text-xs mt-1">JPEG, PNG, or WebP. Max 5MB.</p>
+            </div>
+            } @else {
+            <p class="text-gray-400">{{ service.description }}</p>
+            <div class="flex items-center space-x-4">
+              <span class="text-sm text-[#00A8FF]">Category: {{ service.categoryName }}</span>
+              <span class="text-[#00F5D4] font-bold text-lg">${{ service.price | number:'1.2-2' }}</span>
+            </div>
+            }
+            <div class="flex items-center space-x-4 text-sm text-gray-400">
+              <span>Created: {{ service.createdAt | date:'short' }}</span>
+              @if (service.updatedAt) {
+              <span>Updated: {{ service.updatedAt | date:'short' }}</span>
+              }
+            </div>
+          </div>
+
+          <!-- Detailed Information -->
+          @if (service.showDetails) {
+          <div class="mt-6 pt-6 border-t border-[#00A8FF]/20 space-y-4 animate-fade-in">
+            <h5 class="text-white font-semibold text-sm mb-3">Service Details</h5>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-white/5 rounded-xl p-4">
+                <span class="text-gray-400 text-sm block mb-1">Service ID</span>
+                <span class="text-gray-300 font-mono text-sm">{{ service.id }}</span>
+              </div>
+              <div class="bg-white/5 rounded-xl p-4">
+                <span class="text-gray-400 text-sm block mb-1">Provider ID</span>
+                <span class="text-gray-300 font-mono text-sm">{{ service.providerId }}</span>
+              </div>
+            </div>
+
+            <div class="bg-white/5 rounded-xl p-4">
+              <span class="text-gray-400 text-sm block mb-1">Status</span>
+              <div class="flex items-center space-x-2">
+                <span [class]="getStatusClasses(service.status)" class="px-2 py-1 rounded-full text-xs">
+                  {{ service.status }}
+                </span>
+                @if (service.status === 'PendingApproval') {
+                <span class="text-yellow-400 text-xs">(Changes require admin approval)</span>
+                }
+              </div>
+            </div>
+
+            @if (service.websiteUrl && service.websiteUrl !== 'null') {
+            <div class="bg-white/5 rounded-xl p-4">
+              <span class="text-gray-400 text-sm block mb-1">Website</span>
+              <a [href]="service.websiteUrl" target="_blank" rel="noopener noreferrer"
+                class="text-[#00A8FF] hover:text-[#00A8FF]/80 transition-colors duration-300 break-all text-sm">
+                {{ service.websiteUrl }}
+              </a>
+            </div>
+            }
+
+            @if (hasValidImage(service.imagesUrl)) {
+            <div class="bg-white/5 rounded-xl p-4">
+              <span class="text-gray-400 text-sm block mb-2">Service Image</span>
+              <div class="flex space-x-2">
+                <img [src]="service.imagesUrl" alt="Service image"
+                  class="h-32 w-32 object-cover rounded-lg border border-[#00A8FF]/20">
+              </div>
+            </div>
+            }
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+    } @empty {
+    <div class="text-center py-12 text-gray-400">
+      <div class="w-24 h-24 bg-[#00A8FF]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+        <svg class="w-12 h-12 text-[#00A8FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+      </div>
+      <h3 class="text-xl font-bold text-white mb-2">No services yet</h3>
+      <p class="text-gray-400 mb-6">
+        Start by creating your first service
+      </p>
+      <button [routerLink]="ROUTES.createService"
+        class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium h-12 px-6 bg-gradient-to-r from-[#00A8FF] to-[#0077FF] hover:from-[#00A8FF]/90 hover:to-[#0077FF]/90 text-white transition-all duration-300">
+        Create First Service
+      </button>
+    </div>
+    }
+  </div>
+  }
+</div>
