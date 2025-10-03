@@ -60,30 +60,30 @@ namespace EcommercePlatform
             builder.Services.AddResendOtpRateLimiter();
 
             // Add CORS services
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAngularApp",
-                    policy =>
-                    {
-                        policy.WithOrigins("http://localhost:4200")
-                              .AllowAnyHeader()
-                              .AllowAnyMethod()
-                              .AllowCredentials();
-                    });
-            });
-
-            //Test It Locally 
             //builder.Services.AddCors(options =>
             //{
             //    options.AddPolicy("AllowAngularApp",
             //        policy =>
             //        {
-            //            policy.AllowAnyHeader()
+            //            policy.WithOrigins("http://localhost:4200")
+            //                  .AllowAnyHeader()
             //                  .AllowAnyMethod()
-            //                  .AllowCredentials()
-            //                  .SetIsOriginAllowed(_ => true); // origins
+            //                  .AllowCredentials();
             //        });
             //});
+
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngularApp",
+                    policy =>
+                    {
+                        policy.AllowAnyHeader()
+                              .AllowAnyMethod()
+                              .AllowCredentials()
+                              .SetIsOriginAllowed(_ => true); 
+                    });
+            });
 
             builder.Services.AddDataProtection()
                 .PersistKeysToDbContext<ApplicationDbContext>()
