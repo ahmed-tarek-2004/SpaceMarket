@@ -67,6 +67,21 @@ namespace Ecommerce.API.Controllers
             var response = await _debrisAlertService.GetAlertHistoryAsync(userId);
             return StatusCode((int)response.StatusCode, response);
         }
+        /// <summary>
+        /// Get all satellites of current user
+        /// </summary>
+        [HttpGet("my-satellites")]
+        [Authorize(Roles = "Client")]
+        public async Task<IActionResult> GetMySatellites()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return StatusCode((int)_responseHandler.Unauthorized<string>("User not authenticated").StatusCode,
+                    _responseHandler.Unauthorized<string>("User not authenticated"));
+
+            var response = await _debrisAlertService.GetMySatellitesAsync(userId);
+            return StatusCode((int)response.StatusCode, response);
+        }
 
         /// <summary>
         /// Run debris check manually (optional → mostly handled by Hangfire job)
@@ -78,5 +93,6 @@ namespace Ecommerce.API.Controllers
             var response = await _debrisAlertService.RunDebrisCheckAsync(DateTime.UtcNow);
             return StatusCode((int)response.StatusCode, response);
         }
+
     }
 }
