@@ -1,0 +1,56 @@
+<main class="flex-1">
+  <div class="min-h-screen bg-gradient-to-br from-[#07102a] via-[#0B1A3D] to-[#001135] relative overflow-hidden">
+    <!-- Enhanced Star Field Background -->
+    <div id="star-field" class="star-field absolute inset-0 z-10">
+      <!-- Stars will be generated dynamically via service -->
+    </div>
+
+    <!-- Nebula Background Elements -->
+    <div class="absolute inset-0 opacity-20 pointer-events-none z-0">
+      <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-purple-500 rounded-full blur-3xl opacity-30"></div>
+      <div class="absolute bottom-1/3 right-1/4 w-96 h-96 bg-blue-500 rounded-full blur-3xl opacity-20"></div>
+      <div class="absolute top-2/3 left-1/3 w-48 h-48 bg-cyan-400 rounded-full blur-2xl opacity-25"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="relative py-12 md:py-16 overflow-hidden z-20">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div class="text-center max-w-4xl mx-auto">
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white font-['Exo_2'] mb-6 cosmic-glow">
+            Admin Dashboard
+          </h1>
+          <p class="text-xl text-gray-300 mb-8 leading-relaxed">
+            Navigate the cosmos of your platform data
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-20">
+      <!-- Tab Navigation -->
+      <div class="flex flex-wrap gap-2 mb-8 border-b border-[#00A8FF]/20 pb-4">
+        @for (tab of tabs; track tab.id) {
+        <button (click)="setActiveTab(tab.id)" [class]="getTabClasses(tab.id)"
+          class="transition-all duration-300 relative overflow-hidden group">
+          <span class="relative z-10">{{ tab.name }}</span>
+          <div
+            class="absolute inset-0 bg-gradient-to-r from-[#00A8FF]/0 via-[#00A8FF]/10 to-[#00A8FF]/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-500">
+          </div>
+        </button>
+        }
+      </div>
+
+      <!-- Tab Content -->
+      <div
+        class="bg-white/5 backdrop-blur-md rounded-2xl border border-[#00A8FF]/20 p-6 cosmic-glow-hover shadow-xl shadow-blue-900/10">
+        @if (activeTab === 'service-list') {
+        <app-service-list-admin></app-service-list-admin>
+        }
+        @if (activeTab === 'dataset-list') {
+        <app-dataset-list-admin></app-dataset-list-admin>
+        }
+      </div>
+    </div>
+  </div>
+</main>

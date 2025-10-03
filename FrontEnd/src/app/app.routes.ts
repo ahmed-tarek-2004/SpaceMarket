@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 import { RoleGuard } from './core/guards/role.guard';
 import { ForbiddenComponent } from './shared/components/forbidden/forbidden.component';
-import { DatasetDetailPageComponent } from './features/dataset-details/pages/service-detail-page/dataset-detail-page.component';
 
 export const routes: Routes = [
   {
@@ -37,15 +36,17 @@ export const routes: Routes = [
       import(
         './features/create-services/pages/create-service-page/create-service-page.component'
       ).then((m) => m.CreateServicePageComponent),
-    canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['ServiceProvider'] },
+    canActivate: [RoleGuard],
+    data: { roles: ['serviceprovider'] },
   },
   {
     path: 'categories',
     loadComponent: () =>
       import(
-        './features/service-category/pages/category-management/category-management.component'
+        './features/dashboard/admin/components/service-category/pages/category-management/category-management.component'
       ).then((m) => m.CategoryManagementPageComponent),
+    canActivate: [RoleGuard],
+    data: { roles: ['admin'] },
   },
   {
     path: 'marketplace',
@@ -60,7 +61,34 @@ export const routes: Routes = [
       import('./features/cart/pages/cart-page/cart-page.component').then(
         (m) => m.CartPageComponent
       ),
-    canActivate: [AuthGuard, RoleGuard],
+    canActivate: [RoleGuard],
+    data: { roles: ['client'] },
+  },
+  {
+    path: 'admin-dashboard',
+    loadComponent: () =>
+      import(
+        './features/dashboard/admin/pages/admin-dashboard-page/admin-dashboard-page.component'
+      ).then((m) => m.AdminDashboardPageComponent),
+    canActivate: [RoleGuard],
+    data: { roles: ['admin'] },
+  },
+  {
+    path: 'provider-dashboard',
+    loadComponent: () =>
+      import(
+        './features/dashboard/provider/pages/provider-dashboard-page/provider-dashboard-page.component'
+      ).then((m) => m.ProviderDashboardPageComponent),
+    canActivate: [RoleGuard],
+    data: { roles: ['serviceprovider'] },
+  },
+  {
+    path: 'client-dashboard',
+    loadComponent: () =>
+      import(
+        './features/dashboard/client/pages/client-dashboard-page/client-dashboard-page.component'
+      ).then((m) => m.ClientDashboardPageComponent),
+    canActivate: [RoleGuard],
     data: { roles: ['client'] },
   },
   {
