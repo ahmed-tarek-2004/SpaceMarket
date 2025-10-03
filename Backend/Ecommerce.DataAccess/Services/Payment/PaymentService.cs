@@ -382,8 +382,14 @@ namespace Ecommerce.DataAccess.Services.Payment
                                          message: $"order #{order.Id} is {order.Status}"
                                      );
 
-                var cartItems = _context.CartItems.Where(b => b.ClientId == user.Id);
-                 _context.RemoveRange(cartItems);
+                var cartItems = await _context.CartItems
+                               .Where(b => b.ClientId == user.Id)
+                               .ToListAsync();
+
+                if (cartItems!=null &&cartItems.Any())
+                    _context.CartItems.RemoveRange(cartItems);
+
+
                 await _context.Transactions.AddAsync(transaction);
                 await _context.SaveChangesAsync();
 
