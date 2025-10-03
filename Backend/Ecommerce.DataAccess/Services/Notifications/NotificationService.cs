@@ -42,7 +42,7 @@ namespace Ecommerce.DataAccess.Services.Notifications
                 Message = message
             };
 
-            _context.Notifications.Add(notification);
+            await _context.Notifications.AddAsync(notification);
             await _context.SaveChangesAsync();
 
                 if (!string.IsNullOrEmpty(recipientId))

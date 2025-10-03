@@ -46,7 +46,7 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     uploadedUrl = await _imageUploadService.UploadAsync(request.Image);
                 }
                 var provider = await _context.ServiceProviders.FirstOrDefaultAsync(b => b.Id == providerId);
-                if (provider != null)
+                if (provider == null)
                 {
                     return _responseHandler.BadRequest<ServiceResponse>($"Provider with Id :{providerId} >>Not Found<<");
                 }
