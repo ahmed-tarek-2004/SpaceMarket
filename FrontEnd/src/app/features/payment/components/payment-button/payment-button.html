@@ -1,0 +1,13 @@
+<app-button
+  type="submit"
+  [loading]="isLoading"
+  loadingText="Sending OTP..."
+  label="Send Verification Code"
+  color="bg-gradient-to-r from-cyan-500 to-blue-600"
+  hoverColor="hover:from-cyan-600 hover:to-blue-700"
+  textColor="text-white"
+  [additionalClasses]="
+    'w-full py-4 font-semibold rounded-xl transition-all duration-300 ease-out transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl'
+  "
+  [disabled]="isLoading"
+></app-button>

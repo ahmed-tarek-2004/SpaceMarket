@@ -42,10 +42,14 @@ body {
 html,
 body {
   height: 100%;
-}
-body {
   margin: 0;
+  padding: 0;
+}
+
+body {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
+  display: flex;
+  flex-direction: column;
 }
 
 // Remove the default password reveal button
@@ -97,13 +101,4 @@ input[type='password']::-webkit-outer-spin-button {
 * {
   scrollbar-width: thin; /* "auto" or "thin" */
   scrollbar-color: #00bcd4 transparent; /* thumb color | track color */
-}
-
-html,
-body {
-  height: 100%;
-}
-body {
-  margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }

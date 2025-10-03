@@ -4,5 +4,15 @@ export const ROUTES = {
   marketplace: '/marketplace',
   cart: '/cart',
   commingSoon: '/coming-soon',
-  createService: '/create-service'
+  createService: '/create-service',
+};
+
+export const ITEM_TYPE = {
+  dataset: 'Dataset',
+  service: 'Service',
+};
+
+export const URLS = {
+  success: 'http://localhost:4200/success',
+  cancel: 'http://localhost:4200/cancel',
 };
