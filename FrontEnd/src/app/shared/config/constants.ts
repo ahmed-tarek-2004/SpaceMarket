@@ -6,6 +6,7 @@ export const ROUTES = {
   commingSoon: '/coming-soon',
   createService: '/create-service',
   debrisTracking: '/debris-tracking',
+  dashboard: '/dashboard',
 };
 
 export const ITEM_TYPE = {

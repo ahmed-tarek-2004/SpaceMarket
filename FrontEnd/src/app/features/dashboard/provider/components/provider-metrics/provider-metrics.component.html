@@ -1,0 +1,161 @@
+<div class="space-y-6">
+  <h2 class="text-2xl font-bold text-white">Service Metrics</h2>
+
+  <!-- Date Range Filter -->
+  <div class="bg-white/5 rounded-2xl border border-[#00A8FF]/20 p-6">
+    <h3 class="text-lg font-semibold text-white mb-4">Date Range</h3>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div>
+        <label class="block text-gray-300 text-sm mb-2">Start Date</label>
+        <input type="date" [(ngModel)]="dateRange.startDate"
+          class="w-full bg-white/10 border border-[#00A8FF]/30 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-[#00A8FF] transition-all duration-300"
+          [max]="dateRange.endDate">
+      </div>
+      <div>
+        <label class="block text-gray-300 text-sm mb-2">End Date</label>
+        <input type="date" [(ngModel)]="dateRange.endDate"
+          class="w-full bg-white/10 border border-[#00A8FF]/30 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-[#00A8FF] transition-all duration-300"
+          [min]="dateRange.startDate" [max]="maxDate"
+        >
+      </div>
+      <div class="flex items-end">
+        <button (click)="fetchMetrics()" [disabled]="loading"
+          class="w-full px-6 py-2 bg-gradient-to-r from-[#00A8FF] to-[#0077FF] text-white rounded-xl hover:from-[#00A8FF]/90 hover:to-[#0077FF]/90 disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2">
+          <svg *ngIf="loading" class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+            </path>
+          </svg>
+          {{ loading ? 'Loading...' : 'Apply Filter' }}
+        </button>
+      </div>
+      <div class="flex items-end">
+        <button (click)="resetDateRange()" [disabled]="loading"
+          class="w-full px-6 py-2 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-xl hover:from-gray-500 hover:to-gray-600 disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed transition-all duration-300">
+          Reset
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  @if (errorMessage) {
+  <div class="bg-red-500/10 border border-red-500/30 rounded-2xl p-4">
+    <div class="flex items-center gap-3">
+      <svg class="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+          clip-rule="evenodd" />
+      </svg>
+      <span class="text-red-300">{{ errorMessage }}</span>
+    </div>
+  </div>
+  }
+
+  <!-- Summary Statistics -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div
+      class="bg-white/5 rounded-2xl border border-[#00A8FF]/20 p-6 text-center hover:border-[#00A8FF]/40 transition-all duration-300">
+      <div class="text-3xl font-bold text-[#00A8FF] mb-2">{{ getTotalViews() | number }}</div>
+      <div class="text-gray-300 text-sm">Total Views</div>
+      <div class="text-xs text-gray-400 mt-2">Across all services</div>
+    </div>
+    <div
+      class="bg-white/5 rounded-2xl border border-[#00A8FF]/20 p-6 text-center hover:border-[#00F5D4]/40 transition-all duration-300">
+      <div class="text-3xl font-bold text-[#00F5D4] mb-2">{{ getTotalClicks() | number }}</div>
+      <div class="text-gray-300 text-sm">Total Clicks</div>
+      <div class="text-xs text-gray-400 mt-2">User interactions</div>
+    </div>
+    <div
+      class="bg-white/5 rounded-2xl border border-[#00A8FF]/20 p-6 text-center hover:border-[#FF6B6B]/40 transition-all duration-300">
+      <div class="text-3xl font-bold text-[#FF6B6B] mb-2">{{ getTotalRequests() | number }}</div>
+      <div class="text-gray-300 text-sm">Service Requests</div>
+      <div class="text-xs text-gray-400 mt-2">Customer inquiries</div>
+    </div>
+  </div>
+
+  <!-- Overall Conversion Rate -->
+  @if (metrics.length > 0 && getTotalViews() > 0) {
+  <div class="bg-white/5 rounded-2xl border border-[#00A8FF]/20 p-6">
+    <h3 class="text-lg font-semibold text-white mb-2">Overall Performance</h3>
+    <div class="flex items-center gap-4">
+      <div class="text-2xl font-bold text-[#FFD93D]">
+        {{ (getTotalRequests() / getTotalViews() * 100) | number:'1.1-1' }}%
+      </div>
+      <div class="text-gray-300 text-sm">Overall Conversion Rate</div>
+    </div>
+    <div class="w-full bg-gray-700 rounded-full h-2 mt-3">
+      <div class="bg-gradient-to-r from-[#FFD93D] to-[#FF9A3D] h-2 rounded-full transition-all duration-1000"
+        [style.width.%]="(getTotalRequests() / getTotalViews() * 100) | number:'1.1-1'"></div>
+    </div>
+  </div>
+  }
+
+  <!-- Detailed Metrics -->
+  @if (loading) {
+  <div class="flex justify-center items-center py-12">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-[#00A8FF]"></div>
+  </div>
+  } @else {
+  <div class="grid gap-4">
+    @for (metric of metrics; track metric.serviceId) {
+    <div
+      class="bg-white/5 rounded-2xl border border-[#00A8FF]/20 p-6 hover:border-[#00A8FF]/40 transition-all duration-300">
+      <h4 class="text-white font-semibold text-lg mb-4">{{ metric.title || 'Untitled Service' }}</h4>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="text-center">
+          <div class="text-2xl font-bold text-[#00A8FF]">{{ metric.viewsCount | number }}</div>
+          <div class="text-gray-400 text-sm">Views</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-[#00F5D4]">{{ metric.clicksCount | number }}</div>
+          <div class="text-gray-400 text-sm">Clicks</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-[#FF6B6B]">{{ metric.requestsCount | number }}</div>
+          <div class="text-gray-400 text-sm">Requests</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-[#FFD93D]">{{ getConversionRate(metric) | number:'1.1-1' }}%</div>
+          <div class="text-gray-400 text-sm">Conversion Rate</div>
+        </div>
+      </div>
+
+      <!-- Progress bars for visual comparison -->
+      @if (metric.viewsCount > 0) {
+      <div class="mt-4 space-y-2">
+        <div class="flex items-center gap-2 text-xs text-gray-400">
+          <span>Clicks</span>
+          <div class="flex-1 bg-gray-700 rounded-full h-1.5">
+            <div class="bg-[#00F5D4] h-1.5 rounded-full transition-all duration-1000"
+              [style.width.%]="(metric.clicksCount / metric.viewsCount * 100)"></div>
+          </div>
+          <span>{{ (metric.clicksCount / metric.viewsCount * 100) | number:'1.1-1' }}%</span>
+        </div>
+        <div class="flex items-center gap-2 text-xs text-gray-400">
+          <span>Requests</span>
+          <div class="flex-1 bg-gray-700 rounded-full h-1.5">
+            <div class="bg-[#FF6B6B] h-1.5 rounded-full transition-all duration-1000"
+              [style.width.%]="getConversionRate(metric)"></div>
+          </div>
+          <span>{{ getConversionRate(metric) | number:'1.1-1' }}%</span>
+        </div>
+      </div>
+      }
+    </div>
+    } @empty {
+    <div class="text-center py-12 text-gray-400 bg-white/5 rounded-2xl border border-[#00A8FF]/20">
+      <svg class="w-12 h-12 mx-auto text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+        </path>
+      </svg>
+      <div class="text-lg mb-2">No metrics data available</div>
+      <div class="text-sm">Try adjusting your date range or check back later</div>
+    </div>
+    }
+  </div>
+  }
+</div>
