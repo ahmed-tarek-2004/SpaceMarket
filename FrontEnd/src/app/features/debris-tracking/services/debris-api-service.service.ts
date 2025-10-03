@@ -51,4 +51,10 @@ export class DebrisApiServiceService {
       `${this.apiUrl}${environment.debrisTracking.mySatellites}`
     );
   }
+
+  getAllSatellites(): Observable<ApiResponse<Satellite[]>> {
+    return this.http.get<ApiResponse<Satellite[]>>(
+      `${this.apiUrl}${environment.debrisTracking.getAllSatellites}`
+    );
+  }
 }

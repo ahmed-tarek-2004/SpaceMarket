@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RegisterSatelliteRequest } from '../../interfaces/register-satellite-request';
@@ -10,7 +10,9 @@ import { RegisterSatelliteRequest } from '../../interfaces/register-satellite-re
   templateUrl: './satellite-form.component.html',
   styleUrls: ['./satellite-form.component.scss'],
 })
-export class SatelliteFormComponent {
+export class SatelliteFormComponent implements OnInit {
+  @Input() editMode = false;
+  @Input() editData: { id: string; name: string; proximityThresholdKm: number } | null = null;
   @Output() formSubmit = new EventEmitter<RegisterSatelliteRequest>();
 
   satelliteForm: FormGroup;
@@ -22,6 +24,16 @@ export class SatelliteFormComponent {
       name: ['', [Validators.required, Validators.minLength(2)]],
       proximityThresholdKm: [5, [Validators.required, Validators.min(1), Validators.max(1000)]],
     });
+  }
+
+  ngOnInit(): void {
+    if (this.editMode && this.editData) {
+      this.satelliteForm.patchValue({
+        catalogSatelliteId: this.editData.id,
+        name: this.editData.name,
+        proximityThresholdKm: this.editData.proximityThresholdKm,
+      });
+    }
   }
 
   onSubmit() {

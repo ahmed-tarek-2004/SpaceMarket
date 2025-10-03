@@ -65,10 +65,21 @@ export const routes: Routes = [
   },
   {
     path: 'debris-tracking',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['client'] },
     loadComponent: () =>
       import('./features/debris-tracking/pages/satellites-page/satellites-page').then(
         (m) => m.SatellitesPage
       ),
+  },
+  {
+    path: 'all-satellites',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['client'] },
+    loadComponent: () =>
+      import(
+        './features/debris-tracking/pages/all-satellites-page/all-satellites-page.component'
+      ).then((m) => m.AllSatellitesPageComponent),
   },
   {
     path: 'coming-soon',
