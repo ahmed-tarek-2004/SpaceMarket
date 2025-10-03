@@ -139,6 +139,29 @@ namespace Ecommerce.DataAccess.Services.DebrisTracking
 
             return _responseHandler.Success(alerts, "Alert history retrieved");
         }
+        /// <summary>
+        /// Get all satellites registered by a client
+        /// </summary>
+        public async Task<Response<List<SatelliteResponseDto>>> GetMySatellitesAsync(string userId)
+        {
+            var satellites = await _context.Satellites
+                .Where(s => s.ClientId == userId)
+                .Select(s => new SatelliteResponseDto
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    NoradId = s.NoradId,
+                    ProximityThresholdKm = s.ProximityThresholdKm,
+                    CreatedAt = s.CreatedAt,
+                    UpdatedAt = s.UpdatedAt
+                })
+                .ToListAsync();
+
+            if (!satellites.Any())
+                return _responseHandler.NotFound<List<SatelliteResponseDto>>("No satellites registered for this user");
+
+            return _responseHandler.Success(satellites, "Satellites retrieved successfully");
+        }
 
         /// <summary>
         /// Main job entry → run propagation & detect collisions
