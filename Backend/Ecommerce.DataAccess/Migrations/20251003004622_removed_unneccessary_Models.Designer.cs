@@ -4,6 +4,7 @@ using Ecommerce.DataAccess.ApplicationContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ecommerce.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class AuthContextModelSnapshot : ModelSnapshot
+    [Migration("20251003004622_removed_unneccessary_Models")]
+    partial class removed_unneccessary_Models
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -326,26 +329,8 @@ namespace Ecommerce.DataAccess.Migrations
                     b.Property<double>("ClosestDistanceKm")
                         .HasColumnType("float");
 
-                    b.Property<double>("DebrisAltitudeKm")
-                        .HasColumnType("float");
-
                     b.Property<Guid>("DebrisId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<double>("DebrisLatitude")
-                        .HasColumnType("float");
-
-                    b.Property<double>("DebrisLongitude")
-                        .HasColumnType("float");
-
-                    b.Property<double>("SatAltitudeKm")
-                        .HasColumnType("float");
-
-                    b.Property<double>("SatLatitude")
-                        .HasColumnType("float");
-
-                    b.Property<double>("SatLongitude")
-                        .HasColumnType("float");
 
                     b.Property<Guid>("SatelliteId")
                         .HasColumnType("uniqueidentifier");
@@ -461,6 +446,9 @@ namespace Ecommerce.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<double>("Altitude")
+                        .HasColumnType("float");
+
                     b.Property<DateTime>("LastFetchedAt")
                         .HasColumnType("datetime2");
 
@@ -471,23 +459,13 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.Property<string>("NoradId")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("TleLine1")
-                        .IsRequired()
-                        .HasMaxLength(80)
-                        .HasColumnType("nvarchar(80)");
-
-                    b.Property<string>("TleLine2")
-                        .IsRequired()
-                        .HasMaxLength(80)
-                        .HasColumnType("nvarchar(80)");
+                    b.Property<double>("Velocity")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("NoradId")
-                        .IsUnique();
 
                     b.ToTable("Debris");
                 });
@@ -795,42 +773,6 @@ namespace Ecommerce.DataAccess.Migrations
                     b.HasIndex("ClientId");
 
                     b.ToTable("Satellites");
-                });
-
-            modelBuilder.Entity("Ecommerce.Entities.Models.SatelliteCatalog", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("LastSyncedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getutcdate()");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("NoradId")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("TleLine1")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("TleLine2")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SatellitesCatalog");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Service", b =>

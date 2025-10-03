@@ -7,7 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ecommerce.DataAccess.Services.Notifications
+namespace Ecommerce.DataAccess.Hubs
 {
     public class NotificationHub:Hub
     {
