@@ -1,0 +1,98 @@
+/* App Layout Styles */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Ensure router-outlet content takes full height */
+router-outlet + * {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Sticky footer positioning */
+app-footer {
+  margin-top: auto;
+}
+
+/* Toast container positioning - should be above everything */
+app-toast-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Ensure toast container children can receive pointer events */
+app-toast-container > * {
+  pointer-events: auto;
+}
+
+/* Ensure pages that use min-h-screen work properly with sticky footer */
+.min-h-screen {
+  min-height: calc(100vh - 80px); /* Subtract header height */
+}
+
+/* For auth pages that need full screen height */
+.h-screen {
+  height: calc(100vh - 80px); /* Subtract header height */
+}
+
+/* Ensure proper flex behavior for all page content */
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Handle cases where content is shorter than viewport */
+.app-container {
+  min-height: 100vh;
+}
+
+/* Ensure footer always stays at bottom */
+.app-container > app-footer {
+  margin-top: auto;
+}
+
+/* Additional responsive adjustments */
+@media (max-width: 768px) {
+  .min-h-screen {
+    min-height: calc(100vh - 64px); /* Smaller header on mobile */
+  }
+
+  .h-screen {
+    height: calc(100vh - 64px); /* Smaller header on mobile */
+  }
+}
+
+/* Ensure proper overflow handling */
+.app-container {
+  overflow-x: hidden;
+}
+
+/* Handle print styles */
+@media print {
+  .app-container {
+    display: block;
+    min-height: auto;
+  }
+
+  app-footer {
+    margin-top: 0;
+  }
+}

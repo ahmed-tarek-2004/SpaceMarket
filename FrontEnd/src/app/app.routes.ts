@@ -43,10 +43,9 @@ export const routes: Routes = [
   {
     path: 'categories',
     loadComponent: () =>
-      import('./features/service-category/pages/category-management/category-management.component').then(
-        (m) => m.CategoryManagementPageComponent 
-      ),
-
+      import(
+        './features/service-category/pages/category-management/category-management.component'
+      ).then((m) => m.CategoryManagementPageComponent),
   },
   {
     path: 'marketplace',
@@ -70,6 +69,16 @@ export const routes: Routes = [
       import('./shared/components/coming-soon/coming-soon.component').then(
         (m) => m.ComingSoonComponent
       ),
+  },
+  {
+    path: 'success',
+    loadComponent: () =>
+      import('./shared/components/success/success.component').then((m) => m.SuccessComponent),
+  },
+  {
+    path: 'error',
+    loadComponent: () =>
+      import('./shared/components/error/error.component').then((m) => m.ErrorComponent),
   },
   { path: 'forbidden', component: ForbiddenComponent },
   // Add other routes here
