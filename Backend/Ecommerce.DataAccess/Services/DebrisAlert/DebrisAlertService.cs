@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Ecommerce.DataAccess.ApplicationContext;
+﻿using Ecommerce.DataAccess.ApplicationContext;
 using Ecommerce.DataAccess.Services.DebrisAlert;
 using Ecommerce.DataAccess.Services.Notifications;
 using Ecommerce.DataAccess.Services.OrbitalPropagation;
@@ -44,7 +40,7 @@ namespace Ecommerce.DataAccess.Services.DebrisTracking
             var catalogSat = await _context.SatellitesCatalog.FindAsync(request.CatalogSatelliteId);
             if (catalogSat == null)
                 return _responseHandler.NotFound<Guid>("Satellite not found in catalog");
-            var clientSatellite = await _context.Satellites.FirstOrDefaultAsync(s=> s.ClientId == userId);
+            var clientSatellite = await _context.Satellites.FirstOrDefaultAsync(s => s.ClientId == userId);
 
             if (clientSatellite != null) return _responseHandler.BadRequest<Guid>("Satellite is registered By another user");
 
@@ -144,6 +140,10 @@ namespace Ecommerce.DataAccess.Services.DebrisTracking
         /// </summary>
         public async Task<Response<List<SatelliteResponseDto>>> GetMySatellitesAsync(string userId)
         {
+            var user = await _context.Users.FindAsync(userId);
+            if (user is null)
+                return _responseHandler.Unauthorized<List<SatelliteResponseDto>>("user not found");
+
             var satellites = await _context.Satellites
                 .Where(s => s.ClientId == userId)
                 .Select(s => new SatelliteResponseDto
@@ -156,9 +156,6 @@ namespace Ecommerce.DataAccess.Services.DebrisTracking
                     UpdatedAt = s.UpdatedAt
                 })
                 .ToListAsync();
-
-            if (!satellites.Any())
-                return _responseHandler.NotFound<List<SatelliteResponseDto>>("No satellites registered for this user");
 
             return _responseHandler.Success(satellites, "Satellites retrieved successfully");
         }
