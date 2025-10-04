@@ -11405,23 +11405,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\DESKTOP\\.nuget\\packages\\": {},
+    "C:\\Users\\lap shop\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Team 3 - ZagEng\\SpaceMarket\\AuthTemplate-master\\DataAccess.Tests\\DataAccess.Tests.csproj",
+      "projectUniqueName": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\DataAccess.Tests\\DataAccess.Tests.csproj",
       "projectName": "DataAccess.Tests",
-      "projectPath": "D:\\Team 3 - ZagEng\\SpaceMarket\\AuthTemplate-master\\DataAccess.Tests\\DataAccess.Tests.csproj",
-      "packagesPath": "C:\\Users\\DESKTOP\\.nuget\\packages\\",
-      "outputPath": "D:\\Team 3 - ZagEng\\SpaceMarket\\AuthTemplate-master\\DataAccess.Tests\\obj\\",
+      "projectPath": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\DataAccess.Tests\\DataAccess.Tests.csproj",
+      "packagesPath": "C:\\Users\\lap shop\\.nuget\\packages\\",
+      "outputPath": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\DataAccess.Tests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\DESKTOP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\lap shop\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -11436,8 +11436,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "D:\\Team 3 - ZagEng\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Ecommerce.DataAccess.csproj": {
-              "projectPath": "D:\\Team 3 - ZagEng\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Ecommerce.DataAccess.csproj"
+            "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Ecommerce.DataAccess.csproj": {
+              "projectPath": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Ecommerce.DataAccess.csproj"
             }
           }
         }

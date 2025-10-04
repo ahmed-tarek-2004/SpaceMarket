@@ -1,15 +1,18 @@
-
+using System.Text.Json.Serialization;
 using Ecommerce.API.Extensions;
 using Ecommerce.DataAccess.ApplicationContext;
 using Ecommerce.DataAccess.Extensions;
+using Ecommerce.DataAccess.Hubs;
+using Ecommerce.DataAccess.Jobs;
 using Ecommerce.DataAccess.Seeder;
 using Ecommerce.Entities.Models.Auth.Identity;
 using Ecommerce.Entities.Shared.Bases;
 using Ecommerce.Utilities.Configurations;
-
+using Google;
+using Hangfire;
+using Hangfire.SqlServer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
-
 using StackExchange.Redis;
 
 namespace EcommercePlatform
@@ -21,6 +24,25 @@ namespace EcommercePlatform
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
+
+            #region Hangfire configuration
+            builder.Services.AddHangfire(config =>
+                config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                      .UseSimpleAssemblyNameTypeSerializer()
+                      .UseRecommendedSerializerSettings()
+                      .UseSqlServerStorage(builder.Configuration.GetConnectionString("ProdCS"),
+                          new SqlServerStorageOptions
+                          {
+                              CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                              SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                              QueuePollInterval = TimeSpan.Zero,
+                              UseRecommendedIsolationLevel = true,
+                              DisableGlobalLocks = true
+                          }));
+
+            builder.Services.AddHangfireServer();
+            #endregion
+
 
             builder.Host.UseSerilogLogging();
 
@@ -34,20 +56,58 @@ namespace EcommercePlatform
             builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
             builder.Services.Configure<GoogleAuthSettings>(builder.Configuration.GetSection("Authorization:Google"));
+            builder.Services.Configure<CommissionSettings>(builder.Configuration.GetSection("CommissionSettings"));
+            //builder.Services.Configure<UploadcareSettings>(builder.Configuration.GetSection("Uploadcare"));
 
             builder.Services.AddApplicationServices();
             builder.Services.AddScoped<ResponseHandler>();
             builder.Services.AddDatabase(builder.Configuration);
             builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
             builder.Services.AddEmailServices(builder.Configuration);
+            builder.Services.AddStripeConfiguration(builder.Configuration);
+            builder.Services.AddSignalR();
+
+            // Enum to string converter
+            builder.Services
+                .AddControllers()
+                .AddJsonOptions(options =>
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+
 
             builder.Services.AddFluentValidation();
 
             // Rate limiter for otp resend
             builder.Services.AddResendOtpRateLimiter();
 
+            // Add CORS services
+            //builder.Services.AddCors(options =>
+            //{
+            //    options.AddPolicy("AllowAngularApp",
+            //        policy =>
+            //        {
+            //            policy.WithOrigins("http://localhost:4200")
+            //                  .AllowAnyHeader()
+            //                  .AllowAnyMethod()
+            //                  .AllowCredentials();
+            //        });
+            //});
+
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngularApp",
+                    policy =>
+                    {
+                        policy.AllowAnyHeader()
+                              .AllowAnyMethod()
+                              .AllowCredentials()
+                              .SetIsOriginAllowed(_ => true);
+                    });
+            });
+
             builder.Services.AddDataProtection()
-                .PersistKeysToDbContext<AuthContext>()
+                .PersistKeysToDbContext<ApplicationDbContext>()
                 .SetApplicationName("AuthStarter");
 
             // For redis 
@@ -75,15 +135,30 @@ namespace EcommercePlatform
             }
             #endregion
 
-            if (app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors("AllowAngularApp");
+
             app.UseAuthentication();
             app.UseAuthorization();
+            app.MapHub<NotificationHub>("/hub/notifications");
+            app.UseHangfireDashboard("/hangfire");
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var recurringJobManager = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
+                recurringJobManager.AddOrUpdate<IDebrisAlertJob>(
+                    "debris-check-job",
+                    job => job.ExecuteAsync(),
+                    Cron.MinuteInterval(5)
+                );
+            }
 
             app.MapControllers();
 

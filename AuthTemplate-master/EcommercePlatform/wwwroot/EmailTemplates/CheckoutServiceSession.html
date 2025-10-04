@@ -1,0 +1,283 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Receipt - {ReceiptNumber}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #f5f5f5;
+            padding: 20px;
+            color: #333;
+        }
+
+        .receipt {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 2px dashed #ddd;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .store-info {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .receipt-details {
+            margin-bottom: 20px;
+            font-size: 12px;
+        }
+
+            .receipt-details div {
+                margin-bottom: 3px;
+            }
+
+        .client-info {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+        }
+
+        .section-title {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+
+        .client-info div:not(.section-title) {
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+
+        .services {
+            margin-bottom: 20px;
+        }
+
+        .services-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 10px;
+            font-size: 12px;
+        }
+
+        .service-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 12px;
+            align-items: flex-start;
+        }
+
+        .service-name {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .service-amount {
+            min-width: 80px;
+            text-align: right;
+            margin-right: 10px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .service-commission {
+            min-width: 80px;
+            text-align: right;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        .totals {
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .total-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+
+        .final-total {
+            font-weight: bold;
+            font-size: 16px;
+            border-top: 2px solid #333;
+            padding-top: 8px;
+            margin-top: 8px;
+        }
+
+        .payment-info {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .thank-you {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .status-completed {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        .status-failed {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .status-cancelled {
+            color: #95a5a6;
+            font-weight: bold;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+
+            .receipt {
+                box-shadow: none;
+                border-radius: 0;
+                max-width: none;
+            }
+        }
+
+        .barcode {
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            letter-spacing: 2px;
+            margin: 15px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="receipt">
+        <div class="header">
+            <div class="logo">Space Market</div>
+        </div>
+
+        <div class="receipt-details">
+            <div><strong>Receipt #:</strong> {ReceiptNumber}</div>
+            <div><strong>Date:</strong> {TransactionDate}</div>
+            <div><strong>Time:</strong> {TransactionTime}</div>
+
+            <div><strong>Status:</strong> <span class="status-{StatusClass}">{Status}</span></div>
+        </div>
+
+        <div class="client-info">
+            <div class="section-title">Client Information</div>
+            <div><strong>Client Name:</strong> {ClientName}</div>
+            <div><strong>Client ID:</strong> {ClientId}</div>
+            <div><strong>Email:</strong> {ClientEmail}</div>
+            <div><strong>Phone:</strong> {ClientPhone}</div>
+        </div>
+
+        <div class="services">
+            <!-- <div class="section-title"></div> -->
+            <div class="services-header">
+                <!-- <span>Service Name</span> -->
+                <span>Amount</span>
+                <span>Commission</span>
+            </div>
+
+            <!-- Service Items Loop - Replace with backend loop -->
+            <!-- Example service item structure:
+            <div class="service-item">
+                <span class="service-name">{ServiceName}</span>
+                <span class="service-amount">{ServiceAmount}</span>
+                <span class="service-commission">{ServiceCommission}</span>
+            </div>
+            -->
+        </div>
+
+        <div class="totals">
+            <div class="total-line">
+                <span>Total Services Amount:</span>
+                <span>{TotalAmount}</span>
+            </div>
+            <div class="total-line">
+                <span>Total Salary:</span>
+                <span>{TotalSalary}</span>
+            </div>
+        </div>
+
+         <div class="payment-info">
+            <div><strong>Payment Method:</strong> {PaymentMethod}</div>
+            <div><strong>Transaction ID:</strong> {TransactionId}</div>
+            <div><strong>Payment Status:</strong> <span class="status-{PaymentStatusClass}">{PaymentStatus}</span></div>
+        </div>
+
+          
+        <div class="footer">
+            <div class="thank-you">Thank You for Your Business!</div>
+            <div>
+
+                Visit us online at <a href="https://spacemarket.runasp.net/">ShopMarket</a>
+            </div>
+            <div style="margin-top: 15px; font-size: 10px;">
+                &copy; {CurrentYear}. All rights reserved.
+            </div>
+        </div> 
+    </div>
+</body>
+</html>

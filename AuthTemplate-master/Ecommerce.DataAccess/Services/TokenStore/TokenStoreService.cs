@@ -20,9 +20,9 @@ namespace Ecommerce.DataAccess.Services.Token
         private readonly SymmetricSecurityKey _symmetricSecurityKey;
         private readonly UserManager<User> _userManager; // To get user roles 
         private readonly JwtSettings _jwtSettings;
-        private readonly AuthContext _authContext;
+        private readonly ApplicationDbContext _authContext;
 
-        public TokenStoreService(IOptions<JwtSettings> jwtOptions, UserManager<User> userManager, AuthContext authContext)
+        public TokenStoreService(IOptions<JwtSettings> jwtOptions, UserManager<User> userManager, ApplicationDbContext authContext)
         {
             _jwtSettings = jwtOptions.Value ?? throw new ArgumentNullException(nameof(jwtOptions));
             _userManager = userManager;

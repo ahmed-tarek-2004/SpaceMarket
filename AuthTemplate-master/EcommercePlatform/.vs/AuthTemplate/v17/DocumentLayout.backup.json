@@ -1,12 +1,341 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Team 3 - ZagEng\\SpaceMarket\\AuthTemplate-master\\EcommercePlatform\\",
-  "Documents": [],
+  "WorkspaceRootPath": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\EcommercePlatform\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{69FBB2A2-4675-4E8A-9D0F-F0B3FF35A5F0}|..\\Ecommerce.Entities\\Ecommerce.Entities.csproj|d:\\nasahackathon\\spacemarket\\authtemplate-master\\ecommerce.entities\\ecommerce.entities.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7720CE83-10E9-4069-B5CA-4E5519961CBE}|..\\Ecommerce.DataAccess\\Ecommerce.DataAccess.csproj|d:\\nasahackathon\\spacemarket\\authtemplate-master\\ecommerce.dataaccess\\services\\debrisalert\\debrisalertservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7720CE83-10E9-4069-B5CA-4E5519961CBE}|..\\Ecommerce.DataAccess\\Ecommerce.DataAccess.csproj|d:\\nasahackathon\\spacemarket\\authtemplate-master\\ecommerce.dataaccess\\ecommerce.dataaccess.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BE554A99-8ACD-4854-9BFE-6B77602EF6D6}|Ecommerce.API.csproj|d:\\nasahackathon\\spacemarket\\authtemplate-master\\ecommerceplatform\\ecommerce.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{BE554A99-8ACD-4854-9BFE-6B77602EF6D6}|Ecommerce.API.csproj|solutionrelative:ecommerce.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BE554A99-8ACD-4854-9BFE-6B77602EF6D6}|Ecommerce.API.csproj|d:\\nasahackathon\\spacemarket\\authtemplate-master\\ecommerceplatform\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{BE554A99-8ACD-4854-9BFE-6B77602EF6D6}|Ecommerce.API.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BE554A99-8ACD-4854-9BFE-6B77602EF6D6}|Ecommerce.API.csproj|d:\\nasahackathon\\spacemarket\\authtemplate-master\\ecommerceplatform\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BE554A99-8ACD-4854-9BFE-6B77602EF6D6}|Ecommerce.API.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Migrations\\20251003230753_init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7720CE83-10E9-4069-B5CA-4E5519961CBE}|..\\Ecommerce.DataAccess\\Ecommerce.DataAccess.csproj|d:\\nasahackathon\\spacemarket\\authtemplate-master\\ecommerce.dataaccess\\entitiesconfigurations\\reviewresponseconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Migrations\\20251003230650_init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7720CE83-10E9-4069-B5CA-4E5519961CBE}|..\\Ecommerce.DataAccess\\Ecommerce.DataAccess.csproj|d:\\nasahackathon\\spacemarket\\authtemplate-master\\ecommerce.dataaccess\\entitiesconfigurations\\cartitemconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7720CE83-10E9-4069-B5CA-4E5519961CBE}|..\\Ecommerce.DataAccess\\Ecommerce.DataAccess.csproj|d:\\nasahackathon\\spacemarket\\authtemplate-master\\ecommerce.dataaccess\\entitiesconfigurations\\reviewconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Migrations\\20251003225601_init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Migrations\\20251003225140_init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Migrations\\20251003224913_init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Migrations\\20251003224634_init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Migrations\\20251003224250_init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{042E07DB-F151-4984-856D-A9AC94C30E9E}|..\\Ecommerce.Utilities\\Ecommerce.Utilities.csproj|d:\\nasahackathon\\spacemarket\\authtemplate-master\\ecommerce.utilities\\ecommerce.utilities.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 11,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DebrisAlertService.cs",
+              "DocumentMoniker": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Services\\DebrisAlert\\DebrisAlertService.cs",
+              "RelativeDocumentMoniker": "..\\Ecommerce.DataAccess\\Services\\DebrisAlert\\DebrisAlertService.cs",
+              "ToolTip": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Services\\DebrisAlert\\DebrisAlertService.cs",
+              "RelativeToolTip": "..\\Ecommerce.DataAccess\\Services\\DebrisAlert\\DebrisAlertService.cs",
+              "ViewState": "AgIAAB0BAAAAAAAAAAAewCsBAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-04T00:37:07.835Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\EcommercePlatform\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\EcommercePlatform\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAJYAAADA//////8pwKQAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-03T22:33:50.299Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\EcommercePlatform\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\EcommercePlatform\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAACEAAABANDMzMzMrwCwAAAByAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-10-03T22:33:45.418Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Ecommerce.API",
+              "DocumentMoniker": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\EcommercePlatform\\Ecommerce.API.csproj",
+              "RelativeDocumentMoniker": "Ecommerce.API.csproj",
+              "ToolTip": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\EcommercePlatform\\Ecommerce.API.csproj",
+              "RelativeToolTip": "Ecommerce.API.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvycAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-10-03T22:34:49.723Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Ecommerce.Entities",
+              "DocumentMoniker": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.Entities\\Ecommerce.Entities.csproj",
+              "RelativeDocumentMoniker": "..\\Ecommerce.Entities\\Ecommerce.Entities.csproj",
+              "ToolTip": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.Entities\\Ecommerce.Entities.csproj",
+              "RelativeToolTip": "..\\Ecommerce.Entities\\Ecommerce.Entities.csproj",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAYwBcAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-10-03T22:34:37.588Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "20251003225601_init.cs",
+              "DocumentMoniker": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Migrations\\20251003225601_init.cs",
+              "RelativeDocumentMoniker": "..\\Ecommerce.DataAccess\\Migrations\\20251003225601_init.cs",
+              "ToolTip": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Migrations\\20251003225601_init.cs",
+              "RelativeToolTip": "..\\Ecommerce.DataAccess\\Migrations\\20251003225601_init.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-03T22:56:01.587Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Ecommerce.DataAccess",
+              "DocumentMoniker": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Ecommerce.DataAccess.csproj",
+              "RelativeDocumentMoniker": "..\\Ecommerce.DataAccess\\Ecommerce.DataAccess.csproj",
+              "ToolTip": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Ecommerce.DataAccess.csproj",
+              "RelativeToolTip": "..\\Ecommerce.DataAccess\\Ecommerce.DataAccess.csproj",
+              "ViewState": "AgIAAA0AAAAAAAAAAADwvx0AAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-10-03T22:32:57.281Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ReviewConfiguration.cs",
+              "DocumentMoniker": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\EntitiesConfigurations\\ReviewConfiguration.cs",
+              "RelativeDocumentMoniker": "..\\Ecommerce.DataAccess\\EntitiesConfigurations\\ReviewConfiguration.cs",
+              "ToolTip": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\EntitiesConfigurations\\ReviewConfiguration.cs",
+              "RelativeToolTip": "..\\Ecommerce.DataAccess\\EntitiesConfigurations\\ReviewConfiguration.cs",
+              "ViewState": "AgIAABgAAAAA/f////8PwCgAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-03T23:05:48.977Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "CartItemConfiguration.cs",
+              "DocumentMoniker": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\EntitiesConfigurations\\CartItemConfiguration.cs",
+              "RelativeDocumentMoniker": "..\\Ecommerce.DataAccess\\EntitiesConfigurations\\CartItemConfiguration.cs",
+              "ToolTip": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\EntitiesConfigurations\\CartItemConfiguration.cs",
+              "RelativeToolTip": "..\\Ecommerce.DataAccess\\EntitiesConfigurations\\CartItemConfiguration.cs",
+              "ViewState": "AgIAABMAAABAmJmZmZklwB8AAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-03T23:06:28.651Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "20251003230650_init.cs",
+              "DocumentMoniker": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Migrations\\20251003230650_init.cs",
+              "RelativeDocumentMoniker": "..\\Ecommerce.DataAccess\\Migrations\\20251003230650_init.cs",
+              "ToolTip": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Migrations\\20251003230650_init.cs",
+              "RelativeToolTip": "..\\Ecommerce.DataAccess\\Migrations\\20251003230650_init.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-03T23:06:50.799Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "20251003230753_init.cs",
+              "DocumentMoniker": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Migrations\\20251003230753_init.cs",
+              "RelativeDocumentMoniker": "..\\Ecommerce.DataAccess\\Migrations\\20251003230753_init.cs",
+              "ToolTip": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Migrations\\20251003230753_init.cs",
+              "RelativeToolTip": "..\\Ecommerce.DataAccess\\Migrations\\20251003230753_init.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-03T23:07:53.831Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ReviewResponseConfiguration.cs",
+              "DocumentMoniker": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\EntitiesConfigurations\\ReviewResponseConfiguration.cs",
+              "RelativeDocumentMoniker": "..\\Ecommerce.DataAccess\\EntitiesConfigurations\\ReviewResponseConfiguration.cs",
+              "ToolTip": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\EntitiesConfigurations\\ReviewResponseConfiguration.cs",
+              "RelativeToolTip": "..\\Ecommerce.DataAccess\\EntitiesConfigurations\\ReviewResponseConfiguration.cs",
+              "ViewState": "AgIAAA4AAAAAJjMzMzPjvxoAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-03T23:07:23.598Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "20251003225140_init.cs",
+              "DocumentMoniker": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Migrations\\20251003225140_init.cs",
+              "RelativeDocumentMoniker": "..\\Ecommerce.DataAccess\\Migrations\\20251003225140_init.cs",
+              "ToolTip": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Migrations\\20251003225140_init.cs",
+              "RelativeToolTip": "..\\Ecommerce.DataAccess\\Migrations\\20251003225140_init.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-03T22:51:40.724Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "20251003224913_init.cs",
+              "DocumentMoniker": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Migrations\\20251003224913_init.cs",
+              "RelativeDocumentMoniker": "..\\Ecommerce.DataAccess\\Migrations\\20251003224913_init.cs",
+              "ToolTip": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Migrations\\20251003224913_init.cs",
+              "RelativeToolTip": "..\\Ecommerce.DataAccess\\Migrations\\20251003224913_init.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-03T22:49:13.972Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "20251003224634_init.cs",
+              "DocumentMoniker": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Migrations\\20251003224634_init.cs",
+              "RelativeDocumentMoniker": "..\\Ecommerce.DataAccess\\Migrations\\20251003224634_init.cs",
+              "ToolTip": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Migrations\\20251003224634_init.cs",
+              "RelativeToolTip": "..\\Ecommerce.DataAccess\\Migrations\\20251003224634_init.cs",
+              "ViewState": "AgIAAAwAAAAAMDMzMzPjvwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-03T22:46:34.682Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "20251003224250_init.cs",
+              "DocumentMoniker": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Migrations\\20251003224250_init.cs",
+              "RelativeDocumentMoniker": "..\\Ecommerce.DataAccess\\Migrations\\20251003224250_init.cs",
+              "ToolTip": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.DataAccess\\Migrations\\20251003224250_init.cs",
+              "RelativeToolTip": "..\\Ecommerce.DataAccess\\Migrations\\20251003224250_init.cs",
+              "ViewState": "AgIAAGwAAAAAAGZmZmbGvwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-03T22:42:50.608Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Ecommerce.Utilities",
+              "DocumentMoniker": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.Utilities\\Ecommerce.Utilities.csproj",
+              "RelativeDocumentMoniker": "..\\Ecommerce.Utilities\\Ecommerce.Utilities.csproj",
+              "ToolTip": "D:\\NasaHackathon\\SpaceMarket\\AuthTemplate-master\\Ecommerce.Utilities\\Ecommerce.Utilities.csproj",
+              "RelativeToolTip": "..\\Ecommerce.Utilities\\Ecommerce.Utilities.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-10-03T22:34:33.774Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
