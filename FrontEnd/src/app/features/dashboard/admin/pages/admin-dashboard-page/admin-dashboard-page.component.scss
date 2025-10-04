@@ -1,0 +1,171 @@
+.cosmic-glow {
+  text-shadow: 0 0 10px rgba(0, 168, 255, 0.5), 0 0 20px rgba(0, 168, 255, 0.3);
+}
+
+.cosmic-glow-hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.cosmic-glow-hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 168, 255, 0.1), transparent);
+  transition: left 0.6s;
+}
+
+.cosmic-glow-hover:hover::before {
+  left: 100%;
+}
+
+/* Enhanced Star Field Animation - FIXED VISIBILITY */
+.star-field {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1; /* Changed from 0 to ensure it's above background */
+  pointer-events: none; /* Allow clicks to pass through */
+}
+
+.star {
+  position: absolute;
+  background-color: #ffffff; /* Ensure solid white */
+  border-radius: 50%;
+  pointer-events: none;
+  /* Add glow effect */
+  box-shadow: 
+    0 0 3px rgba(255, 255, 255, 0.8),
+    0 0 6px rgba(255, 255, 255, 0.4);
+}
+
+.star.small {
+  width: 2px;  /* Increased from 1px */
+  height: 2px; /* Increased from 1px */
+}
+
+.star.medium {
+  width: 3px;  /* Increased from 2px */
+  height: 3px; /* Increased from 2px */
+}
+
+.star.large {
+  width: 4px;  /* Increased from 3px */
+  height: 4px; /* Increased from 3px */
+}
+
+/* Enhanced twinkle animations */
+.star-twinkle {
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+.star-twinkle-slow {
+  animation: twinkle 6s ease-in-out infinite;
+}
+
+.star-twinkle-fast {
+  animation: twinkle 1.5s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+/* Enhanced Shooting stars */
+.shooting-star {
+  position: absolute;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 1) 30%,
+    rgba(255, 255, 255, 0.8) 70%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+  pointer-events: none;
+  animation: shoot 4s linear infinite;
+  transform: rotate(-45deg); /* Diagonal shooting stars */
+  transform-origin: left center;
+}
+
+@keyframes shoot {
+  0% {
+    transform: translateX(-100px) translateY(-100px) rotate(-45deg);
+    opacity: 0;
+    width: 0;
+  }
+  10% {
+    opacity: 1;
+    width: 100px;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100vw) translateY(100vh) rotate(-45deg);
+    opacity: 0;
+    width: 0;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b1a3d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00a8ff;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0099e6;
+}
+
+/* Enhanced tab styles */
+.tab-active {
+  background: rgba(0, 168, 255, 0.1);
+  border: 1px solid rgba(0, 168, 255, 0.3);
+  color: #00a8ff;
+  box-shadow: 0 0 15px rgba(0, 168, 255, 0.2);
+}
+
+.tab-inactive {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+}
+
+.tab-inactive:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .text-4xl {
+    font-size: 2rem;
+  }
+
+  .text-xl {
+    font-size: 1.1rem;
+  }
+}
