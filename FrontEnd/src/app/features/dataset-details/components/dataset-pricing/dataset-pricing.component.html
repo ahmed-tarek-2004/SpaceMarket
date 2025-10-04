@@ -1,0 +1,54 @@
+<div class="space-y-8">
+  <!-- Provider Info -->
+  <div class="bg-white/5 backdrop-blur-md rounded-2xl border border-[#00A8FF]/20 p-6 cosmic-glow-hover">
+    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+      <svg class="h-5 w-5 text-[#00A8FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+      </svg>
+      Provider Information
+    </h3>
+
+    <div class="space-y-4">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-12 h-12 bg-gradient-to-r from-[#00A8FF] to-[#0077FF] rounded-full flex items-center justify-center">
+          <span class="text-white font-bold">{{ getProviderInitial() }}</span>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold">{{ dataset.providerName }}</h4>
+          <p class="text-gray-400 text-sm">Service Provider</p>
+        </div>
+      </div>
+
+      <button (click)="onContactProvider()" [routerLink]="ROUTES.commingSoon"
+        class="w-full h-12 border border-[#00A8FF] text-[#00A8FF] hover:bg-[#00A8FF]/10 font-semibold rounded-xl transition-all duration-300 hover:scale-105">
+        Contact Provider
+      </button>
+    </div>
+  </div>
+
+  <!-- Service Details -->
+  <div class="bg-white/5 backdrop-blur-md rounded-2xl border border-[#00A8FF]/20 p-6 cosmic-glow-hover">
+    <h3 class="text-xl font-bold text-white mb-4">Service Details</h3>
+
+    <div class="space-y-3">
+      <div class="flex justify-between items-center py-2 border-b border-[#00A8FF]/10">
+        <span class="text-gray-400">Category</span>
+        <span class="text-white font-semibold">{{ dataset.categoryName || 'General' }}</span>
+      </div>
+      <div class="flex justify-between items-center py-2 border-b border-[#00A8FF]/10">
+        <span class="text-gray-400">Status</span>
+        <span class="text-white font-semibold">{{ getStatusText() }}</span>
+      </div>
+      <div class="flex justify-between items-center py-2 border-b border-[#00A8FF]/10">
+        <span class="text-gray-400">Price</span>
+        <span class="text-white font-semibold">${{ dataset.price || 0 | number:'1.2-2' }}</span>
+      </div>
+      <div class="flex justify-between items-center py-2">
+        <span class="text-gray-400">Last Updated</span>
+        <span class="text-white font-semibold">{{ formatDate(dataset.updatedAt || dataset.createdAt) }}</span>
+      </div>
+    </div>
+  </div>
+</div>
