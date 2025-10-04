@@ -207,6 +207,7 @@ namespace Ecommerce.DataAccess.Services.Auth
                     UserName = clientregisterRequest.Email, // Modify it by what you need
                     Email = clientregisterRequest.Email,
                     PhoneNumber = clientregisterRequest.PhoneNumber,
+                    EmailConfirmed = true
                 };
 
                 var createUserResult = await _userManager.CreateAsync(user, clientregisterRequest.Password);
@@ -286,7 +287,8 @@ namespace Ecommerce.DataAccess.Services.Auth
                 {
                     UserName = registerRequest.Email,
                     Email = registerRequest.Email,
-                    PhoneNumber = registerRequest.PhoneNumber
+                    PhoneNumber = registerRequest.PhoneNumber,
+                    EmailConfirmed = true
                 };
 
                 var createUserResult = await _userManager.CreateAsync(identityUser, registerRequest.Password);
