@@ -1,0 +1,13 @@
+<!-- src/app/features/maps/components/map-detail/map.component.html -->
+<div style="position: relative; width: 100%; height: 100vh;">
+  <div #cesiumContainer style="width: 100%; height: 100%;"></div>
+
+  @if (tooltipVisible) {
+    <div
+      class="cesium-tooltip"
+      [style.left.px]="tooltipX"
+      [style.top.px]="tooltipY">
+      {{ tooltipContent }}
+    </div>
+  }
+</div>

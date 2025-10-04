@@ -33,6 +33,13 @@ export const routes: Routes = [
         (m) => m.CartPageComponent
       ),
   },
+  {
+  path: 'map',
+  loadComponent: () =>
+    import('./features/maps/pages/map-page/map-page.component').then(
+      (m) => m.MapPageComponent
+    ),
+},
   // Add other routes here
   { path: '**', redirectTo: '' },
 ];

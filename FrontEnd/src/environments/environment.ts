@@ -1,8 +1,8 @@
 export const environment = {
   production: false,
 
-  //apiUrl: 'https://spacemarket.runasp.net/api',
-  apiUrl: 'https://localhost:7299/api',
+  apiUrl: 'https://spacemarket.runasp.net/api',
+  // apiUrl: 'https://localhost:7299/api',
 
   account: {
     signIn: '/Account/login',
