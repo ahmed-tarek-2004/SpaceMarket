@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { ApiServiceItem } from '../../interfaces/api-service-item';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-service-card',
@@ -12,6 +13,12 @@ import { ApiServiceItem } from '../../interfaces/api-service-item';
 export class ServiceCardComponent {
   /** Accept the exact backend model */
   @Input() service!: ApiServiceItem;
+
+  constructor(private router: Router) {}
+
+  viewDetails(): void {
+    this.router.navigate(['/service', this.service.id]);
+  }
 
   // Add the missing imageUrl getter
   get imageUrl(): string {
@@ -48,13 +55,5 @@ export class ServiceCardComponent {
       : this.service.title
       ? this.service.title.charAt(0).toUpperCase()
       : 'S';
-  }
-
-  getStars(rating: number): { filled: boolean }[] {
-    const stars = [];
-    for (let i = 1; i <= 5; i++) {
-      stars.push({ filled: i <= Math.floor(rating) });
-    }
-    return stars;
   }
 }

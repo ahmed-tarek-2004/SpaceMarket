@@ -1,0 +1,190 @@
+<div class="space-y-6">
+  <h2 class="text-2xl font-bold text-white">Dataset List Administration</h2>
+
+  <!-- Filters -->
+  <div class="bg-white/5 rounded-2xl border border-[#00A8FF]/20 p-6">
+    <h3 class="text-lg font-semibold text-white mb-4">Filters</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div>
+        <label class="block text-gray-300 text-sm mb-2">Category ID</label>
+        <input type="text" [(ngModel)]="filters.categoryId"
+          class="w-full bg-white/10 border border-[#00A8FF]/30 rounded-xl px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-[#00A8FF] transition-all duration-300"
+          placeholder="Enter Category ID">
+      </div>
+      <div>
+        <label class="block text-gray-300 text-sm mb-2">Provider ID</label>
+        <input type="text" [(ngModel)]="filters.providerId"
+          class="w-full bg-white/10 border border-[#00A8FF]/30 rounded-xl px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-[#00A8FF] transition-all duration-300"
+          placeholder="Enter Provider ID">
+      </div>
+      <div>
+        <label class="block text-gray-300 text-sm mb-2">Status</label>
+        <select [(ngModel)]="filters.status"
+          class="w-full bg-white/10 border border-[#00A8FF]/30 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-[#00A8FF] transition-all duration-300">
+          <option value="">All Status</option>
+          <option value="Active">Active</option>
+          <option value="PendingApproval">Pending Approval</option>
+          <option value="Suspended">Suspended</option>
+        </select>
+      </div>
+    </div>
+    <div class="flex justify-between mt-4">
+      <button (click)="fetchDatasets()"
+        class="px-6 py-2 bg-gradient-to-r from-[#00A8FF] to-[#0077FF] text-white rounded-xl hover:from-[#00A8FF]/90 hover:to-[#0077FF]/90 transition-all duration-300">
+        Apply Filters
+      </button>
+    </div>
+  </div>
+
+  <!-- Datasets List -->
+  @if (loading) {
+  <div class="flex justify-center items-center py-12">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-[#00A8FF]"></div>
+  </div>
+  } @else {
+  <div class="grid gap-4">
+    @for (dataset of datasets; track dataset.id) {
+    <div
+      class="bg-white/5 rounded-2xl border border-[#00A8FF]/20 p-6 hover:border-[#00A8FF]/40 transition-all duration-300">
+      <div class="flex items-start justify-between">
+        <div class="flex-1">
+          <!-- Header with title and toggle button -->
+          <div class="flex items-start justify-between mb-4">
+            <h4 class="text-white font-semibold text-lg">{{ dataset.title }}</h4>
+            <button (click)="toggleDetails(dataset)"
+              class="flex items-center space-x-2 px-4 py-2 bg-white/10 text-gray-300 rounded-xl hover:bg-white/20 hover:text-white transition-all duration-300 border border-[#00A8FF]/20">
+              <span class="text-sm font-medium">
+                {{ dataset.showDetails ? 'Hide Details' : 'Show Details' }}
+              </span>
+              <svg [class]="dataset.showDetails ? 'rotate-180' : ''" class="h-4 w-4 transition-transform duration-300"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Basic Info (Always visible) -->
+          <div class="space-y-3">
+            <p class="text-gray-400 line-clamp-2">{{ dataset.description }}</p>
+            <div class="flex items-center space-x-4">
+              <span class="text-sm text-[#00A8FF]">Category: {{ dataset.categoryName }}</span>
+              <span class="text-sm text-[#00F5D4]">Provider: {{ getProviderDisplay(dataset) }}</span>
+              <span [class]="getStatusClasses(dataset.status)" class="px-3 py-1 rounded-full text-xs font-medium">
+                {{ dataset.status }}
+              </span>
+            </div>
+            <div class="flex items-center space-x-4 text-sm text-gray-400">
+              <span>Created: {{ dataset.createdAt | date:'short' }}</span>
+            </div>
+          </div>
+
+          <!-- Detailed Information (Expandable) -->
+          @if (dataset.showDetails) {
+          <div class="mt-6 pt-6 border-t border-[#00A8FF]/20 space-y-4 animate-fade-in">
+            <h5 class="text-white font-semibold text-sm mb-3">Dataset Details</h5>
+
+            <!-- Price and ID Information -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-white/5 rounded-xl p-4">
+                <span class="text-gray-400 text-sm block mb-1">Price</span>
+                <span class="text-[#00F5D4] font-bold text-xl">${{ dataset.price | number:'1.2-2' }}</span>
+              </div>
+              <div class="bg-white/5 rounded-xl p-4">
+                <span class="text-gray-400 text-sm block mb-1">Dataset ID</span>
+                <span class="text-gray-300 font-mono text-sm">{{ dataset.id }}</span>
+              </div>
+            </div>
+
+            <!-- Provider Information -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-white/5 rounded-xl p-4">
+                <span class="text-gray-400 text-sm block mb-1">Provider ID</span>
+                <span class="text-gray-300 font-mono text-sm">{{ dataset.providerId }}</span>
+              </div>
+              <div class="bg-white/5 rounded-xl p-4">
+                <span class="text-gray-400 text-sm block mb-1">Provider Name</span>
+                <span class="text-gray-300 text-sm">{{ dataset.providerName }}</span>
+              </div>
+            </div>
+
+            <!-- Provider Contact -->
+            <div class="bg-white/5 rounded-xl p-4">
+              <span class="text-gray-400 text-sm block mb-1">Provider Email</span>
+              <a [href]="'mailto:' + dataset.providerEmail"
+                class="text-[#00A8FF] hover:text-[#00A8FF]/80 transition-colors duration-300 break-all">
+                {{ dataset.providerEmail }}
+              </a>
+            </div>
+
+            <!-- Thumbnail -->
+            @if (hasValidThumbnail(dataset.thumbnailUrl)) {
+            <div class="bg-white/5 rounded-xl p-4">
+              <span class="text-gray-400 text-sm block mb-2">Dataset Thumbnail</span>
+              <div class="flex space-x-2">
+                <img [src]="dataset.thumbnailUrl" alt="Dataset thumbnail"
+                  class="h-32 w-32 object-cover rounded-lg border border-[#00A8FF]/20">
+              </div>
+            </div>
+            }
+
+            <!-- Description -->
+            <div class="bg-white/5 rounded-xl p-4">
+              <span class="text-gray-400 text-sm block mb-2">Description</span>
+              <p class="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">{{ dataset.description }}</p>
+            </div>
+
+            <!-- Creation Date -->
+            <div class="bg-white/5 rounded-xl p-4">
+              <span class="text-gray-400 text-sm block mb-2">Creation Date</span>
+              <div class="text-gray-300 text-sm">
+                {{ dataset.createdAt | date:'full' }}
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+
+        <!-- Status Update Section (Right Side) -->
+        <div class="text-right ml-6 min-w-[200px]">
+          <p class="text-[#00F5D4] font-bold text-xl mb-2">${{ dataset.price | number:'1.2-2' }}</p>
+          <p class="text-gray-400 text-sm mb-4">ID: {{ dataset.id }}</p>
+
+          <!-- Update Status Section -->
+          <div class="space-y-2">
+            <select [(ngModel)]="dataset.newStatus" (change)="onStatusChange(dataset)"
+              class="w-full bg-white/10 border border-[#00A8FF]/30 rounded-xl px-3 py-1 text-white text-sm focus:outline-none focus:border-[#00A8FF] transition-all duration-300">
+              <option value="">Change Status</option>
+              <option value="Active">Active</option>
+              <option value="PendingApproval">Pending Approval</option>
+              <option value="Suspended">Suspended</option>
+            </select>
+
+            @if (dataset.showReasonInput) {
+            <div class="space-y-2">
+              <textarea [(ngModel)]="dataset.reason" rows="2" placeholder="Enter reason for status change..."
+                class="w-full bg-white/10 border border-[#00A8FF]/30 rounded-xl px-3 py-2 text-white text-sm placeholder-gray-400 focus:outline-none focus:border-[#00A8FF] transition-all duration-300 resize-none">
+                    </textarea>
+              <div class="flex space-x-2">
+                <button (click)="updateDatasetStatus(dataset)" [disabled]="!dataset.reason?.trim()"
+                  class="flex-1 px-3 py-1 bg-gradient-to-r from-[#00A8FF] to-[#0077FF] text-white rounded-lg text-sm hover:from-[#00A8FF]/90 hover:to-[#0077FF]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300">
+                  Update
+                </button>
+                <button (click)="cancelStatusUpdate(dataset)"
+                  class="px-3 py-1 bg-white/10 text-gray-300 rounded-lg text-sm hover:bg-white/20 transition-all duration-300">
+                  Cancel
+                </button>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+    } @empty {
+    <div class="text-center py-12 text-gray-400">
+      No datasets found with current filters
+    </div>
+    }
+  </div>
+  }
+</div>

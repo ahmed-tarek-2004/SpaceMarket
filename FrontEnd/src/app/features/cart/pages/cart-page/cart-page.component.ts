@@ -1,11 +1,12 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { CartItem } from '../../interfaces/cart-item';
+import { CartItemResponse } from '../../interfaces/cart-item-response';
 import { CartFacadeService } from '../../services/cart-facade.service';
 import { CartItemComponent } from '../../components/cart-item/cart-item.component';
 import { ROUTES } from '../../../../shared/config/constants';
+import { CartResponse } from '../../interfaces/cart-response';
 
 @Component({
   selector: 'app-cart-page',
@@ -14,24 +15,23 @@ import { ROUTES } from '../../../../shared/config/constants';
   styleUrls: ['./cart-page.component.scss'],
 })
 export class CartPageComponent implements OnInit {
-  cartItems: CartItem[] = [];
+  cart: CartResponse | null = null;
 
   readonly ROUTES = ROUTES;
 
-  private destroyRef = inject(DestroyRef);
-
-  constructor(private facadeCart: CartFacadeService) {}
+  constructor(
+    private facadeCart: CartFacadeService,
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    this.facadeCart.cartState$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((items) => {
-      this.cartItems = items ?? [];
+    this.facadeCart.cartState$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((cart) => {
+      this.cart = cart;
+      this.cdr.detectChanges();
     });
 
     this.facadeCart.loadCart();
-  }
-
-  onQuantityChange({ cartItemId, quantity }: { cartItemId: string; quantity: number }): void {
-    this.facadeCart.changeQuantity(cartItemId, quantity);
   }
 
   onRemoveItem(cartItemId: string): void {
@@ -44,20 +44,15 @@ export class CartPageComponent implements OnInit {
     }
   }
 
-  get totalItems(): number {
-    return this.cartItems.reduce((acc, item) => acc + item.quantity, 0);
-  }
-  
-  get totalPrice(): number {
-    return this.cartItems.reduce((acc, item) => acc + item.total, 0);
+  get cartItems(): CartItemResponse[] {
+    return this.cart?.items || [];
   }
 
-  checkout(): void {
-    console.log('Proceeding to checkout with items:', this.cartItems);
-    alert(
-      `Checkout not implemented yet. You have ${
-        this.totalItems
-      } services worth $${this.totalPrice.toFixed(2)}.`
-    );
+  get totalItems(): number {
+    return this.cart?.totalItems || 0;
+  }
+
+  get totalPrice(): number {
+    return (this.cart?.totalPrice || 0) + (this.cart?.totalCommission || 0);
   }
 }

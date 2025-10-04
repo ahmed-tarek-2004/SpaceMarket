@@ -10,9 +10,6 @@ public class OrderRequestValidator : AbstractValidator<OrderRequest>
         RuleFor(x => x.ClientId)
             .NotEmpty().WithMessage("ClientId is required.");
 
-        RuleFor(x => x.ProviderId)
-            .NotEmpty().WithMessage("ProviderId is required.");
-
         RuleFor(x => x.OrderItem)
             .NotNull().WithMessage("OrderItems are required.")
             .NotEmpty().WithMessage("Order must contain at least one item.");

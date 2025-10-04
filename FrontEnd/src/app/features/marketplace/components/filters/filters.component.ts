@@ -21,7 +21,6 @@ export class FiltersComponent implements OnInit {
   loadingCategories = false;
   categoriesError: string | null = null;
 
-  // model (only fields the backend accepts)
   categoryId?: string | null = undefined;
   minPrice?: number | null = null;
   maxPrice?: number | null = null;
@@ -34,7 +33,7 @@ export class FiltersComponent implements OnInit {
   ngOnInit(): void {
     this.loadCategories();
     // emit initial empty query to load first page if desired
-    this.apply(); // optional: comment out if you want marketplace page to trigger initial load
+    this.apply(); 
   }
 
   private loadCategories() {

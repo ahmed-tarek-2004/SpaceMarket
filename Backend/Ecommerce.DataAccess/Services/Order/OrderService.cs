@@ -1,4 +1,5 @@
 ﻿using Ecommerce.DataAccess.ApplicationContext;
+using Ecommerce.DataAccess.Services.Notifications;
 using Ecommerce.Entities.DTO.Order;
 using Ecommerce.Entities.DTO.Shared;
 using Ecommerce.Entities.Models;
@@ -6,18 +7,24 @@ using Ecommerce.Entities.Shared;
 using Ecommerce.Entities.Shared.Bases;
 using Ecommerce.Utilities.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Globalization;
 
 namespace Ecommerce.DataAccess.Services.Order;
 public class OrderService(
         ApplicationDbContext context,
         ILogger<OrderService> logger,
-        ResponseHandler responseHandler
+        ResponseHandler responseHandler,
+        INotificationService notificationService,
+        IConfiguration configurations
     ) : IOrderService
 {
     private readonly ApplicationDbContext _context = context;
     private readonly ILogger<OrderService> _logger = logger;
     private readonly ResponseHandler _responseHandler = responseHandler;
+    private readonly INotificationService _notificationService = notificationService;
+    private readonly IConfiguration _configurations = configurations;
 
     public async Task<Response<PaginatedList<OrderResponse>>> GetAllOrdersAsync(string userId, string role, OrderFilters<OrderSorting> filters, CancellationToken cancellationToken)
     {
@@ -78,6 +85,7 @@ public class OrderService(
             orders.Items.Count, userId, filters.PageNumber, filters.PageSize);
 
         return _responseHandler.Success(orders, "Orders fetched successfully");
+
 
 
     }
@@ -153,10 +161,11 @@ public class OrderService(
             {
                 Id = Guid.NewGuid(),
                 ServiceId = service.Id,
-                PriceSnapshot = service.Price,
+                PriceSnapshot = service.Price
             };
 
             providerId = service.ProviderId;
+
         }
         else if (request.OrderItem.Type == ItemType.Dataset)
         {
@@ -184,14 +193,18 @@ public class OrderService(
             return _responseHandler.BadRequest<OrderResponse>("Invalid item type.");
         }
 
-
+        if (!decimal.TryParse(_configurations["CommissionSettings:RatePercent"],
+            NumberStyles.Any, CultureInfo.InvariantCulture, out var commission))
+        {
+            commission = 10m;
+        }
         // Create order
         var order = new Entities.Models.Order
         {
             Id = Guid.NewGuid(),
             ClientId = clientId,
             Amount = orderItem!.PriceSnapshot,
-            Commission = (orderItem.PriceSnapshot) * 0.1m,
+            Commission = (orderItem.PriceSnapshot) * (commission / 100m),
             Status = OrderStatus.PendingPayment,
             CreatedAt = DateTime.UtcNow,
             Item = orderItem
@@ -245,6 +258,7 @@ public class OrderService(
             return _responseHandler.NotFound<OrderResponse>("Order not found");
         }
 
+
         if (order.Status != OrderStatus.PendingPayment)
         {
             _logger.LogWarning("Cannot update order {OrderId} because status is {Status}", request.OrderId, order.Status);
@@ -284,9 +298,16 @@ public class OrderService(
         order.Item.DatasetId = dataset?.Id;
         order.Item.PriceSnapshot = itemRequest.PriceSnapshot;
 
+
+        if (!decimal.TryParse(_configurations["CommissionSettings:RatePercent"],
+            NumberStyles.Any, CultureInfo.InvariantCulture, out var commission))
+        {
+            commission = 10m;
+        }
+
         // Update Order
         order.Amount = itemRequest.PriceSnapshot;
-        order.Commission = itemRequest.PriceSnapshot * 0.1m;
+        order.Commission = itemRequest.PriceSnapshot * (commission / 100m);
         order.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
@@ -363,6 +384,15 @@ public class OrderService(
         var oldStatus = order.Status;
         order.Status = newStatus;
         order.UpdatedAt = DateTime.UtcNow;
+
+
+        await _notificationService.NotifyUserAsync(
+       recipientId: order.ClientId,
+       senderId: userId,
+       title: "OrderStatus",
+       message: $"order #{order.Id} is {order.Status}"
+                );
+
 
         // Create audit log entry
         _context.AuditLogs.Add(new AuditLog

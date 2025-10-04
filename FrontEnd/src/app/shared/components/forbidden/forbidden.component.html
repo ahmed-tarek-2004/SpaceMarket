@@ -1,0 +1,62 @@
+<main class="flex-1">
+  <div class="min-h-screen bg-gradient-to-br from-[#07102a] via-[#0B1A3D] to-[#001135] nebula-pulse">
+    <!-- Hero -->
+    <div class="relative bg-gradient-to-br from-[#07102a] via-[#0B1A3D] to-[#001135] py-16 md:py-20 overflow-hidden">
+      <div class="star-field absolute inset-0">
+        <div class="star star-twinkle"></div>
+        <div class="star star-twinkle"></div>
+        <div class="star star-twinkle"></div>
+        <div class="star star-twinkle"></div>
+      </div>
+
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center max-w-4xl mx-auto">
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white font-['Exo_2'] mb-4 cosmic-glow">
+            Access Denied
+          </h1>
+          <p class="text-xl text-gray-300 mb-6 leading-relaxed">
+            You don't have permission to view this page.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
+      <div class="flex justify-center">
+        <div class="w-full max-w-3xl">
+          <div class="bg-white/5 backdrop-blur-md rounded-2xl border border-[#00A8FF]/20 p-6 cosmic-glow-hover">
+            <div class="flex items-start gap-6">
+              <div class="flex-shrink-0">
+                <div
+                  class="w-16 h-16 rounded-full bg-gradient-to-r from-[#FF6B6B] to-[#FF8E53] flex items-center justify-center shadow-lg">
+                  <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+                      d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+
+              <div class="flex-1">
+                <h2 class="text-2xl font-semibold text-white mb-2">Access Denied</h2>
+                <p class="text-sm text-gray-300 mb-4">
+                  You don't have permission to access this area.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-3">
+                  <button (click)="goToMarketplace()"
+                    class="inline-flex items-center justify-center gap-2 rounded-xl text-sm font-medium h-12 px-6 bg-gradient-to-r from-[#00A8FF] to-[#0077FF] text-white button-pulse transition-all duration-300">
+                    Back to Marketplace
+                  </button>
+
+                  <a class="inline-flex items-center gap-2 rounded-xl text-sm font-medium h-12 px-6 text-gray-300 hover:text-white ml-auto"
+                    href="mailto:support@example.com?subject=Access%20Request">Contact Support</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

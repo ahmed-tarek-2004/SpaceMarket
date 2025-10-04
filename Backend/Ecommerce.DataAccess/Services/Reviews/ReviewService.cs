@@ -1,11 +1,13 @@
-﻿using System;
-using Ecommerce.DataAccess.ApplicationContext;
+﻿using Ecommerce.DataAccess.ApplicationContext;
+using Ecommerce.DataAccess.Services.Notifications;
 using Ecommerce.DataAccess.Services.Reviews;
 using Ecommerce.Entities.DTO.Reviews;
 using Ecommerce.Entities.Models;
+using Ecommerce.Entities.Models.Auth.Users;
 using Ecommerce.Entities.Shared.Bases;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace Ecommerce.Services.Reviews
 {
@@ -14,23 +16,37 @@ namespace Ecommerce.Services.Reviews
         private readonly ApplicationDbContext _db;
         private readonly ILogger<ReviewService> _logger;
         private readonly ResponseHandler _responseHandler;
-
-        public ReviewService(ApplicationDbContext db, ILogger<ReviewService> logger, ResponseHandler responseHandler)
+        private readonly INotificationService _notificationService;
+        public ReviewService(ApplicationDbContext db, ILogger<ReviewService> logger, ResponseHandler responseHandler, INotificationService notificationService)
         {
             _db = db;
             _logger = logger;
             _responseHandler = responseHandler;
+            _notificationService = notificationService;
         }
 
         public async Task<Response<ReviewResponseDto>> CreateAsync(CreateReviewRequest request, string clientId)
         {
             try
             {
+                var service = await _db.Services.FirstOrDefaultAsync(s => s.Id.ToString() == request.ServiceId);
+                if (service == null)
+                {
+                    return _responseHandler.BadRequest<ReviewResponseDto>($"Service Id #{request.ServiceId} not found ");
+                }
+
+                var provider = await _db.ServiceProviders.FirstOrDefaultAsync(p => p.Id.ToString() == request.ProviderId);
+                if (provider == null)
+                {
+                    return _responseHandler.BadRequest<ReviewResponseDto>($"Provider Id #{request.ProviderId} not found ");
+                }
+
+
                 var review = new Review
                 {
                     Id = Guid.NewGuid(),
-                    ServiceId = request.ServiceId,
-                    ClientId =clientId,
+                    ServiceId = Guid.Parse(request.ServiceId),
+                    ClientId = clientId,
                     ProviderId = request.ProviderId,
                     Rating = request.Rating,
                     Text = request.Text,
@@ -39,6 +55,14 @@ namespace Ecommerce.Services.Reviews
 
                 await _db.Reviews.AddAsync(review);
                 await _db.SaveChangesAsync();
+
+
+                await _notificationService.NotifyUserAsync(
+                                           recipientId: clientId,
+                                           senderId: null,
+                                           title: "Review Updated",
+                                           message: "Your Review Has Been Added"
+                                        );
 
                 var dto = await ProjectToDto(review.Id);
                 return _responseHandler.Created(dto, "Review created successfully");
@@ -54,7 +78,7 @@ namespace Ecommerce.Services.Reviews
         {
             try
             {
-                var review = await _db.Reviews.FirstOrDefaultAsync(r => r.Id == request.Id);
+                var review = await _db.Reviews.FirstOrDefaultAsync(r => r.Id.ToString() == request.Id);
                 if (review == null)
                     return _responseHandler.NotFound<ReviewResponseDto>("Review not found");
 
@@ -63,6 +87,15 @@ namespace Ecommerce.Services.Reviews
                 review.UpdatedAt = DateTime.UtcNow;
 
                 await _db.SaveChangesAsync();
+
+                await _notificationService.NotifyUserAsync(
+                                           recipientId: review.ClientId,
+                                           senderId: null,
+                                           title: "Review Update",
+                                           message: "Your Review Has Been Updated"
+                                        );
+
+
 
                 var dto = await ProjectToDto(review.Id);
                 return _responseHandler.Success(dto, "Review updated successfully");
@@ -116,6 +149,10 @@ namespace Ecommerce.Services.Reviews
                     ProviderReply = r.Response != null ? r.Response.Text : null
                 }).ToListAsync();
 
+            if (reviews.Count == 0)
+            {
+                return _responseHandler.BadRequest<List<ReviewResponseDto>>($"Review With Id #{serviceId} Not Found");
+            }
             return _responseHandler.Success(reviews, "Fetched reviews successfully");
         }
 
@@ -151,8 +188,8 @@ namespace Ecommerce.Services.Reviews
                 .Include(r => r.Response)
                 .AsQueryable();
 
-            if (filter.ServiceId.HasValue)
-                query = query.Where(r => r.ServiceId == filter.ServiceId);
+            if (!string.IsNullOrEmpty(filter.ServiceId))
+                query = query.Where(r => r.ServiceId.ToString() == filter.ServiceId);
 
             if (!string.IsNullOrEmpty(filter.ProviderId))
                 query = query.Where(r => r.Service.ProviderId == filter.ProviderId);
@@ -182,9 +219,9 @@ namespace Ecommerce.Services.Reviews
             try
             {
                 var review = await _db.Reviews
-                    .Where(r=> !r.IsHidden)
+                    .Where(r => !r.IsHidden)
                     .Include(r => r.Service)
-                    .FirstOrDefaultAsync(r => r.Id == request.ReviewId && r.Service.ProviderId == providerId);
+                    .FirstOrDefaultAsync(r => r.Id.ToString() == request.ReviewId && r.Service.ProviderId == providerId);
 
                 if (review == null)
                     return _responseHandler.NotFound<ReviewResponseDto>("Review not found");

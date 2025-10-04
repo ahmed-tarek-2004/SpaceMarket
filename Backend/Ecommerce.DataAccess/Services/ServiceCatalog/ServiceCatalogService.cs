@@ -10,6 +10,7 @@ using Ecommerce.Utilities.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Data;
 using System.Threading;
 
 namespace Ecommerce.DataAccess.Services.ServiceCatalog
@@ -45,11 +46,15 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                 {
                     uploadedUrl = await _imageUploadService.UploadAsync(request.Image);
                 }
-
+                var provider = await _context.ServiceProviders.FirstOrDefaultAsync(b => b.Id == providerId);
+                if (provider == null)
+                {
+                    return _responseHandler.BadRequest<ServiceResponse>($"Provider with Id :{providerId} >>Not Found<<");
+                }
                 var service = new Service
                 {
                     Id = Guid.NewGuid(),
-                    ProviderId = providerId,
+                    Provider=provider,
                     Title = request.Title,
                     Description = request.Description,
                     CategoryId = request.CategoryId,
@@ -74,6 +79,7 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     CategoryName = category?.Name,
                     Price = service.Price,
                     ImagesUrl = service.ImagesUrl,
+                    WebsiteUrl = service.Provider.WebsiteUrl,
                     Status = service.Status.ToString(),
                     CreatedAt = service.CreatedAt
                 };
@@ -93,6 +99,7 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
             {
                 var service = await _context.Services
                     .Include(s => s.Category)
+                    .Include(s=>s.Provider)
                     .FirstOrDefaultAsync(s => s.Id == request.Id && s.ProviderId == providerId && !s.IsDeleted);
 
                 if (service == null)
@@ -136,6 +143,7 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     CategoryName = category?.Name,
                     Price = service.Price,
                     ImagesUrl = service.ImagesUrl,
+                    WebsiteUrl=service.Provider.WebsiteUrl,
                     Status = service.Status.ToString(),
                     CreatedAt = service.CreatedAt,
                     UpdatedAt = service.UpdatedAt
@@ -192,6 +200,7 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                         CategoryName = s.Category.Name,
                         Price = s.Price,
                         ImagesUrl = s.ImagesUrl,
+                        WebsiteUrl=s.Provider.WebsiteUrl,
                         Status = s.Status.ToString(),
                         CreatedAt = s.CreatedAt,
                         UpdatedAt = s.UpdatedAt
@@ -274,7 +283,12 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     query = query.Where(s => s.ProviderId == filter.ProviderId);
 
                 if (!string.IsNullOrEmpty(filter.Status))
-                    query = query.Where(s => s.Status.ToString() == filter.Status);
+                {
+                    if (Enum.TryParse<ServiceStatus>(filter.Status, true, out var parsedStatus))
+                    {
+                        query = query.Where(s => s.Status == parsedStatus);
+                    }
+                }
 
                 var services = await query
                     .OrderByDescending(s => s.CreatedAt)
@@ -282,12 +296,14 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     {
                         Id = s.Id,
                         Title = s.Title,
+                        Description = s.Description,
                         ProviderId = s.ProviderId,
                         ProviderName = s.Provider.CompanyName,
                         ProviderEmail = s.Provider.User.Email,
                         CategoryName = s.Category.Name,
                         Price = s.Price,
                         Status = s.Status.ToString(),
+                        ImagesUrl = s.ImagesUrl,
                         CreatedAt = s.CreatedAt
                     })
                     .ToListAsync();
@@ -406,7 +422,8 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                         ProviderName = s.Provider.CompanyName,
                         CategoryName = s.Category.Name,
                         Price = s.Price,
-                        ImagesUrl = s.ImagesUrl
+                        ImagesUrl = s.ImagesUrl,
+                        WebsiteUrl=s.Provider.WebsiteUrl
                     })
                     .AsQueryable();
 
@@ -430,7 +447,7 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     .Include(s => s.Provider)
                     //.ThenInclude(p => p.User)
                     .AsNoTracking()
-                   .FirstOrDefaultAsync(s => s.Id == serviceId && s.Status == ServiceStatus.Active && !s.IsDeleted);
+                   .FirstOrDefaultAsync(s => s.Id == serviceId /*&& s.Status == ServiceStatus.Active*/ && !s.IsDeleted);
                 if (service == null)
                 {
                     _logger.LogWarning("Service Not Found ");
@@ -449,6 +466,7 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     Status = service.Status.ToString(),
                     CreatedAt = service.CreatedAt,
                     UpdatedAt = service.UpdatedAt,
+                    WebsiteUrl = service.Provider.WebsiteUrl
                 };
 
                 return _responseHandler.Success(response, $"Services {service.Id} fetched successfully.");
@@ -465,8 +483,12 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
         // داخل ServiceCatalogService
         public async Task<Response<DatasetResponse>> CreateDatasetAsync(string providerId, CreateDatasetRequest request)
         {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
+                var category = await _context.ServiceCategories.FirstOrDefaultAsync(c => c.Id == request.CategoryId);
+                if (category == null) return _responseHandler.NotFound<DatasetResponse>("Invalid Category Id");
+
                 string? fileUrl = null;
                 string? thumbnailUrl = null;
 
@@ -494,6 +516,16 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                 await _context.Datasets.AddAsync(dataset);
                 await _context.SaveChangesAsync();
 
+                dataset = await _context.Datasets
+                    .Include(d => d.Provider)
+                    .FirstOrDefaultAsync(d => d.Id == dataset.Id);
+
+                if (dataset == null)
+                {
+                    await transaction.RollbackAsync();
+                    return _responseHandler.NotFound<DatasetResponse>("Dataset could not be retrieved after creation.");
+                }
+
                 var responseDto = new DatasetResponse
                 {
                     Id = dataset.Id,
@@ -505,39 +537,51 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     ThumbnailUrl = dataset.ThumbnailUrl,
                     ApiEndpoint = dataset.ApiEndpoint,
                     ProviderId = dataset.ProviderId,
-                    ProviderName = dataset.Provider.CompanyName,
+                    ProviderName = dataset.Provider?.CompanyName ?? "Unknown",
                     Status = dataset.Status.ToString(),
                     CreatedAt = dataset.CreatedAt
                 };
 
+                await transaction.CommitAsync();
                 return _responseHandler.Created(responseDto, "Dataset created successfully. Pending admin approval.");
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
                 _logger.LogError(ex, "Error creating dataset for Provider: {ProviderId}", providerId);
                 return _responseHandler.ServerError<DatasetResponse>("An error occurred while creating the dataset.");
             }
         }
 
+
         public async Task<Response<DatasetResponse>> UpdateDatasetAsync(string providerId, UpdateDatasetRequest request)
         {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 var dataset = await _context.Datasets
                     .Include(d => d.Category)
+                    .Include(d => d.Provider)
                     .FirstOrDefaultAsync(d => d.Id == request.Id && d.ProviderId == providerId && !d.IsDeleted);
 
                 if (dataset == null)
                     return _responseHandler.NotFound<DatasetResponse>("Dataset not found.");
+
+                if (request.CategoryId.HasValue)
+                {
+                    var category = await _context.ServiceCategories.FirstOrDefaultAsync(c => c.Id == request.CategoryId);
+                    if (category == null) return _responseHandler.NotFound<DatasetResponse>("Invalid Category Id");
+                    else dataset.CategoryId = request.CategoryId.Value;
+                }
+
+                if (dataset.Status == ServiceStatus.PendingApproval)
+                    return _responseHandler.BadRequest<DatasetResponse>("Dataset is still pending you can update it when it is reviwed By the platform first.");
 
                 if (!string.IsNullOrWhiteSpace(request.Title))
                     dataset.Title = request.Title;
 
                 if (!string.IsNullOrWhiteSpace(request.Description))
                     dataset.Description = request.Description;
-
-                if (request.CategoryId.HasValue)
-                    dataset.CategoryId = request.CategoryId.Value;
 
                 if (request.Price.HasValue)
                     dataset.Price = request.Price.Value;
@@ -570,11 +614,12 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     CreatedAt = dataset.CreatedAt,
                     UpdatedAt = dataset.UpdatedAt
                 };
-
+                await transaction.CommitAsync();
                 return _responseHandler.Success(response, "Dataset updated successfully.");
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
                 _logger.LogError(ex, "Error updating dataset {DatasetId} for Provider {ProviderId}", request.Id, providerId);
                 return _responseHandler.ServerError<DatasetResponse>("An error occurred while updating the dataset.");
             }
@@ -619,6 +664,7 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                         Title = d.Title,
                         Description = d.Description,
                         CategoryId = d.CategoryId,
+                        CategoryName = d.Category != null ? d.Category.Name : null,
                         Price = d.Price,
                         FileUrl = d.FileUrl,
                         ThumbnailUrl = d.ThumbnailUrl,
@@ -657,7 +703,12 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     query = query.Where(d => d.ProviderId == filter.ProviderId);
 
                 if (!string.IsNullOrEmpty(filter.Status))
-                    query = query.Where(d => d.Status.ToString() == filter.Status);
+                {
+                    if (Enum.TryParse<ServiceStatus>(filter.Status, true, out var parsedStatus))
+                    {
+                        query = query.Where(s => s.Status == parsedStatus);
+                    }
+                }
 
                 var datasets = await query
                     .OrderByDescending(d => d.CreatedAt)
@@ -665,12 +716,14 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     {
                         Id = d.Id,
                         Title = d.Title,
+                        Description = d.Description,
                         ProviderId = d.ProviderId,
                         ProviderName = d.Provider.CompanyName,
                         ProviderEmail = d.Provider.User.Email,
                         CategoryName = d.Category.Name,
                         Price = d.Price,
                         Status = d.Status.ToString(),
+                        ThumbnailUrl = d.ThumbnailUrl,
                         CreatedAt = d.CreatedAt
                     })
                     .ToListAsync();
@@ -751,7 +804,8 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                         Description = d.Description,
                         ProviderName = d.Provider.CompanyName,
                         Price = d.Price,
-                        ThumbnailUrl = d.ThumbnailUrl
+                        ThumbnailUrl = d.ThumbnailUrl,
+                        CategoryName = d.Category != null ? d.Category.Name : null
                     });
 
                 var paginated = await PaginatedList<DatasetFilterResponse>.CreateAsync(query, filter.PageNumber, filter.PageSize);
@@ -784,10 +838,11 @@ namespace Ecommerce.DataAccess.Services.ServiceCatalog
                     Title = dataset.Title,
                     Description = dataset.Description,
                     CategoryId = dataset.CategoryId,
+                    CategoryName = dataset.Category != null ? dataset.Category.Name : null,
                     Price = dataset.Price,
                     FileUrl = dataset.FileUrl,
                     ThumbnailUrl = dataset.ThumbnailUrl,
-                    ApiEndpoint = dataset.ApiEndpoint,
+                    //ApiEndpoint = dataset.ApiEndpoint,
                     ProviderId = dataset.ProviderId,
                     ProviderName = dataset.Provider.CompanyName,
                     Status = dataset.Status.ToString(),

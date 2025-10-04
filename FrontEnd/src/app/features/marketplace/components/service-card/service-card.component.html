@@ -1,4 +1,4 @@
-<div
+<div (click)="viewDetails()"
   class="rounded-2xl border text-card-foreground shadow-2xl group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md border-[#00A8FF]/20 hover:border-[#00A8FF]/40 hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] overflow-hidden cosmic-glow-hover h-full flex flex-col">
   <div class="service-card-content flex-1 flex flex-col">
     <!-- Image Section -->
@@ -44,14 +44,13 @@
       <!-- Price -->
       <div class="mb-4 flex-shrink-0">
         <span class="text-2xl font-bold text-[#00A8FF]"> ${{ service.price ?? 0 | number }} </span>
-        <!-- no priceUnit because backend doesn't have it; add when backend provides -->
       </div>
     </div>
 
     <!-- Action Button -->
     <div class="flex items-center p-6 pt-0 flex-shrink-0">
       <a class="w-full">
-        <button
+        <button (click)="viewDetails()"
           class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium h-12 px-4 py-2 w-full bg-gradient-to-r from-[#00A8FF] to-[#0077FF] hover:from-[#00A8FF]/90 hover:to-[#0077FF]/90 text-white button-pulse group-hover:scale-105 transition-all duration-300">
           View Details
           <svg class="lucide lucide-arrow-right ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" fill="none"

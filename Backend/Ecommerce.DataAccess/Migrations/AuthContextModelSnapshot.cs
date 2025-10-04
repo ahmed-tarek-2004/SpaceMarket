@@ -326,8 +326,26 @@ namespace Ecommerce.DataAccess.Migrations
                     b.Property<double>("ClosestDistanceKm")
                         .HasColumnType("float");
 
+                    b.Property<double>("DebrisAltitudeKm")
+                        .HasColumnType("float");
+
                     b.Property<Guid>("DebrisId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("DebrisLatitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("DebrisLongitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("SatAltitudeKm")
+                        .HasColumnType("float");
+
+                    b.Property<double>("SatLatitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("SatLongitude")
+                        .HasColumnType("float");
 
                     b.Property<Guid>("SatelliteId")
                         .HasColumnType("uniqueidentifier");
@@ -368,147 +386,6 @@ namespace Ecommerce.DataAccess.Migrations
                     b.ToTable("CommissionSettings");
                 });
 
-            modelBuilder.Entity("Ecommerce.Entities.Models.ComplianceMessage", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AttachmentUrl")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("SenderId")
-                        .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<Guid>("TicketId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SenderId");
-
-                    b.HasIndex("TicketId");
-
-                    b.ToTable("ComplianceMessages");
-                });
-
-            modelBuilder.Entity("Ecommerce.Entities.Models.ComplianceService", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("CertificationsUrl")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("ProviderId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProviderId");
-
-                    b.ToTable("ComplianceServices");
-                });
-
-            modelBuilder.Entity("Ecommerce.Entities.Models.ComplianceTicket", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AttachmentsUrl")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("ClientId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<DateTime>("PreferredDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ProviderId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Topic")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("ProviderId");
-
-                    b.ToTable("ComplianceTickets");
-                });
-
             modelBuilder.Entity("Ecommerce.Entities.Models.Dataset", b =>
                 {
                     b.Property<Guid>("Id")
@@ -543,11 +420,6 @@ namespace Ecommerce.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
-
-                    b.Property<string>("MetadataJson")
-                        .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -589,9 +461,6 @@ namespace Ecommerce.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<double>("Altitude")
-                        .HasColumnType("float");
-
                     b.Property<DateTime>("LastFetchedAt")
                         .HasColumnType("datetime2");
 
@@ -602,15 +471,58 @@ namespace Ecommerce.DataAccess.Migrations
 
                     b.Property<string>("NoradId")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
-                    b.Property<double>("Velocity")
-                        .HasColumnType("float");
+                    b.Property<string>("TleLine1")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<string>("TleLine2")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("NoradId")
+                        .IsUnique();
+
                     b.ToTable("Debris");
+                });
+
+            modelBuilder.Entity("Ecommerce.Entities.Models.Notification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RecipientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SenderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Order", b =>
@@ -883,6 +795,42 @@ namespace Ecommerce.DataAccess.Migrations
                     b.HasIndex("ClientId");
 
                     b.ToTable("Satellites");
+                });
+
+            modelBuilder.Entity("Ecommerce.Entities.Models.SatelliteCatalog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LastSyncedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getutcdate()");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("NoradId")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("TleLine1")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("TleLine2")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SatellitesCatalog");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Service", b =>
@@ -1328,54 +1276,6 @@ namespace Ecommerce.DataAccess.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("Ecommerce.Entities.Models.ComplianceMessage", b =>
-                {
-                    b.HasOne("Ecommerce.Entities.Models.Auth.Identity.User", "Sender")
-                        .WithMany()
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Ecommerce.Entities.Models.ComplianceTicket", "Ticket")
-                        .WithMany("Messages")
-                        .HasForeignKey("TicketId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Sender");
-
-                    b.Navigation("Ticket");
-                });
-
-            modelBuilder.Entity("Ecommerce.Entities.Models.ComplianceService", b =>
-                {
-                    b.HasOne("Ecommerce.Entities.Models.Auth.Users.ServiceProvider", "Provider")
-                        .WithMany()
-                        .HasForeignKey("ProviderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Provider");
-                });
-
-            modelBuilder.Entity("Ecommerce.Entities.Models.ComplianceTicket", b =>
-                {
-                    b.HasOne("Ecommerce.Entities.Models.Auth.Users.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Ecommerce.Entities.Models.Auth.Users.ServiceProvider", "Provider")
-                        .WithMany()
-                        .HasForeignKey("ProviderId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Client");
-
-                    b.Navigation("Provider");
-                });
-
             modelBuilder.Entity("Ecommerce.Entities.Models.Dataset", b =>
                 {
                     b.HasOne("Ecommerce.Entities.Models.ServiceCategory", "Category")
@@ -1662,11 +1562,6 @@ namespace Ecommerce.DataAccess.Migrations
             modelBuilder.Entity("Ecommerce.Entities.Models.Cart", b =>
                 {
                     b.Navigation("CartItems");
-                });
-
-            modelBuilder.Entity("Ecommerce.Entities.Models.ComplianceTicket", b =>
-                {
-                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Order", b =>

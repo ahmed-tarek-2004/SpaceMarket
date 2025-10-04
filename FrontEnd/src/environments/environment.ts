@@ -14,16 +14,47 @@ export const environment = {
     refresh: '/Account/refresh-token',
   },
   service: {
-    createService: '/Service/create',
-    availaleService: '/Service/client/available-service',
+    createService: '/Service/create-service',
+    myServices: '/Service/my-services',
+    updateService: '/Service/update-service',
+    deleteService: '/Service/',
+    serviceMatrics: '/Service/metrics',
+    createDataset: '/Service/dataset/create',
+    myDatasets: '/Service/dataset/my-datasets',
+    updateDataset: '/Service/dataset/update',
+    deleteDataset: '/Service/dataset/',
+    availableService: '/Service/client/available-service',
+    availableDataset: '/Service/dataset/client/available',
+    serviceDetail: '/Service/client/service-detail/',
+    datasetDetails: '/Service/dataset/client/detail/',
+    adminServiceList: '/Service/admin/list',
+    adminUpdateServiceStatus: '/Service/admin/update-status',
+    adminDatasetList: '/Service/dataset/admin/list',
+    adminUpdateDatasetStatus: '/Service/dataset/admin/update-status',
   },
   serviceCategory: {
     getAllCategories: '/ServiceCategory',
   },
   cart: {
+    addToCart: '/Cart/add-to-cart',
     cartContent: '/Cart/Cart/cart-content',
     updateQuantity: '/Cart/update-quantity',
     removeItem: `/Cart/remove/`,
     clearCart: '/Cart/clear-cart',
+  },
+
+  payment: {
+    checkoutSession: '/Payment/checkout-session',
+    success: '/Payment/success',
+    cancel: '/Payment/cancel',
+  },
+  order: {
+    createOrder: '/Order',
+  },
+
+  notification: {
+    getAll: '/Notifications/user/notification',
+    markAsRead: (id: string) => `/Notifications/user/mark-read/${id}`,
+    getAllForAdmin: '/Notifications/admin/notification',
   },
 };

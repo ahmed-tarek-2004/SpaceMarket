@@ -20,13 +20,12 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
   private viewer!: Cesium.Viewer;
   private isViewerReady = false;
 
-  constructor() {} // ChangeDetectorRef مش محتاج هنا مع setTimeout
+  constructor() {} 
 
   ngAfterViewInit(): void {
     this.initCesiumViewer();
     this.isViewerReady = true;
     
-    // ✅ تجنب NG0100
     setTimeout(() => {
       this.drawAlerts();
     }, 0);

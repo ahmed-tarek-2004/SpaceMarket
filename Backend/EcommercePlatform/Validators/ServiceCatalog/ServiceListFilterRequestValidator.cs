@@ -9,9 +9,9 @@ namespace Ecommerce.API.Validators.ServiceCatalog
         public ServiceListFilterRequestValidator()
         {
             RuleFor(x => x.Status)
-                .NotEmpty().WithMessage("Status is required.")
-                .Must(status => Enum.TryParse<ServiceStatus>(status, true, out _))
+                .Must(status => string.IsNullOrEmpty(status) || Enum.TryParse<ServiceStatus>(status, true, out _))
                 .WithMessage("Invalid status value. Allowed: PendingApproval, Active, Suspended.");
+
         }
     }
 }

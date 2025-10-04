@@ -1,0 +1,331 @@
+<main class="flex-1">
+  <div class="min-h-screen bg-gradient-to-br from-[#07102a] via-[#0B1A3D] to-[#001135] nebula-pulse">
+    <!-- Hero Section -->
+    <div class="relative bg-gradient-to-br from-[#07102a] via-[#0B1A3D] to-[#001135] py-16 md:py-20 overflow-hidden">
+      <div class="star-field absolute inset-0">
+        <div class="star star-twinkle"></div>
+        <div class="star star-twinkle"></div>
+        <div class="star star-twinkle"></div>
+        <div class="star star-twinkle"></div>
+      </div>
+
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center max-w-4xl mx-auto">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white font-['Exo_2'] mb-6 cosmic-glow">
+          Create New Service
+        </h1>
+        <p class="text-xl text-gray-300 mb-8 leading-relaxed">
+          Add your space service to the LEO Marketplace and reach customers across the cosmos
+        </p>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+      <!-- Error -->
+      @if (error$ | async; as error) {
+      <div class="bg-red-500/20 border border-red-500/50 rounded-2xl p-6 mb-8">
+        <div class="flex items-center gap-3">
+          <svg class="h-5 w-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div class="text-red-200">{{ error }}</div>
+        </div>
+      </div>
+      }
+
+      <!-- Flex Row: Form + Preview -->
+      <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Form -->
+        <div class="lg:w-2/3">
+          <div class="flex gap-2 items-center mb-6">
+            <button (click)="setTab('createService')"
+              [class]="tab === 'createService' ? 'px-4 py-2 rounded-xl bg-gradient-to-r from-[#00A8FF] to-[#0077FF] text-white' : 'px-4 py-2 rounded-xl border border-[#00A8FF]/30 text-[#00A8FF] hover:bg-[#00A8FF]/10'">
+              Create Service
+            </button>
+            <button (click)="setTab('createDataset')"
+              [class]="tab === 'createDataset' ? 'px-4 py-2 rounded-xl bg-gradient-to-r from-[#00A8FF] to-[#0077FF] text-white' : 'px-4 py-2 rounded-xl border border-[#00A8FF]/30 text-[#00A8FF] hover:bg-[#00A8FF]/10'">
+              Create Dataset
+            </button>
+          </div>
+
+          @if (tab === 'createService') {
+          <app-create-service [categories]="categories"></app-create-service>
+          }
+          @if (tab === 'createDataset') {
+          <app-create-dataset [categories]="categories" (thumbnailPreviewChanged)="onThumbnailPreviewChanged($event)"
+            (formValuesChanged)="datasetFormValues.next($event)">></app-create-dataset>
+          }
+        </div>
+
+        <!-- Preview Card -->
+        <div class="lg:w-1/3">
+          <div class="sticky top-8">
+            <!-- Service Preview -->
+            @if (tab === 'createService') {
+            <div class="bg-white/5 backdrop-blur-md rounded-2xl border border-[#00A8FF]/20 p-6 cosmic-glow-hover mb-6">
+              <h3 class="text-white font-semibold text-lg mb-6 flex items-center gap-2">
+                <svg class="h-5 w-5 text-[#00A8FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                Service Preview
+              </h3>
+
+              <!-- Preview Card -->
+              <div
+                class="rounded-2xl border text-card-foreground shadow-2xl group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md border-[#00A8FF]/20 hover:border-[#00A8FF]/40 hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] overflow-hidden cosmic-glow-hover h-full flex flex-col">
+                <div class="service-card-content flex-1 flex flex-col">
+                  <!-- Image Preview -->
+                  <div class="relative overflow-hidden flex-shrink-0">
+                    @if (imagePreview) {
+                    <img [alt]="currentServiceFormValues.title || 'Service preview'"
+                      class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700"
+                      [src]="imagePreview" />
+                    } @else {
+                    <div
+                      class="w-full h-48 bg-gradient-to-br from-[#00A8FF]/20 to-[#0077FF]/20 flex items-center justify-center">
+                      <svg class="w-12 h-12 text-[#00A8FF]/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    }
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#0B1A3D]/80 to-transparent"></div>
+
+                    <!-- Category badge -->
+                    @if (selectedCategoryName) {
+                    <div
+                      class="inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold transition-colors absolute top-3 right-3 bg-[#00A8FF]/20 text-white backdrop-blur-md border-[#00A8FF]/30">
+                      {{ selectedCategoryName }}
+                    </div>
+                    }
+                  </div>
+
+                  <!-- Content Preview -->
+                  <div class="p-6 flex-1 flex flex-col">
+                    <!-- Provider -->
+                    <div class="flex items-center space-x-2 mb-3">
+                      <div
+                        class="w-6 h-6 bg-gradient-to-r from-[#00A8FF] to-[#0077FF] rounded-full flex items-center justify-center">
+                        <span class="text-white text-xs font-bold">{{ getProviderInitial() }}</span>
+                      </div>
+                      <span class="text-sm text-gray-300 font-medium">Your Service</span>
+                    </div>
+
+                    <!-- Title -->
+                    <h3
+                      class="text-lg font-semibold text-white mb-3 line-clamp-2 group-hover:text-[#00A8FF] transition-colors duration-300 flex-shrink-0">
+                      {{ currentServiceFormValues.title || 'Service Title' }}
+                    </h3>
+
+                    <!-- Description -->
+                    @if (currentServiceFormValues.description) {
+                    <p class="text-sm text-gray-300 mb-4 line-clamp-3 flex-1">
+                      {{ currentServiceFormValues.description }}
+                    </p>
+                    } @else {
+                    <p class="text-sm text-gray-400 mb-4 line-clamp-3 flex-1 italic">
+                      Service description will appear here
+                    </p>
+                    }
+
+                    <!-- Price -->
+                    <div class="mb-4 flex-shrink-0">
+                      <span class="text-2xl font-bold text-[#00A8FF]">
+                        ${{ (currentServiceFormValues.price || 0) | number:'1.2-2' }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Action Button -->
+                  <div class="flex items-center p-6 pt-0 flex-shrink-0">
+                    <button
+                      class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium h-12 px-4 py-2 w-full bg-gradient-to-r from-[#00A8FF] to-[#0077FF] hover:from-[#00A8FF]/90 hover:to-[#0077FF]/90 text-white button-pulse group-hover:scale-105 transition-all duration-300 opacity-50 cursor-default">
+                      View Details
+                      <svg class="lucide lucide-arrow-right ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M5 12h14m-7-7l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            }
+
+            <!-- Dataset Preview -->
+            @if (tab === 'createDataset') {
+            <div class="bg-white/5 backdrop-blur-md rounded-2xl border border-[#00A8FF]/20 p-6 cosmic-glow-hover mb-6">
+              <h3 class="text-white font-semibold text-lg mb-6 flex items-center gap-2">
+                <svg class="h-5 w-5 text-[#00A8FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Dataset Preview
+              </h3>
+
+              <!-- Preview Card -->
+              <div
+                class="rounded-2xl border text-card-foreground shadow-2xl group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md border-[#00A8FF]/20 hover:border-[#00A8FF]/40 hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] overflow-hidden cosmic-glow-hover h-full flex flex-col">
+                <div class="service-card-content flex-1 flex flex-col">
+                  <!-- Thumbnail Section - Updated to match service preview -->
+                  <div class="relative overflow-hidden flex-shrink-0">
+                    @if (datasetThumbnailPreview) {
+                    <!-- Thumbnail Image with hover effect -->
+                    <img [src]="datasetThumbnailPreview" alt="Dataset thumbnail"
+                      class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700">
+                    } @else {
+                    <!-- Default Dataset Icon Section - Updated to match service preview -->
+                    <div
+                      class="w-full h-48 bg-gradient-to-br from-[#00A8FF]/20 to-[#0077FF]/20 flex items-center justify-center">
+                      <svg class="w-12 h-12 text-[#00A8FF]/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                    }
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#0B1A3D]/80 to-transparent"></div>
+
+                    <!-- Category badge -->
+                    @if (currentDatasetFormValues.categoryName) {
+                    <div
+                      class="inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold transition-colors absolute top-3 right-3 bg-[#00A8FF]/20 text-white backdrop-blur-md border-[#00A8FF]/30">
+                      {{ currentDatasetFormValues.categoryName }}
+                    </div>
+                    }
+                  </div>
+
+                  <!-- Content Preview -->
+                  <div class="p-6 flex-1 flex flex-col">
+                    <!-- Provider -->
+                    <div class="flex items-center space-x-2 mb-3">
+                      <div
+                        class="w-6 h-6 bg-gradient-to-r from-[#00A8FF] to-[#0077FF] rounded-full flex items-center justify-center">
+                        <span class="text-white text-xs font-bold">{{ getProviderInitial() }}</span>
+                      </div>
+                      <span class="text-sm text-gray-300 font-medium">Your Dataset</span>
+                    </div>
+
+                    <!-- Title -->
+                    <h3
+                      class="text-lg font-semibold text-white mb-3 line-clamp-2 group-hover:text-[#00A8FF] transition-colors duration-300 flex-shrink-0">
+                      {{ currentDatasetFormValues.title || 'Dataset Title' }}
+                    </h3>
+
+                    <!-- Description -->
+                    @if (currentDatasetFormValues.description) {
+                    <p class="text-sm text-gray-300 mb-4 line-clamp-3 flex-1">
+                      {{ currentDatasetFormValues.description }}
+                    </p>
+                    } @else {
+                    <p class="text-sm text-gray-400 mb-4 line-clamp-3 flex-1 italic">
+                      Dataset description will appear here
+                    </p>
+                    }
+
+                    <!-- Price -->
+                    <div class="mb-4 flex-shrink-0">
+                      <span class="text-2xl font-bold text-[#00A8FF]">
+                        ${{ (currentDatasetFormValues.price || 0) | number:'1.2-2' }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Action Button - Updated to match service preview style but with dataset text -->
+                  <div class="flex items-center p-6 pt-0 flex-shrink-0">
+                    <button
+                      class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium h-12 px-4 py-2 w-full bg-gradient-to-r from-[#00A8FF] to-[#0077FF] hover:from-[#00A8FF]/90 hover:to-[#0077FF]/90 text-white button-pulse group-hover:scale-105 transition-all duration-300 opacity-50 cursor-default">
+                      View Details
+                      <svg class="lucide lucide-arrow-right ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M5 12h14m-7-7l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            }
+
+            <!-- Tips Section -->
+            <div class="bg-white/5 backdrop-blur-md rounded-2xl border border-[#00A8FF]/20 p-6">
+              <h4 class="text-white font-medium mb-3 flex items-center gap-2">
+                <svg class="h-4 w-4 text-[#00A8FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Tips for a great listing
+              </h4>
+              <ul class="text-sm text-gray-400 space-y-2">
+                @if (tab === 'createService') {
+                <li class="flex items-start gap-2">
+                  <svg class="h-4 w-4 text-[#00A8FF] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Use a clear, high-quality image
+                </li>
+                <li class="flex items-start gap-2">
+                  <svg class="h-4 w-4 text-[#00A8FF] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Write a detailed description
+                </li>
+                <li class="flex items-start gap-2">
+                  <svg class="h-4 w-4 text-[#00A8FF] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Choose the right category
+                </li>
+                <li class="flex items-start gap-2">
+                  <svg class="h-4 w-4 text-[#00A8FF] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Set a competitive price
+                </li>
+                } @else if (tab === 'createDataset') {
+                <li class="flex items-start gap-2">
+                  <svg class="h-4 w-4 text-[#00A8FF] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Use a descriptive title
+                </li>
+                <li class="flex items-start gap-2">
+                  <svg class="h-4 w-4 text-[#00A8FF] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Provide clear documentation
+                </li>
+                <li class="flex items-start gap-2">
+                  <svg class="h-4 w-4 text-[#00A8FF] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Choose relevant categories
+                </li>
+                <li class="flex items-start gap-2">
+                  <svg class="h-4 w-4 text-[#00A8FF] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Ensure data quality and format
+                </li>
+                }
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

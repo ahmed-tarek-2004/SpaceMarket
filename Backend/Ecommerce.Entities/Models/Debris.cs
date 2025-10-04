@@ -11,8 +11,10 @@ namespace Ecommerce.Entities.Models
         public Guid Id { get; set; }
         public string NoradId { get; set; }
         public string Name { get; set; }
-        public double Altitude { get; set; }
-        public double Velocity { get; set; }
-        public DateTime LastFetchedAt { get; set; }
+
+        public string TleLine1 { get; set; }
+        public string TleLine2 { get; set; }
+
+        public DateTime LastFetchedAt { get; set; } // when we last got the Tles from Celestrak/Space-Track
     }
 }

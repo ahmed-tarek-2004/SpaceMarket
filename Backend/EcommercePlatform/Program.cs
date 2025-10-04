@@ -1,16 +1,18 @@
+using System.Text.Json.Serialization;
 using Ecommerce.API.Extensions;
 using Ecommerce.DataAccess.ApplicationContext;
 using Ecommerce.DataAccess.Extensions;
+using Ecommerce.DataAccess.Hubs;
+using Ecommerce.DataAccess.Jobs;
 using Ecommerce.DataAccess.Seeder;
 using Ecommerce.Entities.Models.Auth.Identity;
 using Ecommerce.Entities.Shared.Bases;
 using Ecommerce.Utilities.Configurations;
-
+using Hangfire;
+using Hangfire.SqlServer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
-
 using StackExchange.Redis;
-using System.Text.Json.Serialization;
 
 namespace EcommercePlatform
 {
@@ -21,6 +23,25 @@ namespace EcommercePlatform
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
+
+            #region Hangfire configuration
+            builder.Services.AddHangfire(config =>
+                config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                      .UseSimpleAssemblyNameTypeSerializer()
+                      .UseRecommendedSerializerSettings()
+                      .UseSqlServerStorage(builder.Configuration.GetConnectionString("ProdCS"),
+                          new SqlServerStorageOptions
+                          {
+                              CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                              SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                              QueuePollInterval = TimeSpan.Zero,
+                              UseRecommendedIsolationLevel = true,
+                              DisableGlobalLocks = true
+                          }));
+
+            builder.Services.AddHangfireServer();
+            #endregion
+
 
             builder.Host.UseSerilogLogging();
 
@@ -42,6 +63,8 @@ namespace EcommercePlatform
             builder.Services.AddDatabase(builder.Configuration);
             builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
             builder.Services.AddEmailServices(builder.Configuration);
+            builder.Services.AddStripeConfiguration(builder.Configuration);
+            builder.Services.AddSignalR();
 
             // Enum to string converter
             builder.Services
@@ -50,21 +73,35 @@ namespace EcommercePlatform
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 
+
             builder.Services.AddFluentValidation();
 
             // Rate limiter for otp resend
             builder.Services.AddResendOtpRateLimiter();
 
             // Add CORS services
+            //builder.Services.AddCors(options =>
+            //{
+            //    options.AddPolicy("AllowAngularApp",
+            //        policy =>
+            //        {
+            //            policy.WithOrigins("http://localhost:4200")
+            //                  .AllowAnyHeader()
+            //                  .AllowAnyMethod()
+            //                  .AllowCredentials();
+            //        });
+            //});
+
+
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAngularApp",
                     policy =>
                     {
-                        policy.WithOrigins("http://localhost:4200")
-                              .AllowAnyHeader()
+                        policy.AllowAnyHeader()
                               .AllowAnyMethod()
-                              .AllowCredentials();
+                              .AllowCredentials()
+                              .SetIsOriginAllowed(_ => true); 
                     });
             });
 
@@ -109,6 +146,18 @@ namespace EcommercePlatform
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.MapHub<NotificationHub>("/hub/notifications");
+            app.UseHangfireDashboard("/hangfire");
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var recurringJobManager = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
+                recurringJobManager.AddOrUpdate<IDebrisAlertJob>(
+                    "debris-check-job",
+                    job => job.ExecuteAsync(),
+                    Cron.MinuteInterval(5)
+                );
+            }
 
             app.MapControllers();
 

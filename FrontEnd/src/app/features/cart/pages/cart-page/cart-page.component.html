@@ -2,6 +2,12 @@
   <div
     class="min-h-screen bg-gradient-to-br from-[#07102a] via-[#0B1A3D] to-[#001135] nebula-pulse"
   >
+    @if (cart === null) {
+    <!-- Loading Spinner -->
+    <div class="flex justify-center items-center h-screen">
+      <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#00A8FF]"></div>
+    </div>
+    } @else {
     <!-- Hero Section -->
     <div
       class="relative bg-gradient-to-br from-[#07102a] via-[#0B1A3D] to-[#001135] py-16 md:py-20 overflow-hidden"
@@ -169,22 +175,6 @@
               </div>
             </div>
 
-            <!-- Checkout Button -->
-            <button
-              (click)="checkout()"
-              class="w-full inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium h-14 px-6 bg-gradient-to-r from-[#00F5D4] to-[#00A8FF] hover:from-[#00F5D4]/90 hover:to-[#00A8FF]/90 text-black font-bold transition-all duration-300 hover:scale-105 mb-4"
-            >
-              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-              Proceed to Launch
-            </button>
-
             <!-- Security Note -->
             <div class="text-center">
               <p class="text-xs text-gray-400">
@@ -207,5 +197,6 @@
         }
       </div>
     </div>
+    }
   </div>
 </main>

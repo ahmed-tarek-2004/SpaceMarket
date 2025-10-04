@@ -61,6 +61,17 @@ namespace Ecommerce.DataAccess.Services.Auth
             if (!user.EmailConfirmed)
                 return _responseHandler.BadRequest<LoginResponse>("Email is not verified. Please verify your email first.");
 
+            //var role = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
+
+            //if (role == "ServiceProvider")
+            //{
+            //    var provider = _context.ServiceProviders.FirstOrDefault(p => p.Id == user.Id);
+            //    if (provider.Status != ServiceProviderStatus.Active)
+            //    {
+            //        return _responseHandler.BadRequest<LoginResponse>($"Request is {provider.Status} Wait untill Admin Response");
+            //    }
+            //}
+
             // If OTP is not provided, generate and send OTP
             if (string.IsNullOrEmpty(loginRequest.Otp))
             {

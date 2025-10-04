@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { TokenService } from './token.service';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { NotificationService } from './notification.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +13,7 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
   private tokenService = inject(TokenService);
+  private notificationService = inject(NotificationService);
 
   refreshToken(): Observable<{ accessToken: string; refreshToken: string }> {
     const refreshToken = this.tokenService.getRefreshToken();
@@ -22,6 +24,7 @@ export class AuthService {
   }
 
   logout(): void {
+    this.notificationService.stopConnection();
     this.tokenService.clearTokens();
     this.router.navigate(['/auth/sign-in']);
   }

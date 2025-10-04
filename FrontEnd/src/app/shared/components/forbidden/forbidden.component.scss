@@ -1,0 +1,174 @@
+:host {
+  display: block;
+}
+a {
+  text-decoration: none;
+}
+@media (max-width: 768px) {
+  .text-4xl {
+    font-size: 2rem;
+  }
+}
+.cosmic-glow-hover {
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 168, 255, 0.1), transparent);
+    transition: left 0.6s;
+    z-index: 1;
+  }
+
+  &:hover::before {
+    left: 100%;
+  }
+}
+
+.button-pulse:hover {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 168, 255, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(0, 168, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 168, 255, 0);
+  }
+}
+
+.service-card-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Star field animation */
+.star-field {
+  .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+
+    &.star-twinkle {
+      animation: twinkle 4s infinite;
+    }
+
+    &:nth-child(1) {
+      top: 20%;
+      left: 10%;
+      width: 2px;
+      height: 2px;
+      animation-delay: 0s;
+    }
+
+    &:nth-child(2) {
+      top: 60%;
+      left: 80%;
+      width: 3px;
+      height: 3px;
+      animation-delay: 1s;
+    }
+
+    &:nth-child(3) {
+      top: 40%;
+      left: 40%;
+      width: 2px;
+      height: 2px;
+      animation-delay: 2s;
+    }
+
+    &:nth-child(4) {
+      top: 80%;
+      left: 30%;
+      width: 3px;
+      height: 3px;
+      animation-delay: 3s;
+    }
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Form styling */
+input,
+textarea,
+select {
+  &::placeholder {
+    color: #9ca3af;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 2px rgba(0, 168, 255, 0.2);
+  }
+}
+
+/* Line clamp utilities */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .grid-cols-1 {
+    grid-template-columns: 1fr;
+  }
+
+  .p-6 {
+    padding: 1rem;
+  }
+
+  .text-4xl {
+    font-size: 2rem;
+  }
+
+  .text-xl {
+    font-size: 1.1rem;
+  }
+
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Sticky sidebar */
+.sticky {
+  position: sticky;
+}
+
+/* File upload area styling */
+.file-upload-area {
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: rgba(0, 168, 255, 0.5);
+    background: rgba(255, 255, 255, 0.08);
+  }
+}
