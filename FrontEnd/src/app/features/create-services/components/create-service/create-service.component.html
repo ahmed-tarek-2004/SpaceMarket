@@ -1,0 +1,174 @@
+<div class="bg-white/5 backdrop-blur-md rounded-2xl border border-[#00A8FF]/20 p-6 cosmic-glow-hover">
+  <form [formGroup]="createServiceForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    <!-- Title Field -->
+    <div>
+      <label for="title" class="block text-sm font-medium text-gray-300 mb-2">
+        Service Title *
+      </label>
+      <input id="title" type="text" formControlName="title"
+        class="w-full h-12 px-4 rounded-xl bg-white/5 border border-[#00A8FF]/30 text-white placeholder-gray-400 focus:outline-none focus:border-[#00A8FF] focus:ring-2 focus:ring-[#00A8FF]/20 transition-all duration-300 backdrop-blur-md"
+        placeholder="Enter service title" />
+      @if (createServiceForm.get('title')?.invalid && createServiceForm.get('title')?.touched) {
+      <p class="mt-1 text-sm text-red-400">
+        @if (createServiceForm.get('title')?.errors?.['required']) {
+        Title is required
+        }
+        @if (createServiceForm.get('title')?.errors?.['minlength']) {
+        Title must be at least 3 characters long
+        }
+      </p>
+      }
+    </div>
+
+    <!-- Description Field -->
+    <div>
+      <label for="description" class="block text-sm font-medium text-gray-300 mb-2">
+        Description *
+      </label>
+      <textarea id="description" formControlName="description" rows="4"
+        class="w-full px-4 py-3 rounded-xl bg-white/5 border border-[#00A8FF]/30 text-white placeholder-gray-400 focus:outline-none focus:border-[#00A8FF] focus:ring-2 focus:ring-[#00A8FF]/20 transition-all duration-300 backdrop-blur-md resize-vertical"
+        placeholder="Describe your service in detail"></textarea>
+      @if (createServiceForm.get('description')?.invalid && createServiceForm.get('description')?.touched)
+      {
+      <p class="mt-1 text-sm text-red-400">
+        @if (createServiceForm.get('description')?.errors?.['required']) {
+        Description is required
+        }
+        @if (createServiceForm.get('description')?.errors?.['minlength']) {
+        Description must be at least 10 characters long
+        }
+      </p>
+      }
+    </div>
+
+    <!-- Category and Price Row -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Category Field -->
+      <div>
+        <label for="categoryId" class="block text-sm font-medium text-gray-300 mb-2">
+          Category *
+        </label>
+        <div class="relative">
+          <select id="categoryId" formControlName="categoryId"
+            class="w-full h-12 px-4 pr-10 rounded-xl bg-[#0B1A3D] border border-[#00A8FF]/30 text-white focus:outline-none focus:border-[#00A8FF] focus:ring-2 focus:ring-[#00A8FF]/20 transition-all duration-300 backdrop-blur-md appearance-none cursor-pointer">
+            <option value="" disabled selected>Select a category</option>
+            @for (category of categories; track category.id) {
+            <option [value]="category.id">{{ category.name }}</option>
+            }
+          </select>
+          <!-- Custom dropdown arrow -->
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-[#00A8FF]">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </div>
+        @if (createServiceForm.get('categoryId')?.invalid && createServiceForm.get('categoryId')?.touched)
+        {
+        <p class="mt-1 text-sm text-red-400">Please select a category</p>
+        }
+      </div>
+
+      <!-- Price Field -->
+      <div>
+        <label for="price" class="block text-sm font-medium text-gray-300 mb-2">
+          Price ($) *
+        </label>
+        <input id="price" type="number" formControlName="price" step="0.01" min="0"
+          class="w-full h-12 px-4 rounded-xl bg-white/5 border border-[#00A8FF]/30 text-white placeholder-gray-400 focus:outline-none focus:border-[#00A8FF] focus:ring-2 focus:ring-[#00A8FF]/20 transition-all duration-300 backdrop-blur-md"
+          placeholder="0.00" />
+        @if (createServiceForm.get('price')?.invalid && createServiceForm.get('price')?.touched) {
+        <p class="mt-1 text-sm text-red-400">
+          @if (createServiceForm.get('price')?.errors?.['required']) {
+          Price is required
+          }
+          @if (createServiceForm.get('price')?.errors?.['min']) {
+          Price must be a positive number
+          }
+        </p>
+        }
+      </div>
+    </div>
+
+    <!-- Image Upload Field -->
+    <div>
+      <label for="image" class="block text-sm font-medium text-gray-300 mb-2">
+        Service Image *
+      </label>
+      <div class="flex items-center justify-center w-full">
+        <label for="image"
+          class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-300 backdrop-blur-md text-center"
+          [class]="fileError || (createServiceForm.get('image')?.invalid && createServiceForm.get('image')?.touched) ? 
+                   'border-red-500/50 bg-red-500/10 hover:bg-red-500/20' : 
+                   'border-[#00A8FF]/30 bg-white/5 hover:bg-white/10'">
+          <div class="flex flex-col items-center justify-center pt-5 pb-6">
+            <svg class="w-8 h-8 mb-4" [class]="fileError ? 'text-red-400' : 'text-[#00A8FF]'" aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+            </svg>
+            <p class="mb-2 text-sm" [class]="fileError ? 'text-red-400' : 'text-gray-400'">
+              <span class="font-semibold">Click to upload</span> or drag and drop
+            </p>
+            <p class="text-xs" [class]="fileError ? 'text-red-400' : 'text-gray-500'">
+              PNG, JPG, JPEG (MAX. 5MB)
+            </p>
+          </div>
+          <input id="image" type="file" (change)="onFileSelected($event)" class="hidden" accept="image/*" />
+        </label>
+      </div>
+
+      <!-- File selection success message -->
+      @if (selectedFile && !fileError) {
+      <div class="mt-2 flex items-center gap-2 text-sm text-[#00A8FF]">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        {{ selectedFile.name }}
+      </div>
+      }
+
+      <!-- File validation errors -->
+      @if (fileError) {
+      <div class="mt-2 flex items-center gap-2 text-sm text-red-400">
+        <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        {{ fileError }}
+      </div>
+      }
+
+      <!-- Required field error -->
+      @if (createServiceForm.get('image')?.errors?.['required'] && createServiceForm.get('image')?.touched &&
+      !fileError) {
+      <p class="mt-1 text-sm text-red-400">
+        Service image is required
+      </p>
+      }
+    </div>
+
+    <!-- Form Actions -->
+    <div class="flex flex-col sm:flex-row gap-4 pt-6">
+      <button type="submit" [disabled]="createServiceForm.invalid || (isLoading$ | async) || !selectedFile"
+        class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium h-12 px-6 py-2 bg-gradient-to-r from-[#00A8FF] to-[#0077FF] hover:from-[#00A8FF]/90 hover:to-[#0077FF]/90 text-white button-pulse transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+        @if (isLoading$ | async) {
+        <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+        Creating Service...
+        } @else {
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        </svg>
+        Create Service
+        }
+      </button>
+      <button type="button" (click)="onCancel()"
+        class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium h-12 px-6 py-2 border border-[#00A8FF]/30 text-[#00A8FF] hover:bg-[#00A8FF]/10 transition-all duration-300">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>
