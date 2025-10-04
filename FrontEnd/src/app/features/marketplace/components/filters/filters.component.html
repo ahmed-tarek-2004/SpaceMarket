@@ -1,0 +1,157 @@
+<div class="space-y-6 filter-scroll filters-container cosmic-glow-hover">
+  <!-- Category Section -->
+  <div class="space-y-3">
+    <label class="text-sm font-semibold text-[#00A8FF] mb-3 flex items-center gap-2">
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+      Service Category
+    </label>
+
+    @if (loadingCategories) {
+    <div class="flex items-center gap-3 text-gray-400">
+      <div
+        class="h-4 w-4 animate-spin rounded-full border-2 border-[#00A8FF] border-t-transparent"
+      ></div>
+      <span class="text-sm">Loading categories...</span>
+    </div>
+    } @else {
+    <div class="relative group">
+      <select
+        [(ngModel)]="categoryId"
+        class="w-full h-12 px-4 rounded-xl bg-white/5 border border-[#00A8FF]/30 text-white text-sm focus:outline-none focus:border-[#00A8FF] focus:ring-2 focus:ring-[#00A8FF]/20 transition-all duration-300 backdrop-blur-md appearance-none cursor-pointer"
+      >
+        <option [ngValue]="undefined" class="bg-[#0B1A3D] text-white">All Categories</option>
+        @for (c of categories; track c.id) {
+        <option [value]="c.id" class="bg-[#0B1A3D] text-white">{{ c.name }}</option>
+        }
+      </select>
+      <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+        <svg class="h-4 w-4 text-[#00A8FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7" />
+        </svg>
+      </div>
+    </div>
+
+    @if (categoriesError) {
+    <div class="flex items-center gap-2 text-xs text-red-400 mt-2">
+      <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+      {{ categoriesError }}
+    </div>
+    } }
+  </div>
+
+  <!-- Price Range Section -->
+  <div class="space-y-4">
+    <label class="text-sm font-semibold text-[#00A8FF] mb-3 flex items-center gap-2">
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
+        />
+      </svg>
+      Price Range ($)
+    </label>
+
+    <div class="flex gap-3 items-center">
+      <div class="relative flex-1">
+        <input
+          type="number"
+          [(ngModel)]="minPrice"
+          placeholder="Min"
+          class="w-full h-12 px-4 rounded-xl bg-white/5 border border-[#00A8FF]/30 text-white text-sm focus:outline-none focus:border-[#00A8FF] focus:ring-2 focus:ring-[#00A8FF]/20 transition-all duration-300 backdrop-blur-md"
+        />
+      </div>
+      <div class="text-gray-400">-</div>
+      <div class="relative flex-1">
+        <input
+          type="number"
+          [(ngModel)]="maxPrice"
+          placeholder="Max"
+          class="w-full h-12 px-4 rounded-xl bg-white/5 border border-[#00A8FF]/30 text-white text-sm focus:outline-none focus:border-[#00A8FF] focus:ring-2 focus:ring-[#00A8FF]/20 transition-all duration-300 backdrop-blur-md"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- Location Section -->
+  <div class="space-y-3">
+    <label class="text-sm font-semibold text-[#00A8FF] mb-3 flex items-center gap-2">
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+        />
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+        />
+      </svg>
+      Service Location
+    </label>
+
+    <div class="relative">
+      <input
+        type="text"
+        [(ngModel)]="location"
+        placeholder="Enter city, region, or leave empty for all"
+        class="w-full h-12 px-4 pr-10 rounded-xl bg-white/5 border border-[#00A8FF]/30 text-white text-sm focus:outline-none focus:border-[#00A8FF] focus:ring-2 focus:ring-[#00A8FF]/20 transition-all duration-300 backdrop-blur-md"
+      />
+    </div>
+  </div>
+
+  <!-- Paging Section -->
+  <div class="space-y-3">
+    <label class="block text-sm font-semibold text-[#00A8FF] mb-3">Results Display</label>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div class="space-y-2">
+        <label class="block text-xs text-gray-400">Page</label>
+        <input
+          type="number"
+          [(ngModel)]="pageNumber"
+          min="1"
+          class="w-full h-12 px-4 rounded-xl bg-white/5 border border-[#00A8FF]/30 text-white text-sm focus:outline-none focus:border-[#00A8FF] focus:ring-2 focus:ring-[#00A8FF]/20 transition-all duration-300 backdrop-blur-md"
+        />
+      </div>
+      <div class="space-y-2">
+        <label class="block text-xs text-gray-400">Page Size</label>
+        <input
+          type="number"
+          [(ngModel)]="pageSize"
+          min="1"
+          class="w-full h-12 px-4 rounded-xl bg-white/5 border border-[#00A8FF]/30 text-white text-sm focus:outline-none focus:border-[#00A8FF] focus:ring-2 focus:ring-[#00A8FF]/20 transition-all duration-300 backdrop-blur-md"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="flex gap-3 pt-4">
+    <button
+      (click)="reset()"
+      class="flex-1 h-12 rounded-xl border border-[#00A8FF]/30 text-[#00A8FF] font-medium hover:bg-[#00A8FF]/10 hover:border-[#00A8FF]/50 transition-all duration-300 backdrop-blur-md galaxy-hover"
+    >
+      Reset
+    </button>
+    <button
+      (click)="apply()"
+      class="flex-1 h-12 rounded-xl bg-gradient-to-r from-[#00A8FF] to-[#0077FF] text-white font-medium hover:from-[#00A8FF]/90 hover:to-[#0077FF]/90 hover:scale-[1.02] transition-all duration-300 button-pulse backdrop-blur-md"
+    >
+      Apply Filters
+    </button>
+  </div>
+</div>
