@@ -1,0 +1,108 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+
+  thead {
+    background: rgba(255, 255, 255, 0.08);
+
+    th {
+      padding: 1rem;
+      text-align: left;
+      color: #e5e7eb;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      td {
+        padding: 1rem;
+        color: #f3f4f6;
+        font-size: 0.9rem;
+        vertical-align: middle;
+
+        img {
+          border-radius: 8px;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        input[type="number"] {
+          width: 70px;
+          padding: 0.5rem;
+          border-radius: 6px;
+          border: none;
+          background: rgba(255, 255, 255, 0.1);
+          color: #fff;
+          text-align: center;
+
+          &:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 2px #6366f1;
+          }
+        }
+
+        button {
+          background: linear-gradient(90deg, #ef4444, #b91c1c);
+          border: none;
+          padding: 0.5rem 1rem;
+          border-radius: 6px;
+          font-size: 0.85rem;
+          font-weight: 500;
+          color: #fff;
+          cursor: pointer;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background: linear-gradient(90deg, #dc2626, #991b1b);
+            transform: translateY(-2px);
+          }
+        }
+      }
+    }
+  }
+}
+
+.cart-summary {
+  margin-top: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1rem;
+  border-radius: 12px;
+  text-align: right;
+  color: #e5e7eb;
+  font-size: 0.95rem;
+
+  p {
+    margin: 0.4rem 0;
+  }
+
+  button {
+    margin-top: 1rem;
+    background: linear-gradient(90deg, #6366f1, #4338ca);
+    border: none;
+    padding: 0.7rem 1.2rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: linear-gradient(90deg, #4f46e5, #3730a3);
+      transform: translateY(-2px);
+    }
+  }
+}

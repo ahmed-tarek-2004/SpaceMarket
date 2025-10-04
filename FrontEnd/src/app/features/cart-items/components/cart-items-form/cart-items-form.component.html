@@ -1,0 +1,48 @@
+<form [formGroup]="cartForm" (ngSubmit)="onSubmit()">
+  <!-- Service Id -->
+  <div class="form-group">
+    <label for="serviceId">Service ID</label>
+    <input
+      type="text"
+      id="serviceId"
+      formControlName="serviceId"
+      placeholder="Enter Service ID"
+    />
+    <div class="error" *ngIf="cartForm.get('serviceId')?.invalid && (cartForm.get('serviceId')?.dirty || cartForm.get('serviceId')?.touched)">
+      {{ getError('serviceId') }}
+    </div>
+  </div>
+
+  <!-- DataSet Id -->
+  <div class="form-group">
+    <label for="dataSetId">DataSet ID</label>
+    <input
+      type="text"
+      id="dataSetId"
+      formControlName="dataSetId"
+      placeholder="Enter DataSet ID"
+    />
+    <div class="error" *ngIf="cartForm.get('dataSetId')?.invalid && (cartForm.get('dataSetId')?.dirty || cartForm.get('dataSetId')?.touched)">
+      {{ getError('dataSetId') }}
+    </div>
+  </div>
+
+  <!-- Quantity -->
+  <div class="form-group">
+    <label for="quantity">Quantity</label>
+    <input
+      type="number"
+      id="quantity"
+      formControlName="quantity"
+      placeholder="1"
+    />
+    <div class="error" *ngIf="cartForm.get('quantity')?.invalid && (cartForm.get('quantity')?.dirty || cartForm.get('quantity')?.touched)">
+      {{ getError('quantity') }}
+    </div>
+  </div>
+
+  <!-- Submit Button -->
+  <button type="submit" [disabled]="cartForm.invalid || isSubmitting">
+    {{ isSubmitting ? 'Adding...' : 'Add To Cart' }}
+  </button>
+</form>
