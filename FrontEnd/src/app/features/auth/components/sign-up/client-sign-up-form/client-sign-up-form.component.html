@@ -1,0 +1,201 @@
+<form
+  [formGroup]="clientForm"
+  (ngSubmit)="onClientSubmit()"
+  class="form-container space-y-4 lg:space-y-6 w-full max-w-full"
+>
+  <div class="form-grid grid grid-cols-1 lg:grid-cols-2 gap-2 lg:gap-4 w-full max-w-full">
+    <!-- First Name -->
+    <div
+      class="input-wrapper transition-all duration-300 ease-out"
+      [class.active]="clientForm.get('firstName')?.touched && clientForm.get('firstName')?.valid"
+    >
+      <app-input
+        [formGroup]="clientForm"
+        [errorMessage]="getValidationMessage('firstName')"
+        controlName="firstName"
+        label="First Name"
+        placeholder="John"
+        icon="user"
+        [required]="true"
+        class="w-full"
+      ></app-input>
+    </div>
+
+    <!-- Last Name -->
+    <div
+      class="input-wrapper transition-all duration-300 ease-out"
+      [class.active]="clientForm.get('lastName')?.touched && clientForm.get('lastName')?.valid"
+    >
+      <app-input
+        [formGroup]="clientForm"
+        [errorMessage]="getValidationMessage('lastName')"
+        controlName="lastName"
+        label="Last Name"
+        placeholder="Doe"
+        icon="user"
+        [required]="true"
+        class="w-full"
+      ></app-input>
+    </div>
+
+    <!-- Email -->
+    <div
+      class="input-wrapper lg:col-span-2 transition-all duration-300 ease-out"
+      [class.active]="clientForm.get('email')?.touched && clientForm.get('email')?.valid"
+    >
+      <app-input
+        [formGroup]="clientForm"
+        [errorMessage]="getValidationMessage('email')"
+        controlName="email"
+        label="Email"
+        type="email"
+        placeholder="your@email.com"
+        icon="mail"
+        [required]="true"
+        class="w-full"
+      ></app-input>
+    </div>
+
+    <!-- Organization -->
+    <div
+      class="input-wrapper lg:col-span-2 transition-all duration-300 ease-out"
+      [class.active]="
+        clientForm.get('organization')?.touched && clientForm.get('organization')?.valid
+      "
+    >
+      <app-input
+        [formGroup]="clientForm"
+        [errorMessage]="getValidationMessage('organization')"
+        controlName="organization"
+        label="Organization"
+        placeholder="Your Organization"
+        icon="building"
+        [required]="true"
+        class="w-full"
+      ></app-input>
+    </div>
+
+    <!-- Phone Number -->
+    <div
+      class="input-wrapper lg:col-span-2 transition-all duration-300 ease-out"
+      [class.active]="
+        clientForm.get('phoneNumber')?.touched && clientForm.get('phoneNumber')?.valid
+      "
+    >
+      <app-input
+        [formGroup]="clientForm"
+        [errorMessage]="getValidationMessage('phoneNumber')"
+        controlName="phoneNumber"
+        label="Phone Number"
+        type="tel"
+        placeholder="+201234567890"
+        icon="phone"
+        [required]="true"
+        class="w-full"
+      ></app-input>
+    </div>
+
+    <!-- Country -->
+    <div
+      class="input-wrapper lg:col-span-2 transition-all duration-300 ease-out"
+      [class.active]="clientForm.get('country')?.touched && clientForm.get('country')?.valid"
+    >
+      <app-input
+        [formGroup]="clientForm"
+        [errorMessage]="getValidationMessage('country')"
+        controlName="country"
+        label="Country"
+        placeholder="Country"
+        icon="globe"
+        [required]="true"
+        class="w-full"
+      ></app-input>
+    </div>
+
+    <!-- Password with Enhanced Strength Indicator -->
+    <div
+      class="input-wrapper lg:col-span-2 transition-all duration-300 ease-out"
+      [class.active]="clientForm.get('password')?.touched && clientForm.get('password')?.valid"
+    >
+      <app-input
+        [formGroup]="clientForm"
+        [errorMessage]="getValidationMessage('password')"
+        controlName="password"
+        label="Password"
+        type="password"
+        placeholder="••••••••"
+        icon="lock"
+        [required]="true"
+        class="w-full"
+      ></app-input>
+
+      <!-- Enhanced Password Strength Indicator -->
+      <div
+        [class]="
+          shouldShowPasswordStrength() ? 'password-strength appear' : 'password-strength disappear'
+        "
+        class="mt-2 overflow-hidden transition-all duration-500 ease-out"
+      >
+        <div class="flex items-center gap-3 mb-2">
+          <span class="text-xs text-gray-600 font-medium">Password Strength:</span>
+          <span
+            class="text-sm font-semibold transition-colors duration-300"
+            [class]="getPasswordStrengthClass()"
+          >
+            {{ getPasswordStrength() }}
+          </span>
+        </div>
+
+        <!-- Animated Progress Bar -->
+        <div class="w-full bg-gray-200 rounded-full h-2 mb-1">
+          <div
+            class="h-2 rounded-full transition-all duration-700 ease-out"
+            [class]="getPasswordStrengthBarClass()"
+            [style.width]="getPasswordStrengthPercentage() + '%'"
+          ></div>
+        </div>
+
+        <div class="text-xs text-gray-500 transition-opacity duration-300">
+          Must include uppercase, lowercase, numbers, and special characters
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirm Password -->
+    <div
+      class="input-wrapper lg:col-span-2 transition-all duration-300 ease-out"
+      [class.active]="
+        clientForm.get('confirmPassword')?.touched && clientForm.get('confirmPassword')?.valid
+      "
+    >
+      <app-input
+        [formGroup]="clientForm"
+        [parentFormGroup]="clientForm"
+        [errorMessage]="getValidationMessage('confirmPassword')"
+        controlName="confirmPassword"
+        label="Confirm Password"
+        type="password"
+        placeholder="••••••••"
+        icon="lock"
+        [required]="true"
+        class="w-full"
+      ></app-input>
+    </div>
+  </div>
+
+  <!-- Enhanced Submit Button -->
+  <div class="w-full pt-2 lg:pt-4">
+    <app-button
+      type="submit"
+      [loading]="(isSubmitting$ | async) ?? false"
+      loadingText="Creating Account..."
+      label="Create Client Account"
+      color="bg-[#00A8FF]"
+      hoverColor="hover:bg-[#00A8FF]/90"
+      textColor="text-white"
+      [additionalClasses]="
+        'w-full py-3 font-medium rounded-lg transition-all duration-300 ease-out active:scale-[0.98] shadow-lg hover:shadow-xl hover:scale-[1.02]'
+      "
+    ></app-button>
+  </div>
+</form>

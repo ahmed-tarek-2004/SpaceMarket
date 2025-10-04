@@ -1,0 +1,313 @@
+/* Cosmic Background Animation */
+.cosmic-bg-animate {
+  background: linear-gradient(-45deg, #07102a, #0b1a3d, #001135, #00081c);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Nebula Background */
+.nebula-bg {
+  .nebula {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.1;
+
+    &.nebula-1 {
+      width: 300px;
+      height: 300px;
+      top: 10%;
+      left: 10%;
+      background: radial-gradient(circle, #00a8ff, transparent);
+      animation: float 20s infinite ease-in-out;
+    }
+
+    &.nebula-2 {
+      width: 400px;
+      height: 400px;
+      bottom: 10%;
+      right: 10%;
+      background: radial-gradient(circle, #00f5d4, transparent);
+      animation: float 25s infinite ease-in-out reverse;
+    }
+
+    &.nebula-3 {
+      width: 250px;
+      height: 250px;
+      top: 50%;
+      left: 50%;
+      background: radial-gradient(circle, #0077ff, transparent);
+      animation: float 30s infinite ease-in-out;
+    }
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -30px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+}
+
+/* Enhanced Star Field */
+.star-field {
+  .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+
+    &.star-twinkle {
+      animation: twinkle 4s infinite;
+    }
+
+    &.star-pulse {
+      animation: pulse 3s infinite;
+    }
+  }
+
+  .star:nth-child(1) {
+    width: 2px;
+    height: 2px;
+  }
+  .star:nth-child(2) {
+    width: 3px;
+    height: 3px;
+  }
+  .star:nth-child(3) {
+    width: 2px;
+    height: 2px;
+  }
+  .star:nth-child(4) {
+    width: 3px;
+    height: 3px;
+  }
+  .star:nth-child(5) {
+    width: 4px;
+    height: 4px;
+  }
+  .star:nth-child(6) {
+    width: 3px;
+    height: 3px;
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.5);
+  }
+}
+
+/* Shooting Stars */
+.shooting-stars {
+  .shooting-star {
+    position: absolute;
+    background: linear-gradient(90deg, transparent, white);
+    border-radius: 50%;
+    opacity: 0;
+
+    &:nth-child(1) {
+      top: 20%;
+      width: 100px;
+      height: 2px;
+      animation: shoot 8s infinite;
+    }
+
+    &:nth-child(2) {
+      top: 60%;
+      width: 150px;
+      height: 1px;
+      animation: shoot 12s infinite 4s;
+    }
+
+    &:nth-child(3) {
+      top: 80%;
+      width: 80px;
+      height: 1px;
+      animation: shoot 10s infinite 6s;
+    }
+  }
+}
+
+@keyframes shoot {
+  0% {
+    opacity: 0;
+    transform: translateX(-100px) translateY(0);
+  }
+  10% {
+    opacity: 1;
+  }
+  20% {
+    opacity: 0;
+    transform: translateX(100vw) translateY(100px);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Enhanced Glow Effects */
+.cosmic-text-glow {
+  text-shadow: 0 0 20px rgba(0, 168, 255, 0.7), 0 0 40px rgba(0, 168, 255, 0.5),
+    0 0 60px rgba(0, 168, 255, 0.3);
+  animation: textGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes textGlow {
+  from {
+    text-shadow: 0 0 20px rgba(0, 168, 255, 0.7), 0 0 40px rgba(0, 168, 255, 0.5),
+      0 0 60px rgba(0, 168, 255, 0.3);
+  }
+  to {
+    text-shadow: 0 0 25px rgba(0, 168, 255, 0.8), 0 0 50px rgba(0, 168, 255, 0.6),
+      0 0 75px rgba(0, 168, 255, 0.4);
+  }
+}
+
+.cosmic-number-glow {
+  text-shadow: 0 0 10px rgba(0, 168, 255, 0.8), 0 0 20px rgba(0, 168, 255, 0.6),
+    0 0 30px rgba(0, 168, 255, 0.4);
+}
+
+/* Countdown Items */
+.countdown-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 168, 255, 0.2);
+  border-radius: 16px;
+  padding: 1.5rem 1rem;
+  min-width: 100px;
+  transition: all 0.3s ease;
+
+  .countdown-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    font-feature-settings: 'tnum';
+    font-variant-numeric: tabular-nums;
+  }
+
+  .countdown-label {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+.cosmic-card-hover {
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 168, 255, 0.1), transparent);
+    transition: left 0.7s ease;
+  }
+
+  &:hover::before {
+    left: 100%;
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+    border-color: rgba(0, 168, 255, 0.4);
+    box-shadow: 0 10px 30px rgba(0, 168, 255, 0.2), 0 0 20px rgba(0, 168, 255, 0.1);
+  }
+}
+
+/* Button Glow */
+.cosmic-button-glow {
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: rotate(45deg);
+    transition: all 0.3s ease;
+  }
+
+  &:hover::after {
+    animation: shine 1.5s ease;
+  }
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+/* Form Styles */
+.cosmic-form-group {
+  position: relative;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .countdown-item {
+    min-width: 80px;
+    padding: 1rem 0.5rem;
+
+    .countdown-value {
+      font-size: 2rem;
+    }
+  }
+
+  .cosmic-text-glow {
+    font-size: 3rem !important;
+  }
+}
+
+/* Ensure smooth animations */
+* {
+  transition: all 0.3s ease;
+}

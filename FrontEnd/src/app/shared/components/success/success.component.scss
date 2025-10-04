@@ -1,0 +1,70 @@
+/* Container */
+.success-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 24px;
+  background: transparent;
+}
+
+/* Card */
+.success-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  padding: 32px;
+  max-width: 520px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Icon */
+.success-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #ffffff;
+  font-size: 36px;
+  font-weight: 800;
+}
+
+.success-title {
+  margin: 0 0 8px 0;
+  font-size: 28px;
+  font-weight: 800;
+  color: #14532d;
+}
+
+.success-message {
+  margin: 0;
+  color: #4b5563;
+}
+
+.success-subtext {
+  margin: 16px 0 0 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.countdown {
+  font-weight: 700;
+  color: #16a34a;
+}
+
+.success-link {
+  display: inline-block;
+  margin-top: 20px;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.success-link:hover {
+  text-decoration: underline;
+}
+
