@@ -43,9 +43,12 @@ namespace Ecommerce.DataAccess.Services.DebrisTracking
             var catalogSat = await _context.SatellitesCatalog.FindAsync(request.CatalogSatelliteId);
             if (catalogSat == null)
                 return _responseHandler.NotFound<Guid>("Satellite not found in catalog");
-            var clientSatellite = await _context.Satellites.FirstOrDefaultAsync(s => s.ClientId == userId);
 
-            if (clientSatellite != null) return _responseHandler.BadRequest<Guid>("Satellite is registered By another user");
+            var existingSatellite = await _context.Satellites
+                    .FirstOrDefaultAsync(s => s.NoradId == catalogSat.NoradId);
+
+            if (existingSatellite != null && existingSatellite.ClientId != userId)
+                return _responseHandler.BadRequest<Guid>("Satellite is registered by another user");
 
             var satellite = new Satellite
             {
@@ -294,6 +297,7 @@ namespace Ecommerce.DataAccess.Services.DebrisTracking
 
         private double Deg2Rad(double deg) => deg * Math.PI / 180.0;
 
+<<<<<<< HEAD
         //public async Task<Response<List<SatelliteCatalogResponseDto>>> GetSatelliteCatalogs(SatelliteCatalogFilter filter)
         //{
         //    try
@@ -342,5 +346,50 @@ namespace Ecommerce.DataAccess.Services.DebrisTracking
         //        return _responseHandler.ServerError<List<SatelliteCatalogResponseDto>>("Error while checking debris alerts.");
         //    }
         //}
+=======
+        public async Task<Response<PaginatedList<SatelliteCatalogResponseDto>>> GetSatelliteCatalogsAsync(SatelliteCatalogFilter filter)
+        {
+            try
+            {
+                var SatelliteCatalog = _context.SatellitesCatalog.AsQueryable();
+                if (!string.IsNullOrEmpty(filter.Name))
+                {
+                    SatelliteCatalog = SatelliteCatalog.Where(q => q.Name == filter.Name);
+                }
+                if (!string.IsNullOrEmpty(filter.NoradId))
+                {
+                    SatelliteCatalog = SatelliteCatalog.Where(q => q.NoradId == filter.NoradId);
+                }
+                if (!string.IsNullOrEmpty(filter.TleLine1))
+                {
+                    SatelliteCatalog = SatelliteCatalog.Where(q => q.TleLine1 == filter.TleLine1);
+                }
+                if (!string.IsNullOrEmpty(filter.TleLine2))
+                {
+                    SatelliteCatalog = SatelliteCatalog.Where(q => q.TleLine2 == filter.TleLine2);
+                }
+
+                var response = SatelliteCatalog
+                    .OrderBy(s => s.Id) 
+                    .Select(s => new SatelliteCatalogResponseDto
+                    {
+                        Id = s.Id,
+                        Name = s.Name,
+                        NoradId = s.NoradId,
+                        TleLine1 = s.TleLine1,
+                        TleLine2 = s.TleLine2
+                    });
+
+               var paginated=  await PaginatedList<SatelliteCatalogResponseDto>.CreateAsync(response, filter.PageNumber, filter.PageSize);
+                return _responseHandler.Success <PaginatedList<SatelliteCatalogResponseDto>> (paginated,"SatelieCatalog Retrieved Successfully");
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in RunDebrisCheckAsync");
+                return _responseHandler.ServerError<PaginatedList<SatelliteCatalogResponseDto>>("Error while checking debris alerts.");
+            }
+        }
+>>>>>>> 2b3d2dce1a07214220e9ab3c8d73aa12795a6210
     }
 }

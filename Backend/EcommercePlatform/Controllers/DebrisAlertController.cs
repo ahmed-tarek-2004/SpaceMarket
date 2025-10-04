@@ -113,5 +113,13 @@ namespace Ecommerce.API.Controllers
             var response = await _debrisAlertService.GetSatellitePositionAsync(satelliteId);
             return StatusCode((int)response.StatusCode, response);
         }
+
+        [HttpGet("satelitecatalog")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetSatellitegatalog([FromQuery]SatelliteCatalogFilter filter)
+        {
+            var response = await _debrisAlertService.GetSatelliteCatalogsAsync(filter);
+            return StatusCode((int)response.StatusCode, response);
+        }
     }
 }

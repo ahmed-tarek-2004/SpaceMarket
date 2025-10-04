@@ -65,6 +65,11 @@ export const routes: Routes = [
     data: { roles: ['client'] },
   },
   {
+    path: 'map',
+    loadComponent: () =>
+      import('./features/maps/pages/map-page/map-page.component').then((m) => m.MapPageComponent),
+  },
+  {
     path: 'admin-dashboard',
     loadComponent: () =>
       import(
@@ -127,6 +132,7 @@ export const routes: Routes = [
       import('./shared/components/error/error.component').then((m) => m.ErrorComponent),
   },
   { path: 'forbidden', component: ForbiddenComponent },
+
   // Add other routes here
   { path: '**', redirectTo: '' },
 ];
