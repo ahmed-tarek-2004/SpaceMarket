@@ -24,12 +24,12 @@
             type="text"
             class="search-input"
             placeholder="Search satellites by name, ID, or NORAD ID..."
-            [value]="searchQuery()"
+            [value]="searchQuery$ | async"
             (input)="onSearchChange($any($event.target).value)"
           />
           <button
             class="clear-search-btn"
-            *ngIf="searchQuery()"
+            *ngIf="searchQuery$ | async"
             (click)="onSearchChange('')"
             title="Clear search"
           >
@@ -48,7 +48,7 @@
       <button
         class="refresh-btn"
         (click)="refreshSatellites()"
-        [disabled]="isLoading()"
+        [disabled]="loading$ | async"
         title="Refresh satellite list"
       >
         <svg
@@ -56,7 +56,7 @@
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
-          [class.animate-spin]="isLoading()"
+          [class.animate-spin]="loading$ | async"
         >
           <path
             stroke-linecap="round"
@@ -71,29 +71,25 @@
   </div>
 
   <!-- Results Summary -->
-  <div class="results-summary" *ngIf="!isLoading() && !hasError()">
+  <div class="results-summary" *ngIf="!(loading$ | async) && !(error$ | async)">
     <div class="summary-text">
-      <span class="total-count">{{ filteredSatellites.length }}</span>
+      <span class="total-count">{{ (satellites$ | async)?.length || 0 }}</span>
       <span class="count-label">{{
-        filteredSatellites.length === 1 ? 'satellite' : 'satellites'
+        ((satellites$ | async)?.length || 0) === 1 ? 'satellite' : 'satellites'
       }}</span>
-      <span *ngIf="searchQuery()" class="search-indicator">found for "{{ searchQuery() }}"</span>
+      <span *ngIf="searchQuery$ | async" class="search-indicator"
+        >found for "{{ searchQuery$ | async }}"</span
+      >
     </div>
 
     <!-- Pagination Info -->
-    <div class="pagination-info" *ngIf="totalPages() > 1">
-      <span>Page {{ currentPage() }} of {{ totalPages() }}</span>
-      <span class="items-info"
-        >({{ (currentPage() - 1) * itemsPerPage() + 1 }}-{{
-          Math.min(currentPage() * itemsPerPage(), filteredSatellites.length)
-        }}
-        of {{ filteredSatellites.length }})</span
-      >
+    <div class="pagination-info" *ngIf="totalPages > 1">
+      <span>Page {{ pageNumber }} of {{ totalPages }}</span>
     </div>
   </div>
 
   <!-- Loading State -->
-  <div class="loading-state" *ngIf="isLoading()">
+  <div class="loading-state" *ngIf="loading$ | async">
     <div class="loading-spinner">
       <svg class="w-8 h-8 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
@@ -108,7 +104,7 @@
   </div>
 
   <!-- Error State -->
-  <div class="error-state" *ngIf="hasError() && !isLoading()">
+  <div class="error-state" *ngIf="error$ | async">
     <div class="error-icon">
       <svg class="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
@@ -121,7 +117,7 @@
     </div>
     <h3 class="error-title">Failed to Load Satellites</h3>
     <p class="error-message">
-      {{ errorMessage() || 'Unable to fetch satellite data. Please try again later.' }}
+      {{ (error$ | async) || 'Unable to fetch satellite data. Please try again later.' }}
     </p>
     <button class="retry-btn" (click)="refreshSatellites()">
       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -137,7 +133,10 @@
   </div>
 
   <!-- Empty State -->
-  <div class="empty-state" *ngIf="!isLoading() && !hasError() && filteredSatellites.length === 0">
+  <div
+    class="empty-state"
+    *ngIf="!(loading$ | async) && !(error$ | async) && (satellites$ | async)?.length === 0"
+  >
     <div class="empty-icon">
       <svg class="w-16 h-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
@@ -148,21 +147,24 @@
         />
       </svg>
     </div>
-    <h3 class="empty-title" *ngIf="!searchQuery()">No Satellites Available</h3>
-    <h3 class="empty-title" *ngIf="searchQuery()">No Satellites Found</h3>
-    <p class="empty-description" *ngIf="!searchQuery()">
+    <h3 class="empty-title" *ngIf="!(searchQuery$ | async)">No Satellites Available</h3>
+    <h3 class="empty-title" *ngIf="searchQuery$ | async">No Satellites Found</h3>
+    <p class="empty-description" *ngIf="!(searchQuery$ | async)">
       There are currently no satellites registered in the system.
     </p>
-    <p class="empty-description" *ngIf="searchQuery()">
+    <p class="empty-description" *ngIf="searchQuery$ | async">
       No satellites match your search criteria. Try adjusting your search terms.
     </p>
   </div>
 
   <!-- Satellites Grid -->
-  <div class="satellites-grid" *ngIf="!isLoading() && !hasError() && filteredSatellites.length > 0">
+  <div
+    class="satellites-grid"
+    *ngIf="!(loading$ | async) && !(error$ | async) && ((satellites$ | async)?.length ?? 0) > 0"
+  >
     <div
       class="satellite-card"
-      *ngFor="let satellite of paginatedSatellites(); trackBy: trackBySatelliteId"
+      *ngFor="let satellite of satellites$ | async; trackBy: trackBySatelliteId"
       (click)="onSatelliteClick(satellite)"
     >
       <!-- Card Header -->
@@ -181,9 +183,9 @@
           <h3 class="satellite-name">{{ satellite.name }}</h3>
           <p class="satellite-id">ID: {{ satellite.id }}</p>
         </div>
-        <div class="status-indicator" [class]="getStatusColor(satellite.proximityThresholdKm)">
+        <div class="status-indicator" [class]="getStatusColor()">
           <div class="status-dot"></div>
-          <span class="status-text">{{ getStatusText(satellite.proximityThresholdKm) }}</span>
+          <span class="status-text">{{ getStatusText() }}</span>
         </div>
       </div>
 
@@ -211,8 +213,8 @@
               d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
             />
           </svg>
-          <span class="info-label">Threshold:</span>
-          <span class="info-value">{{ satellite.proximityThresholdKm }} km</span>
+          <span class="info-label">TLE Line 1:</span>
+          <span class="info-value">{{ satellite.tleLine1.substring(0, 20) }}...</span>
         </div>
 
         <div class="info-item">
@@ -221,11 +223,11 @@
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
             />
           </svg>
-          <span class="info-label">Registered:</span>
-          <span class="info-value">{{ getRelativeTime(satellite.createdAt) }}</span>
+          <span class="info-label">TLE Line 2:</span>
+          <span class="info-value">{{ satellite.tleLine2.substring(0, 20) }}...</span>
         </div>
       </div>
 
@@ -247,13 +249,16 @@
   </div>
 
   <!-- Pagination -->
-  <div class="pagination-container" *ngIf="!isLoading() && !hasError() && totalPages() > 1">
+  <div
+    class="pagination-container"
+    *ngIf="!(loading$ | async) && !(error$ | async) && totalPages > 1"
+  >
     <div class="pagination">
       <!-- Previous Button -->
       <button
         class="pagination-btn prev-btn"
-        [disabled]="currentPage() === 1"
-        (click)="onPageChange(currentPage() - 1)"
+        [disabled]="!hasPrevPage"
+        (click)="prevPage()"
         title="Previous page"
       >
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -267,23 +272,14 @@
         Previous
       </button>
 
-      <!-- Page Numbers -->
-      <div class="page-numbers">
-        <button
-          *ngFor="let page of getPageNumbers(); trackBy: trackByPageNumber"
-          class="page-btn"
-          [class.active]="page === currentPage()"
-          (click)="onPageChange(page)"
-        >
-          {{ page }}
-        </button>
-      </div>
+      <!-- Page Info -->
+      <span class="page-numbers"> Page {{ pageNumber }} of {{ totalPages }} </span>
 
       <!-- Next Button -->
       <button
         class="pagination-btn next-btn"
-        [disabled]="currentPage() === totalPages()"
-        (click)="onPageChange(currentPage() + 1)"
+        [disabled]="!hasNextPage"
+        (click)="nextPage()"
         title="Next page"
       >
         Next

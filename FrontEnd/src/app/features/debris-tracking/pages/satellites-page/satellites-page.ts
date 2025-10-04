@@ -1,24 +1,24 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SatelliteFormComponent } from '../../components/satellite-form/satellite-form.component';
+import { Router } from '@angular/router';
 import { SatelliteListComponent } from '../../components/satellite-list/satellite-list.component';
+import { AllSatellitesComponent } from '../../components/all-satellites/all-satellites.component';
 import { DebrisApiServiceService } from '../../services/debris-api-service.service';
-import { RegisterSatelliteRequest } from '../../interfaces/register-satellite-request';
 import { Satellite } from '../../interfaces/satellite';
 import { ToastService } from '../../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-satellites-page',
   standalone: true,
-  imports: [CommonModule, SatelliteFormComponent, SatelliteListComponent],
+  imports: [CommonModule, SatelliteListComponent, AllSatellitesComponent],
   templateUrl: './satellites-page.html',
   styleUrl: './satellites-page.scss',
 })
 export class SatellitesPage implements OnInit {
   private debrisApiService = inject(DebrisApiServiceService);
   private toastService = inject(ToastService);
+  private router = inject(Router);
 
-  isSubmitting = signal(false);
   satellites: Satellite[] = [];
   isLoadingSatellites = signal(false);
   hasSatelliteError = signal(false);
@@ -59,41 +59,14 @@ export class SatellitesPage implements OnInit {
     });
   }
 
-  onFormSubmit(formData: RegisterSatelliteRequest) {
-    if (this.isSubmitting()) return;
-
-    this.isSubmitting.set(true);
-
-    this.debrisApiService.registerSatellite(formData).subscribe({
-      next: (response) => {
-        this.isSubmitting.set(false);
-        if (response.succeeded) {
-          this.toastService.success(
-            `Satellite "${formData.name}" has been successfully registered for debris tracking!`,
-            6000
-          );
-          // Refresh the satellite list
-          this.loadSatellites();
-        } else {
-          this.toastService.error(
-            response.message || 'Failed to register satellite. Please try again.',
-            6000
-          );
-        }
-      },
-      error: (error) => {
-        this.isSubmitting.set(false);
-        console.error('Error registering satellite:', error);
-
-        let errorMessage = 'Failed to register satellite. Please try again.';
-
-        if (error.error?.message) {
-          errorMessage = error.error.message;
-        } else if (error.message) {
-          errorMessage = error.message;
-        }
-
-        this.toastService.error(errorMessage, 6000);
+  onSatelliteSelected(satellite: { id: string; name: string; noradId: string }): void {
+    console.log('Satellite selected:', satellite);
+    // Navigate to registration page with satellite data as query parameters
+    this.router.navigate(['/satellite-registration'], {
+      queryParams: {
+        id: satellite.id,
+        name: satellite.name,
+        noradId: satellite.noradId,
       },
     });
   }

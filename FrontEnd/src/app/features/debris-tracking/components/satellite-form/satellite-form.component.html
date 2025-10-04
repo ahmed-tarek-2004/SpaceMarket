@@ -1,11 +1,21 @@
 <div class="satellite-form-container">
   <!-- Form Header -->
   <div class="form-header">
-    <h2 class="form-title">{{ editMode ? 'Edit Satellite Threshold' : 'Register Satellite' }}</h2>
+    <h2 class="form-title">
+      {{
+        editMode
+          ? 'Edit Satellite Threshold'
+          : editData
+          ? 'Register Selected Satellite'
+          : 'Register Satellite'
+      }}
+    </h2>
     <p class="form-description">
       {{
         editMode
           ? 'Update the proximity threshold for your satellite'
+          : editData
+          ? 'Set up proximity threshold monitoring for the selected satellite'
           : 'Register your satellite for debris tracking and proximity alerts'
       }}
     </p>
@@ -13,8 +23,8 @@
 
   <!-- Satellite Registration Form -->
   <form [formGroup]="satelliteForm" (ngSubmit)="onSubmit()" class="satellite-form">
-    <!-- Catalog Satellite ID Field - Hidden in edit mode -->
-    <div class="form-group" *ngIf="!editMode">
+    <!-- Catalog Satellite ID Field - Hidden in edit mode or when satellite is selected -->
+    <div class="form-group" *ngIf="!editMode && !editData">
       <label for="catalogSatelliteId" class="form-label">
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path
@@ -40,8 +50,8 @@
       </div>
     </div>
 
-    <!-- Satellite Name Field - Hidden in edit mode -->
-    <div class="form-group" *ngIf="!editMode">
+    <!-- Satellite Name Field - Hidden in edit mode or when satellite is selected -->
+    <div class="form-group" *ngIf="!editMode && !editData">
       <label for="name" class="form-label">
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path
@@ -85,6 +95,25 @@
       </div>
     </div>
 
+    <!-- Selected Satellite Info Display -->
+    <div class="edit-mode-info" *ngIf="!editMode && editData">
+      <div class="info-card">
+        <div class="info-header">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 7l-4 4m0 0l-4-4m4 4l4-4M5 7l4 4m4-6v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+            />
+          </svg>
+          <h3 class="satellite-name">{{ editData.name }}</h3>
+        </div>
+        <p class="satellite-id">ID: {{ editData.id }}</p>
+        <p class="satellite-norad" *ngIf="editData.noradId">NORAD ID: {{ editData.noradId }}</p>
+      </div>
+    </div>
+
     <!-- Proximity Threshold Field -->
     <div class="form-group">
       <label for="proximityThresholdKm" class="form-label">
@@ -117,27 +146,27 @@
 
     <!-- Form Actions -->
     <div class="form-actions">
-      <button
-        type="button"
-        (click)="resetForm()"
-        class="btn btn-secondary"
-        [disabled]="isSubmitting"
-      >
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <button type="button" (click)="goBack()" class="btn btn-secondary" [disabled]="isSubmitting">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
-            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+            d="M15 19l-7-7 7-7"
           />
         </svg>
-        Reset
+        Back to Satellites
       </button>
 
       <button
         type="submit"
         class="btn btn-primary"
-        [disabled]="isSubmitting || satelliteForm.invalid"
+        [disabled]="
+          isSubmitting ||
+          (editMode || editData
+            ? satelliteForm.get('proximityThresholdKm')?.invalid
+            : satelliteForm.invalid)
+        "
       >
         <svg
           class="w-4 h-4"

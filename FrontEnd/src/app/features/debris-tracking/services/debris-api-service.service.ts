@@ -6,6 +6,7 @@ import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { DebrisAlertHistoryResponse } from '../interfaces/debris-alert-history-response';
 import { Satellite } from '../interfaces/satellite';
+import { SatelliteCard } from '../interfaces/satellite-card';
 
 @Injectable({
   providedIn: 'root',
@@ -52,9 +53,23 @@ export class DebrisApiServiceService {
     );
   }
 
-  getAllSatellites(): Observable<ApiResponse<Satellite[]>> {
-    return this.http.get<ApiResponse<Satellite[]>>(
-      `${this.apiUrl}${environment.debrisTracking.getAllSatellites}`
+  getAllSatellites(
+    pageNumber: number = 1,
+    pageSize: number = 12,
+    name?: string
+  ): Observable<ApiResponse<SatelliteCard>> {
+    const params: any = {
+      PageNumber: pageNumber.toString(),
+      PageSize: pageSize.toString(),
+    };
+
+    if (name && name.trim()) {
+      params.Name = name.trim();
+    }
+
+    return this.http.get<ApiResponse<SatelliteCard>>(
+      `${this.apiUrl}${environment.debrisTracking.getAllSatellites}`,
+      { params }
     );
   }
 }

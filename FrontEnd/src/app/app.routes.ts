@@ -101,6 +101,15 @@ export const routes: Routes = [
       ).then((m) => m.AllSatellitesPageComponent),
   },
   {
+    path: 'satellite-registration',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['client'] },
+    loadComponent: () =>
+      import(
+        './features/debris-tracking/pages/satellite-registration-page/satellite-registration-page'
+      ).then((m) => m.SatelliteRegistrationPage),
+  },
+  {
     path: 'coming-soon',
     loadComponent: () =>
       import('./shared/components/coming-soon/coming-soon.component').then(

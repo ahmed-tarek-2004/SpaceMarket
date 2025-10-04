@@ -58,7 +58,7 @@ export const environment = {
     getAllForAdmin: '/Notifications/admin/notification',
   },
   debrisTracking: {
-    getAllSatellites: '/DebrisAlert/satellites',
+    getAllSatellites: '/DebrisAlert/satelitecatalog',
     registerSatellite: '/DebrisAlert/register-satellite',
     editThreshold: (satelliteId: string) => `/DebrisAlert/${satelliteId}/threshold`,
     debrisAlertHistory: '/DebrisAlert/alerts/history',

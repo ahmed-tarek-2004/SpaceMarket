@@ -1,7 +1,9 @@
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RegisterSatelliteRequest } from '../../interfaces/register-satellite-request';
+import { Satellite } from '../../interfaces/satellite';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-satellite-form',
@@ -12,9 +14,9 @@ import { RegisterSatelliteRequest } from '../../interfaces/register-satellite-re
 })
 export class SatelliteFormComponent implements OnInit {
   @Input() editMode = false;
-  @Input() editData: { id: string; name: string; proximityThresholdKm: number } | null = null;
+  @Input() editData: { id: string; name: string; noradId: string } | null = null;
   @Output() formSubmit = new EventEmitter<RegisterSatelliteRequest>();
-
+  private router = inject(Router);
   satelliteForm: FormGroup;
   isSubmitting = false;
 
@@ -31,15 +33,62 @@ export class SatelliteFormComponent implements OnInit {
       this.satelliteForm.patchValue({
         catalogSatelliteId: this.editData.id,
         name: this.editData.name,
-        proximityThresholdKm: this.editData.proximityThresholdKm,
+        proximityThresholdKm: 5, // Default threshold
       });
+
+      // Disable the catalog satellite ID and name fields in edit mode
+      this.satelliteForm.get('catalogSatelliteId')?.disable();
+      this.satelliteForm.get('name')?.disable();
+    } else if (this.editData) {
+      // Pre-populate form with selected satellite data
+      this.satelliteForm.patchValue({
+        catalogSatelliteId: this.editData.id,
+        name: this.editData.name,
+        proximityThresholdKm: 5, // Default threshold
+      });
+
+      // Disable the catalog satellite ID and name fields since they're from the selected satellite
+      this.satelliteForm.get('catalogSatelliteId')?.disable();
+      this.satelliteForm.get('name')?.disable();
     }
   }
 
   onSubmit() {
-    if (this.satelliteForm.valid && !this.isSubmitting) {
+    console.log('Form submission attempted');
+    console.log('Form valid:', this.satelliteForm.valid);
+    console.log('Edit mode:', this.editMode);
+    console.log('Edit data:', this.editData);
+    console.log(
+      'Proximity threshold valid:',
+      this.satelliteForm.get('proximityThresholdKm')?.valid
+    );
+    console.log(
+      'Proximity threshold value:',
+      this.satelliteForm.get('proximityThresholdKm')?.value
+    );
+    console.log('Is submitting:', this.isSubmitting);
+
+    // In edit mode or when pre-populated, only validate the proximity threshold field
+    const isFormValid =
+      this.editMode || this.editData
+        ? this.satelliteForm.get('proximityThresholdKm')?.valid
+        : this.satelliteForm.valid;
+
+    console.log('Is form valid:', isFormValid);
+
+    if (isFormValid && !this.isSubmitting) {
       this.isSubmitting = true;
-      const formData: RegisterSatelliteRequest = this.satelliteForm.value;
+      console.log('Submitting form...');
+
+      // Get form data, including disabled fields
+      const formData: RegisterSatelliteRequest = {
+        catalogSatelliteId:
+          this.satelliteForm.get('catalogSatelliteId')?.value || this.editData?.id || '',
+        name: this.satelliteForm.get('name')?.value || this.editData?.name || '',
+        proximityThresholdKm: this.satelliteForm.get('proximityThresholdKm')?.value || 5,
+      };
+
+      console.log('Form data to emit:', formData);
       this.formSubmit.emit(formData);
 
       // Reset submitting state after a delay
@@ -47,6 +96,7 @@ export class SatelliteFormComponent implements OnInit {
         this.isSubmitting = false;
       }, 1000);
     } else {
+      console.log('Form validation failed, marking fields as touched');
       this.markFormGroupTouched();
     }
   }
@@ -88,6 +138,9 @@ export class SatelliteFormComponent implements OnInit {
     return '';
   }
 
+  goBack() {
+    this.router.navigate(['/client-dashboard']);
+  }
   private getFieldLabel(fieldName: string): string {
     const labels: { [key: string]: string } = {
       catalogSatelliteId: 'Catalog Satellite ID',
