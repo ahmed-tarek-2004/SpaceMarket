@@ -1,0 +1,46 @@
+<div class="all-satellites-page-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">Satellite Management</h1>
+      <p class="page-description">
+        Browse all satellites and manage their proximity thresholds for debris tracking
+      </p>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- All Satellites Component -->
+    <div class="satellites-section" [class.hidden]="showForm()">
+      <app-all-satellites (satelliteSelected)="onSatelliteSelected($event)"> </app-all-satellites>
+    </div>
+
+    <!-- Satellite Form Component -->
+    <div class="form-section" *ngIf="showForm()">
+      <div class="form-container">
+        <app-satellite-form
+          [editMode]="editMode()"
+          [editData]="editData()"
+          (formSubmit)="onFormSubmit()"
+        >
+        </app-satellite-form>
+
+        <!-- Cancel Button -->
+        <div class="form-actions">
+          <button class="cancel-btn" (click)="onFormCancel()" title="Cancel editing">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
