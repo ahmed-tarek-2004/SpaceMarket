@@ -1,494 +1,322 @@
-/* Satellite List Component Styles */
 .satellite-list-container {
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
   padding: 2rem 1rem;
-
-  /* Loading State */
-  .loading-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 4rem 2rem;
-    text-align: center;
-
-    .loading-spinner {
-      width: 4rem;
-      height: 4rem;
-      margin-bottom: 1.5rem;
-      color: #00a8ff;
-      animation: spin 1s linear infinite;
-
-      svg {
-        filter: drop-shadow(0 0 10px rgba(0, 168, 255, 0.5));
-      }
-    }
-
-    .loading-text {
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 1.125rem;
-      font-weight: 500;
-      margin: 0;
-    }
-  }
-
-  /* Error State */
-  .error-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 4rem 2rem;
-    text-align: center;
-    background: rgba(255, 71, 87, 0.05);
-    border: 1px solid rgba(255, 71, 87, 0.2);
-    border-radius: 1.5rem;
-    backdrop-filter: blur(20px);
-
-    .error-icon {
-      width: 5rem;
-      height: 5rem;
-      margin-bottom: 1.5rem;
-      color: #ff4757;
-      background: rgba(255, 71, 87, 0.1);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      svg {
-        filter: drop-shadow(0 0 10px rgba(255, 71, 87, 0.5));
-      }
-    }
-
-    .error-title {
-      color: white;
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-
-    .error-message {
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 1rem;
-      line-height: 1.6;
-      margin: 0;
-    }
-  }
-
-  /* Empty State */
-  .empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 4rem 2rem;
-    text-align: center;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 1.5rem;
-    backdrop-filter: blur(20px);
-
-    .empty-icon {
-      width: 6rem;
-      height: 6rem;
-      margin-bottom: 2rem;
-      color: rgba(255, 255, 255, 0.4);
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .empty-title {
-      color: white;
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 0.75rem;
-    }
-
-    .empty-description {
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 1rem;
-      line-height: 1.6;
-      margin: 0;
-      max-width: 500px;
-    }
-  }
-
-  /* Satellites Grid */
-  .satellites-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
-
-    .satellite-card {
-      background: linear-gradient(135deg, rgba(7, 16, 42, 0.95) 0%, rgba(11, 26, 61, 0.98) 100%);
-      border: 1px solid rgba(0, 168, 255, 0.2);
-      border-radius: 1.5rem;
-      padding: 1.5rem;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      backdrop-filter: blur(20px);
-      position: relative;
-      overflow: hidden;
-
-      /* Cosmic background effects */
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: radial-gradient(circle at 30% 30%, rgba(0, 168, 255, 0.05) 0%, transparent 50%),
-          radial-gradient(circle at 70% 70%, rgba(0, 245, 212, 0.05) 0%, transparent 50%);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        pointer-events: none;
-        z-index: 0;
-      }
-
-      &:hover {
-        transform: translateY(-8px);
-        border-color: rgba(0, 168, 255, 0.4);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 168, 255, 0.15);
-
-        &::before {
-          opacity: 1;
-        }
-
-        .satellite-icon {
-          transform: scale(1.1);
-          box-shadow: 0 10px 30px rgba(0, 168, 255, 0.3);
-        }
-      }
-
-      /* Card Header */
-      .card-header {
-        display: flex;
-        align-items: flex-start;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-        position: relative;
-        z-index: 1;
-
-        .satellite-icon {
-          width: 3rem;
-          height: 3rem;
-          background: linear-gradient(135deg, #00a8ff 0%, #0077ff 100%);
-          border-radius: 0.75rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: white;
-          transition: all 0.3s ease;
-          flex-shrink: 0;
-
-          svg {
-            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
-          }
-        }
-
-        .satellite-info {
-          flex: 1;
-          min-width: 0;
-
-          .satellite-name {
-            color: white;
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin: 0 0 0.25rem 0;
-            background: linear-gradient(135deg, #00a8ff 0%, #00f5d4 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1.3;
-          }
-
-          .satellite-id {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.875rem;
-            margin: 0;
-            font-family: 'Courier New', monospace;
-          }
-        }
-
-        .status-indicator {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          padding: 0.5rem 0.75rem;
-          background: rgba(255, 255, 255, 0.05);
-          border-radius: 0.75rem;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          font-size: 0.75rem;
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-
-          .status-dot {
-            width: 0.5rem;
-            height: 0.5rem;
-            border-radius: 50%;
-            background: currentColor;
-          }
-
-          &.text-red-400 {
-            color: #ff4757;
-          }
-
-          &.text-yellow-400 {
-            color: #ffa502;
-          }
-
-          &.text-green-400 {
-            color: #2ed573;
-          }
-        }
-      }
-
-      /* Card Content */
-      .card-content {
-        position: relative;
-        z-index: 1;
-
-        .info-row {
-          margin-bottom: 1rem;
-
-          &:last-child {
-            margin-bottom: 0;
-          }
-
-          .info-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 0.75rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-
-            svg {
-              color: #00a8ff;
-              filter: drop-shadow(0 0 5px rgba(0, 168, 255, 0.5));
-              flex-shrink: 0;
-            }
-
-            .info-label {
-              color: rgba(255, 255, 255, 0.7);
-              font-size: 0.875rem;
-              font-weight: 500;
-              min-width: fit-content;
-            }
-
-            .info-value {
-              color: white;
-              font-size: 0.875rem;
-              font-weight: 600;
-              margin-left: auto;
-            }
-          }
-        }
-      }
-
-      /* Card Footer */
-      .card-footer {
-        margin-top: 1.5rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        position: relative;
-        z-index: 1;
-
-        .footer-actions {
-          display: flex;
-          gap: 0.75rem;
-
-          .action-btn {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1rem;
-            border-radius: 0.75rem;
-            font-size: 0.875rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: none;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-
-            svg {
-              transition: transform 0.3s ease;
-            }
-
-            &:hover {
-              transform: translateY(-2px);
-
-              svg {
-                transform: scale(1.1);
-              }
-            }
-
-            &.edit-btn {
-              background: rgba(255, 193, 7, 0.1);
-              color: #ffc107;
-              border: 1px solid rgba(255, 193, 7, 0.2);
-
-              &:hover {
-                background: rgba(255, 193, 7, 0.2);
-                border-color: rgba(255, 193, 7, 0.4);
-                box-shadow: 0 10px 20px rgba(255, 193, 7, 0.2);
-              }
-            }
-
-            &.details-btn {
-              background: rgba(0, 168, 255, 0.1);
-              color: #00a8ff;
-              border: 1px solid rgba(0, 168, 255, 0.2);
-
-              &:hover {
-                background: rgba(0, 168, 255, 0.2);
-                border-color: rgba(0, 168, 255, 0.4);
-                box-shadow: 0 10px 20px rgba(0, 168, 255, 0.2);
-              }
-            }
-          }
-        }
-      }
-    }
-  }
 }
-
-/* Animations */
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
 }
-
-/* Responsive Design */
+.loading-spinner {
+  width: 4rem;
+  height: 4rem;
+  margin-bottom: 1.5rem;
+  color: #00a8ff;
+}
+.loading-text {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin: 0;
+}
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  background: rgba(255, 71, 87, 0.05);
+  border: 1px solid rgba(255, 71, 87, 0.2);
+  border-radius: 1.5rem;
+}
+.error-icon {
+  width: 5rem;
+  height: 5rem;
+  margin-bottom: 1.5rem;
+  color: #ff4757;
+  background: rgba(255, 71, 87, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.error-title {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.error-message {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.5rem;
+}
+.empty-icon {
+  width: 6rem;
+  height: 6rem;
+  margin-bottom: 2rem;
+  color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.empty-title {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+.empty-description {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 500px;
+}
+.satellites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+.satellite-card {
+  background: rgba(7, 16, 42, 0.95);
+  border: 1px solid rgba(0, 168, 255, 0.2);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+}
+.satellite-card:hover {
+  border-color: rgba(0, 168, 255, 0.4);
+}
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+.satellite-icon {
+  width: 3rem;
+  height: 3rem;
+  background: #00a8ff;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+.satellite-info {
+  flex: 1;
+  min-width: 0;
+}
+.satellite-name {
+  color: #00a8ff;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.3;
+}
+.satellite-id {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.875rem;
+  margin: 0;
+  font-family: 'Courier New', monospace;
+}
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.status-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+.status-indicator.text-red-400 {
+  color: #ff4757;
+}
+.status-indicator.text-yellow-400 {
+  color: #ffa502;
+}
+.status-indicator.text-green-400 {
+  color: #2ed573;
+}
+.card-content {
+  position: relative;
+  z-index: 1;
+}
+.info-row {
+  margin-bottom: 1rem;
+}
+.info-row:last-child {
+  margin-bottom: 0;
+}
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.info-item svg {
+  color: #00a8ff;
+  flex-shrink: 0;
+}
+.info-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  font-weight: 500;
+  min-width: fit-content;
+}
+.info-value {
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-left: auto;
+}
+.card-footer {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 1;
+}
+.footer-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: none;
+  cursor: pointer;
+  position: relative;
+}
+.action-btn svg {
+  transition: transform 0.3s ease;
+}
+.action-btn:hover {
+  background: rgba(0, 168, 255, 0.1);
+  border-color: rgba(0, 168, 255, 0.3);
+}
+.action-btn.edit-btn {
+  background: rgba(255, 193, 7, 0.1);
+  color: #ffc107;
+  border: 1px solid rgba(255, 193, 7, 0.2);
+}
+.action-btn.edit-btn:hover {
+  background: rgba(255, 193, 7, 0.2);
+  border-color: rgba(255, 193, 7, 0.4);
+}
+.action-btn.details-btn {
+  background: rgba(0, 168, 255, 0.1);
+  color: #00a8ff;
+  border: 1px solid rgba(0, 168, 255, 0.2);
+}
+.action-btn.details-btn:hover {
+  background: rgba(0, 168, 255, 0.2);
+  border-color: rgba(0, 168, 255, 0.4);
+}
 @media (max-width: 1024px) {
   .satellite-list-container {
     padding: 1.5rem 1rem;
-
-    .satellites-grid {
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1.5rem;
-    }
+  }
+  .satellites-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
   }
 }
-
 @media (max-width: 768px) {
   .satellite-list-container {
     padding: 1rem 0.5rem;
-
-    .loading-state,
-    .error-state,
-    .empty-state {
-      padding: 3rem 1.5rem;
-
-      .loading-spinner,
-      .error-icon,
-      .empty-icon {
-        width: 4rem;
-        height: 4rem;
-        margin-bottom: 1rem;
-      }
-
-      .loading-text,
-      .error-title,
-      .empty-title {
-        font-size: 1.25rem;
-      }
-
-      .error-message,
-      .empty-description {
-        font-size: 0.875rem;
-      }
-    }
-
-    .satellites-grid {
-      grid-template-columns: 1fr;
-      gap: 1.25rem;
-
-      .satellite-card {
-        padding: 1.25rem;
-
-        .card-header {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 0.75rem;
-
-          .satellite-info {
-            width: 100%;
-
-            .satellite-name {
-              font-size: 1.125rem;
-            }
-          }
-
-          .status-indicator {
-            align-self: flex-end;
-          }
-        }
-
-        .card-footer .footer-actions {
-          flex-direction: column;
-
-          .action-btn {
-            width: 100%;
-            justify-content: center;
-          }
-        }
-      }
-    }
   }
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .satellite-list-container {
-    .loading-state .loading-spinner {
-      animation: none;
-    }
-
-    .satellites-grid .satellite-card {
-      &:hover {
-        transform: none;
-      }
-
-      .satellite-icon {
-        transition: none;
-
-        &:hover {
-          transform: none;
-        }
-      }
-
-      .card-footer .footer-actions .action-btn {
-        &:hover {
-          transform: none;
-
-          svg {
-            transform: none;
-          }
-        }
-      }
-    }
+  .loading-state,
+  .error-state,
+  .empty-state {
+    padding: 3rem 1.5rem;
   }
-
-  @keyframes spin {
-    to {
-      transform: rotate(0deg);
-    }
+  .loading-spinner,
+  .error-icon,
+  .empty-icon {
+    width: 4rem;
+    height: 4rem;
+    margin-bottom: 1rem;
+  }
+  .loading-text,
+  .error-title,
+  .empty-title {
+    font-size: 1.25rem;
+  }
+  .error-message,
+  .empty-description {
+    font-size: 0.875rem;
+  }
+  .satellites-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  .satellite-card {
+    padding: 1.25rem;
+  }
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  .satellite-info {
+    width: 100%;
+  }
+  .satellite-info .satellite-name {
+    font-size: 1.125rem;
+  }
+  .status-indicator {
+    align-self: flex-end;
+  }
+  .card-footer .footer-actions {
+    flex-direction: column;
+  }
+  .action-btn {
+    width: 100%;
+    justify-content: center;
   }
 }

@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { Satellite } from '../../interfaces/satellite';
 
 @Component({
@@ -14,6 +15,9 @@ export class SatelliteListComponent {
   @Input() isLoading = false;
   @Input() hasError = false;
   @Input() errorMessage = '';
+  @Output() satelliteClicked = new EventEmitter<{ id: string; name: string }>();
+
+  constructor(private router: Router) {}
 
   getStatusColor(threshold: number): string {
     if (threshold <= 5) return 'text-red-400';
@@ -53,5 +57,20 @@ export class SatelliteListComponent {
 
   trackBySatelliteId(index: number, satellite: Satellite): string {
     return satellite.id;
+  }
+
+  onSatelliteClick(satellite: Satellite): void {
+    console.log('Satellite clicked:', satellite);
+    this.satelliteClicked.emit({
+      id: satellite.id,
+      name: satellite.name,
+    });
+
+    // Navigate to map with satellite ID as route parameter
+    this.router.navigate(['/maps', satellite.id], {
+      queryParams: {
+        satelliteName: satellite.name,
+      },
+    });
   }
 }

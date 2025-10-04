@@ -4,7 +4,6 @@
   background: linear-gradient(135deg, #07102a 0%, #0b1a3d 50%, #001135 100%);
   padding: 2rem 1rem;
   position: relative;
-  overflow-x: hidden;
 
   /* Background Effects */
   &::before {
@@ -62,63 +61,6 @@
   .main-content {
     position: relative;
     z-index: 1;
-
-    .satellites-section {
-      transition: all 0.3s ease;
-
-      &.hidden {
-        opacity: 0;
-        pointer-events: none;
-        transform: translateX(-100%);
-      }
-    }
-
-    .form-section {
-      .form-container {
-        max-width: 800px;
-        margin: 0 auto;
-        position: relative;
-
-        .form-actions {
-          display: flex;
-          justify-content: center;
-          margin-top: 2rem;
-
-          .cancel-btn {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.875rem 2rem;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 0.75rem;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.875rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-
-            &:hover {
-              background: rgba(255, 255, 255, 0.15);
-              border-color: rgba(255, 255, 255, 0.3);
-              color: white;
-              transform: translateY(-2px);
-              box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
-            }
-
-            svg {
-              transition: transform 0.3s ease;
-            }
-
-            &:hover svg {
-              transform: rotate(90deg);
-            }
-          }
-        }
-      }
-    }
   }
 }
 
@@ -177,19 +119,6 @@
         }
       }
     }
-
-    .main-content {
-      .form-section {
-        .form-container {
-          .form-actions {
-            .cancel-btn {
-              padding: 0.75rem 1.5rem;
-              font-size: 0.75rem;
-            }
-          }
-        }
-      }
-    }
   }
 }
 
@@ -198,26 +127,6 @@
   .all-satellites-page-container {
     .page-header .header-content .header-icon {
       animation: none;
-    }
-
-    .main-content {
-      .satellites-section {
-        transition: none;
-
-        &.hidden {
-          transform: none;
-        }
-      }
-
-      .form-section .form-container .form-actions .cancel-btn {
-        &:hover {
-          transform: none;
-
-          svg {
-            transform: none;
-          }
-        }
-      }
     }
   }
 

@@ -43,6 +43,7 @@
       [isLoading]="isLoadingSatellites()"
       [hasError]="hasSatelliteError()"
       [errorMessage]="satelliteErrorMessage()"
+      (satelliteClicked)="onSatelliteClicked($event)"
     >
     </app-satellite-list>
   </div>

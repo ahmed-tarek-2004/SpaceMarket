@@ -53,7 +53,11 @@
 
   <!-- Satellite Cards Grid -->
   <div class="satellites-grid" *ngIf="!isLoading && !hasError && satellites.length > 0">
-    <div class="satellite-card" *ngFor="let satellite of satellites; trackBy: trackBySatelliteId">
+    <div
+      class="satellite-card"
+      *ngFor="let satellite of satellites; trackBy: trackBySatelliteId"
+      (click)="onSatelliteClick(satellite)"
+    >
       <!-- Card Header -->
       <div class="card-header">
         <div class="satellite-icon">

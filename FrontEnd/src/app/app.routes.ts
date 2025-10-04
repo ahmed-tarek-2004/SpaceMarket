@@ -65,9 +65,10 @@ export const routes: Routes = [
     data: { roles: ['client'] },
   },
   {
-    path: 'map',
+    path: 'maps/:satelliteId',
     loadComponent: () =>
       import('./features/maps/pages/map-page/map-page.component').then((m) => m.MapPageComponent),
+    data: { hideFooter: true, hideHeader: true },
   },
   {
     path: 'admin-dashboard',

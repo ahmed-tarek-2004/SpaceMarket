@@ -13,9 +13,9 @@ import { SatelliteFormComponent } from '../../components/satellite-form/satellit
 export class AllSatellitesPageComponent {
   showForm = signal(false);
   editMode = signal(false);
-  editData = signal<{ id: string; name: string; proximityThresholdKm: number } | null>(null);
+  editData = signal<{ id: string; name: string; noradId: string } | null>(null);
 
-  onSatelliteSelected(data: { id: string; name: string; proximityThresholdKm: number }): void {
+  onSatelliteSelected(data: { id: string; name: string; noradId: string }): void {
     this.editData.set(data);
     this.editMode.set(true);
     this.showForm.set(true);

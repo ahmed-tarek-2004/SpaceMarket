@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit, inject } from '@angular/core';
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SatelliteCardData } from '../../interfaces/satellite-card';
 import { AllSatellitesFacadeService } from '../../services/all-satellites-facade.service';
@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'app-all-satellites',
   standalone: true,
-  imports: [CommonModule, FormsModule, AsyncPipe],
+  imports: [CommonModule, FormsModule],
   templateUrl: './all-satellites.component.html',
   styleUrls: ['./all-satellites.component.scss'],
 })

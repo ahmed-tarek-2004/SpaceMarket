@@ -74,4 +74,9 @@ export class SatellitesPage implements OnInit {
   refreshSatellites(): void {
     this.loadSatellites();
   }
+
+  onSatelliteClicked(satellite: { id: string; name: string }): void {
+    console.log('Satellite clicked in satellites page:', satellite);
+    // Navigation is handled in the satellite-list component
+  }
 }
