@@ -36,7 +36,7 @@ namespace Ecommerce.DataAccess.Extensions
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    configuration.GetConnectionString("ProdCS")));
+                    configuration.GetConnectionString("DevCS")));
 
             return services;
         }
