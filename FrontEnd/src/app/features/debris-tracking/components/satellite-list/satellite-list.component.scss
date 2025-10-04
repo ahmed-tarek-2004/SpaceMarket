@@ -1,0 +1,322 @@
+.satellite-list-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+.loading-spinner {
+  width: 4rem;
+  height: 4rem;
+  margin-bottom: 1.5rem;
+  color: #00a8ff;
+}
+.loading-text {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin: 0;
+}
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  background: rgba(255, 71, 87, 0.05);
+  border: 1px solid rgba(255, 71, 87, 0.2);
+  border-radius: 1.5rem;
+}
+.error-icon {
+  width: 5rem;
+  height: 5rem;
+  margin-bottom: 1.5rem;
+  color: #ff4757;
+  background: rgba(255, 71, 87, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.error-title {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.error-message {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.5rem;
+}
+.empty-icon {
+  width: 6rem;
+  height: 6rem;
+  margin-bottom: 2rem;
+  color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.empty-title {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+.empty-description {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 500px;
+}
+.satellites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+.satellite-card {
+  background: rgba(7, 16, 42, 0.95);
+  border: 1px solid rgba(0, 168, 255, 0.2);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+}
+.satellite-card:hover {
+  border-color: rgba(0, 168, 255, 0.4);
+}
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+.satellite-icon {
+  width: 3rem;
+  height: 3rem;
+  background: #00a8ff;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+.satellite-info {
+  flex: 1;
+  min-width: 0;
+}
+.satellite-name {
+  color: #00a8ff;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.3;
+}
+.satellite-id {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.875rem;
+  margin: 0;
+  font-family: 'Courier New', monospace;
+}
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.status-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+.status-indicator.text-red-400 {
+  color: #ff4757;
+}
+.status-indicator.text-yellow-400 {
+  color: #ffa502;
+}
+.status-indicator.text-green-400 {
+  color: #2ed573;
+}
+.card-content {
+  position: relative;
+  z-index: 1;
+}
+.info-row {
+  margin-bottom: 1rem;
+}
+.info-row:last-child {
+  margin-bottom: 0;
+}
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.info-item svg {
+  color: #00a8ff;
+  flex-shrink: 0;
+}
+.info-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  font-weight: 500;
+  min-width: fit-content;
+}
+.info-value {
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-left: auto;
+}
+.card-footer {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 1;
+}
+.footer-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: none;
+  cursor: pointer;
+  position: relative;
+}
+.action-btn svg {
+  transition: transform 0.3s ease;
+}
+.action-btn:hover {
+  background: rgba(0, 168, 255, 0.1);
+  border-color: rgba(0, 168, 255, 0.3);
+}
+.action-btn.edit-btn {
+  background: rgba(255, 193, 7, 0.1);
+  color: #ffc107;
+  border: 1px solid rgba(255, 193, 7, 0.2);
+}
+.action-btn.edit-btn:hover {
+  background: rgba(255, 193, 7, 0.2);
+  border-color: rgba(255, 193, 7, 0.4);
+}
+.action-btn.details-btn {
+  background: rgba(0, 168, 255, 0.1);
+  color: #00a8ff;
+  border: 1px solid rgba(0, 168, 255, 0.2);
+}
+.action-btn.details-btn:hover {
+  background: rgba(0, 168, 255, 0.2);
+  border-color: rgba(0, 168, 255, 0.4);
+}
+@media (max-width: 1024px) {
+  .satellite-list-container {
+    padding: 1.5rem 1rem;
+  }
+  .satellites-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+}
+@media (max-width: 768px) {
+  .satellite-list-container {
+    padding: 1rem 0.5rem;
+  }
+  .loading-state,
+  .error-state,
+  .empty-state {
+    padding: 3rem 1.5rem;
+  }
+  .loading-spinner,
+  .error-icon,
+  .empty-icon {
+    width: 4rem;
+    height: 4rem;
+    margin-bottom: 1rem;
+  }
+  .loading-text,
+  .error-title,
+  .empty-title {
+    font-size: 1.25rem;
+  }
+  .error-message,
+  .empty-description {
+    font-size: 0.875rem;
+  }
+  .satellites-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  .satellite-card {
+    padding: 1.25rem;
+  }
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  .satellite-info {
+    width: 100%;
+  }
+  .satellite-info .satellite-name {
+    font-size: 1.125rem;
+  }
+  .status-indicator {
+    align-self: flex-end;
+  }
+  .card-footer .footer-actions {
+    flex-direction: column;
+  }
+  .action-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
