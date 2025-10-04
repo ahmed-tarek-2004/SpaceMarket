@@ -1,0 +1,13 @@
+<div class="fixed top-5 right-5 z-[9999] space-y-3 w-72">
+  @if (toast) {
+  <div class="px-4 py-3 rounded-lg shadow-lg text-white flex items-center justify-between animate-slideIn" [ngClass]="{
+            'bg-green-600 dark:bg-green-500': toast.type === 'success',
+            'bg-red-600 dark:bg-red-500': toast.type === 'error',
+            'bg-blue-600 dark:bg-blue-500': toast.type === 'info',
+            'bg-yellow-600 dark:bg-yellow-500': toast.type === 'warning'
+          }">
+    <span class="text-sm font-medium">{{ toast.message }}</span>
+    <button class="ml-3 text-white" (click)="dismiss()">✕</button>
+  </div>
+  }
+</div>

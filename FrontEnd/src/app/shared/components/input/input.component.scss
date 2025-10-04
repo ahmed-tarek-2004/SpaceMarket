@@ -1,0 +1,15 @@
+.error-message {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transform: translateY(-5px);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-top: 0;
+}
+
+.error-message.show {
+  opacity: 1;
+  max-height: 60px;
+  transform: translateY(0);
+  margin-top: 0.25rem;
+}

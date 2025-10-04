@@ -1,0 +1,45 @@
+:host {
+  display: block;
+}
+
+.tab-content {
+  transition: all 0.3s ease;
+}
+
+/* Remove all scroll-related styles */
+button:focus {
+  outline: 2px solid #00a8ff;
+  outline-offset: 2px;
+}
+
+.tab-panel {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Tab styling */
+.border-cyan-500 {
+  border-color: #00a8ff;
+}
+
+.text-cyan-600 {
+  color: #00a8ff;
+}
+
+.text-gray-500 {
+  color: #6b7280;
+}
+
+.border-transparent {
+  border-color: transparent;
+}
