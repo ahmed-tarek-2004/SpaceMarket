@@ -1,4 +1,67 @@
 export const environment = {
-  production: false
-  
-}
+  production: true,
+  apiUrl: 'https://spacemarket.runasp.net/api',
+  // apiUrl: 'https://localhost:7299/api',
+
+  account: {
+    signIn: '/Account/login',
+    clientSignup: '/Account/register/client',
+    providerSignup: '/Account/register/provider',
+    verifyOtp: '/Account/verify-otp',
+    forgetPassword: '/Account/forget-password',
+    resetPassword: '/Account/reset-password',
+    refresh: '/Account/refresh-token',
+  },
+  service: {
+    createService: '/Service/create-service',
+    myServices: '/Service/my-services',
+    updateService: '/Service/update-service',
+    deleteService: '/Service/',
+    serviceMatrics: '/Service/metrics',
+    createDataset: '/Service/dataset/create',
+    myDatasets: '/Service/dataset/my-datasets',
+    updateDataset: '/Service/dataset/update',
+    deleteDataset: '/Service/dataset/',
+    availableService: '/Service/client/available-service',
+    availableDataset: '/Service/dataset/client/available',
+    serviceDetail: '/Service/client/service-detail/',
+    datasetDetails: '/Service/dataset/client/detail/',
+    adminServiceList: '/Service/admin/list',
+    adminUpdateServiceStatus: '/Service/admin/update-status',
+    adminDatasetList: '/Service/dataset/admin/list',
+    adminUpdateDatasetStatus: '/Service/dataset/admin/update-status',
+  },
+  serviceCategory: {
+    getAllCategories: '/ServiceCategory',
+  },
+  cart: {
+    addToCart: '/Cart/add-to-cart',
+    cartContent: '/Cart/Cart/cart-content',
+    updateQuantity: '/Cart/update-quantity',
+    removeItem: `/Cart/remove/`,
+    clearCart: '/Cart/clear-cart',
+  },
+
+  payment: {
+    checkoutSession: '/Payment/checkout-session',
+    success: '/Payment/success',
+    cancel: '/Payment/cancel',
+  },
+  order: {
+    createOrder: '/Order',
+  },
+
+  notification: {
+    getAll: '/Notifications/user/notification',
+    markAsRead: (id: string) => `/Notifications/user/mark-read/${id}`,
+    getAllForAdmin: '/Notifications/admin/notification',
+  },
+  debrisTracking: {
+    getAllSatellites: '/DebrisAlert/satelitecatalog',
+    registerSatellite: '/DebrisAlert/register-satellite',
+    editThreshold: (satelliteId: string) => `/DebrisAlert/${satelliteId}/threshold`,
+    debrisAlertHistory: '/DebrisAlert/alerts/history',
+    debrisCheck: '/DebrisAlert/check',
+    mySatellites: '/DebrisAlert/my-satellites',
+  },
+};

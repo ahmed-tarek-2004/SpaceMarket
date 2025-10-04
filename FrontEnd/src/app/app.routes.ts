@@ -64,12 +64,11 @@ export const routes: Routes = [
     canActivate: [RoleGuard],
     data: { roles: ['client'] },
   },
-    {
-    path: 'map',
+  {
+    path: 'maps/:satelliteId',
     loadComponent: () =>
-      import('./features/maps/pages/map-page/map-page.component').then(
-        (m) => m.MapPageComponent
-      ),
+      import('./features/maps/pages/map-page/map-page.component').then((m) => m.MapPageComponent),
+    data: { hideFooter: true, hideHeader: true },
   },
   {
     path: 'admin-dashboard',
@@ -91,12 +90,30 @@ export const routes: Routes = [
   },
   {
     path: 'client-dashboard',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['client'] },
+    loadComponent: () =>
+      import('./features/debris-tracking/pages/satellites-page/satellites-page').then(
+        (m) => m.SatellitesPage
+      ),
+  },
+  {
+    path: 'all-satellites',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['client'] },
     loadComponent: () =>
       import(
-        './features/dashboard/client/pages/client-dashboard-page/client-dashboard-page.component'
-      ).then((m) => m.ClientDashboardPageComponent),
-    canActivate: [RoleGuard],
+        './features/debris-tracking/pages/all-satellites-page/all-satellites-page.component'
+      ).then((m) => m.AllSatellitesPageComponent),
+  },
+  {
+    path: 'satellite-registration',
+    canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['client'] },
+    loadComponent: () =>
+      import(
+        './features/debris-tracking/pages/satellite-registration-page/satellite-registration-page'
+      ).then((m) => m.SatelliteRegistrationPage),
   },
   {
     path: 'coming-soon',

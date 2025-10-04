@@ -139,10 +139,13 @@
 
         <!-- Dashboard Button (Only for logged-in users) -->
         @if (isLoggedIn()) {
-        <a  [routerLink]="getDashboardRoute()" class="hidden md:inline-flex">
+
+        <a [routerLink]="getDashboardRoute()" class="hidden md:inline-flex">
           <button
             class="inline-flex items-center gap-2 h-10 rounded-xl px-4 text-sm font-semibold text-gray-300 hover:text-white hover:bg-[#00A8FF]/15 transition-all duration-300 border border-transparent hover:border-[#00A8FF]/30 relative galaxy-hover group"
-            title="Dashboard" [routerLink]="ROUTES.dashboard">
+            title="Dashboard"
+            [routerLink]="ROUTES.dashboard"
+          >
             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 stroke-linecap="round"
@@ -204,17 +207,26 @@
 
                 <!-- Create Dataset in Dropdown (for service providers) -->
                 @if (isServiceProvider()) {
-                <a routerLink="/create-service"
-                  class="flex items-center gap-2 px-3 py-2 text-sm text-[#00D8FF] hover:text-[#00D8FF] hover:bg-[#00D8FF]/10 rounded-lg transition-colors border-l-2 border-[#00D8FF]">
+                <a
+                  routerLink="/create-service"
+                  class="flex items-center gap-2 px-3 py-2 text-sm text-[#00D8FF] hover:text-[#00D8FF] hover:bg-[#00D8FF]/10 rounded-lg transition-colors border-l-2 border-[#00D8FF]"
+                >
                   <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 4v16m8-8H4"
+                    />
                   </svg>
                   Create Dataset
                 </a>
                 }
 
-                <a routerLink="/profile"
-                  class="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+                <a
+                  routerLink="/profile"
+                  class="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                >
                   <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       stroke-linecap="round"
@@ -245,24 +257,35 @@
                   </svg>
                   Settings
                 </a>
-<a routerLink="/map"
-  class="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
-   <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-       d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-   </svg>
-   Map
-</a>
+                <a
+                  routerLink="/map"
+                  class="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                >
+                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                    />
+                  </svg>
+                  Map
+                </a>
 
-<button (click)="logout()"
-  class="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-lg transition-colors">
-  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-  </svg>
-  Sign Out
-</button>
-
+                <button
+                  (click)="logout()"
+                  class="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-lg transition-colors"
+                >
+                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                    />
+                  </svg>
+                  Sign Out
+                </button>
               </div>
             </div>
             }
@@ -437,18 +460,29 @@
     <div class="space-y-3 relative z-10">
       <!-- Create Dataset Button for Mobile (Service Providers) -->
       @if (isServiceProvider()) {
-      <a routerLink="/create-service" (click)="closeMenu()"
-        class="fade-in-up nav-item-delay-5 w-full text-center px-4 py-3 rounded-xl bg-gradient-to-r from-[#00D8FF] to-[#00A8FF] text-white font-bold button-pulse hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 border border-[#00D8FF]/50">
+      <a
+        routerLink="/create-service"
+        (click)="closeMenu()"
+        class="fade-in-up nav-item-delay-5 w-full text-center px-4 py-3 rounded-xl bg-gradient-to-r from-[#00D8FF] to-[#00A8FF] text-white font-bold button-pulse hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 border border-[#00D8FF]/50"
+      >
         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 4v16m8-8H4"
+          />
         </svg>
         Create Dataset
       </a>
       }
 
       <!-- Cart Button for Mobile -->
-      <a [routerLink]="ROUTES.cart" (click)="closeMenu()"
-        class="fade-in-up nav-item-delay-6 w-full text-center px-4 py-3 border border-white/10 rounded-xl text-sm text-gray-200 hover:bg-white/5 galaxy-hover transition-all duration-300 flex items-center justify-center gap-2">
+      <a
+        [routerLink]="ROUTES.cart"
+        (click)="closeMenu()"
+        class="fade-in-up nav-item-delay-6 w-full text-center px-4 py-3 border border-white/10 rounded-xl text-sm text-gray-200 hover:bg-white/5 galaxy-hover transition-all duration-300 flex items-center justify-center gap-2"
+      >
         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path
             stroke-linecap="round"
@@ -462,8 +496,11 @@
 
       <!-- Dashboard Button (Only for logged-in users) -->
       @if (isLoggedIn()) {
-      <a  [routerLink]="getDashboardRoute()" (click)="closeMenu()"
-        class="fade-in-up nav-item-delay-7 w-full text-center px-4 py-3 border border-white/10 rounded-xl text-sm text-gray-200 hover:bg-white/5 galaxy-hover transition-all duration-300 flex items-center justify-center gap-2">
+      <a
+        [routerLink]="getDashboardRoute()"
+        (click)="closeMenu()"
+        class="fade-in-up nav-item-delay-7 w-full text-center px-4 py-3 border border-white/10 rounded-xl text-sm text-gray-200 hover:bg-white/5 galaxy-hover transition-all duration-300 flex items-center justify-center gap-2"
+      >
         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path
             stroke-linecap="round"
@@ -497,17 +534,28 @@
 
         <!-- Create Dataset in Mobile Profile (for service providers) -->
         @if (isServiceProvider()) {
-        <a routerLink="/create-service" (click)="closeMenu()"
-          class="fade-in-up flex items-center gap-2 w-full text-center px-4 py-2 text-sm text-[#00D8FF] hover:text-[#00D8FF] hover:bg-[#00D8FF]/10 transition-all duration-300 border-l-2 border-[#00D8FF] ml-4">
+        <a
+          routerLink="/create-service"
+          (click)="closeMenu()"
+          class="fade-in-up flex items-center gap-2 w-full text-center px-4 py-2 text-sm text-[#00D8FF] hover:text-[#00D8FF] hover:bg-[#00D8FF]/10 transition-all duration-300 border-l-2 border-[#00D8FF] ml-4"
+        >
           <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4v16m8-8H4"
+            />
           </svg>
           Create Dataset
         </a>
         }
 
-        <a routerLink="/profile" (click)="closeMenu()"
-          class="fade-in-up block w-full text-center px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-300">
+        <a
+          routerLink="/profile"
+          (click)="closeMenu()"
+          class="fade-in-up block w-full text-center px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-300"
+        >
           My Profile
         </a>
         <button
@@ -521,8 +569,11 @@
 
       <!-- Sign In Button (Only for logged-out users) -->
       @if (!isLoggedIn()) {
-      <a routerLink="/login" (click)="closeMenu()"
-        class="fade-in-up nav-item-delay-8 block w-full text-center px-4 py-3 rounded-xl bg-gradient-to-r from-[#00A8FF] to-[#0077FF] text-white font-bold button-pulse hover:shadow-lg transition-all duration-300">
+      <a
+        routerLink="/login"
+        (click)="closeMenu()"
+        class="fade-in-up nav-item-delay-8 block w-full text-center px-4 py-3 rounded-xl bg-gradient-to-r from-[#00A8FF] to-[#0077FF] text-white font-bold button-pulse hover:shadow-lg transition-all duration-300"
+      >
         Sign in
       </a>
       }

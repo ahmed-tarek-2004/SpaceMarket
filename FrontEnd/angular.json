@@ -27,6 +27,11 @@
                 "output": "/assets"
               },
               {
+                "glob": "_redirects",
+                "input": "src",
+                "output": "/"
+              },
+              {
                 "glob": "**/*",
                 "input": "node_modules/cesium/Build/Cesium/Workers",
                 "output": "assets/cesium/Workers"
@@ -98,9 +103,7 @@
                 "input": "src/assets"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ]
+            "styles": ["src/styles.scss"]
           }
         }
       }

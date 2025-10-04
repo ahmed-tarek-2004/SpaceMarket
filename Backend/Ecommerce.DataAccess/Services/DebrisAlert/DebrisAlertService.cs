@@ -3,13 +3,11 @@ using Ecommerce.DataAccess.Services.DebrisAlert;
 using Ecommerce.DataAccess.Services.Notifications;
 using Ecommerce.DataAccess.Services.OrbitalPropagation;
 using Ecommerce.Entities.DTO.DebrisTracking;
-using Ecommerce.Entities.DTO.ServiceCatalog;
 using Ecommerce.Entities.Models;
 using Ecommerce.Entities.Shared;
 using Ecommerce.Entities.Shared.Bases;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 
 namespace Ecommerce.DataAccess.Services.DebrisTracking
 {
@@ -297,6 +295,7 @@ namespace Ecommerce.DataAccess.Services.DebrisTracking
 
         private double Deg2Rad(double deg) => deg * Math.PI / 180.0;
 
+
         public async Task<Response<PaginatedList<SatelliteCatalogResponseDto>>> GetSatelliteCatalogsAsync(SatelliteCatalogFilter filter)
         {
             try
@@ -320,7 +319,7 @@ namespace Ecommerce.DataAccess.Services.DebrisTracking
                 }
 
                 var response = SatelliteCatalog
-                    .OrderBy(s => s.Id) 
+                    .OrderBy(s => s.Id)
                     .Select(s => new SatelliteCatalogResponseDto
                     {
                         Id = s.Id,
@@ -330,8 +329,8 @@ namespace Ecommerce.DataAccess.Services.DebrisTracking
                         TleLine2 = s.TleLine2
                     });
 
-               var paginated=  await PaginatedList<SatelliteCatalogResponseDto>.CreateAsync(response, filter.PageNumber, filter.PageSize);
-                return _responseHandler.Success <PaginatedList<SatelliteCatalogResponseDto>> (paginated,"SatelieCatalog Retrieved Successfully");
+                var paginated = await PaginatedList<SatelliteCatalogResponseDto>.CreateAsync(response, filter.PageNumber, filter.PageSize);
+                return _responseHandler.Success<PaginatedList<SatelliteCatalogResponseDto>>(paginated, "SatelieCatalog Retrieved Successfully");
 
             }
             catch (Exception ex)
