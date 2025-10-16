@@ -12,6 +12,7 @@ using Hangfire;
 using Hangfire.SqlServer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 
 namespace EcommercePlatform
@@ -126,6 +127,11 @@ namespace EcommercePlatform
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
+                var db = services.GetRequiredService<ApplicationDbContext>();
+                if(db.Database.GetPendingMigrations().Count()>0)
+                {
+                    db.Database.Migrate();
+                }
                 var userManager = services.GetRequiredService<UserManager<User>>();
                 var roleManager = services.GetRequiredService<RoleManager<Ecommerce.Entities.Models.Auth.Identity.Role>>();
 
@@ -151,6 +157,7 @@ namespace EcommercePlatform
 
             using (var scope = app.Services.CreateScope())
             {
+                var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 var recurringJobManager = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
                 recurringJobManager.AddOrUpdate<IDebrisAlertJob>(
                     "debris-check-job",
