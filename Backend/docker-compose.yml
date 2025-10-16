@@ -1,0 +1,37 @@
+services:
+  spacemarket-api:
+    build: .
+    container_name: spacemarket-api
+    ports:
+      - "8081:5258"  # HostPort:ContainerPort
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5258
+      - ConnectionStrings__DevCS=Server=sqlserver,1433;Database=spacemarket;User Id=sa;Password=YourStrong!Pass123;TrustServerCertificate=True
+      - ConnectionStrings__Redis=redis:6379,password=,ssl=False,abortConnect=False
+    depends_on:
+      - sqlserver
+      - redis
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: spacemarket-sql
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong!Pass123
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+
+  redis:
+    image: redis:latest
+    container_name: spacemarket-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  sql_data:
+  redis_data:
