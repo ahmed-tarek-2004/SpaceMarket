@@ -7,7 +7,7 @@
 ## Demo Video
 
 Watch the demo video here:  
-[![Watch Demo](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://drive.google.com/file/d/1PigUeRtWUMYbuc6dgB4XFzLFj-IJs7Eb/view?usp=sharing)
+[![Watch Demo]](https://drive.google.com/file/d/1PigUeRtWUMYbuc6dgB4XFzLFj-IJs7Eb/view?usp=sharing)
 
 ---
 
@@ -20,16 +20,9 @@ Watch the demo video here:
 
 ---
 
-## Tech Stack
-
-- Frontend: (Your frontend tech, e.g., React, Angular, Vue)  
-- Backend: (Your backend tech, e.g., Node.js, Django, .NET)  
-- APIs: (Any APIs used for satellite data)  
-
----
 
 ## How to Run the Demo
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/spacemarket.git
+   git clone https://github.com/ahmed-tarek-2004/spacemarket.git
