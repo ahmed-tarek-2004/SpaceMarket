@@ -123,14 +123,17 @@ namespace EcommercePlatform
 
             var app = builder.Build();
 
-            #region Seed User,Role Data
-            using (var scope = app.Services.CreateScope())
+           #region Seed User,Role Data
+            await using (var scope = app.Services.CreateAsyncScope())
             {
                 var services = scope.ServiceProvider;
                 var db = services.GetRequiredService<ApplicationDbContext>();
-                if(db.Database.GetPendingMigrations().Count()>0)
+                 var pending = await db.Database.GetPendingMigrationsAsync();
+                // _logger.LogInformation("Begin Updateing");
+                if (pending.Any())
                 {
-                    db.Database.Migrate();
+                    // _logger.LogInformation($"Applying migrations: {string.Join(", ", pending)}");
+                     await db.Database.MigrateAsync();
                 }
                 var userManager = services.GetRequiredService<UserManager<User>>();
                 var roleManager = services.GetRequiredService<RoleManager<Ecommerce.Entities.Models.Auth.Identity.Role>>();
@@ -139,6 +142,7 @@ namespace EcommercePlatform
                 await UserSeeder.SeedAsync(userManager);
             }
             #endregion
+     
 
             if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
             {
